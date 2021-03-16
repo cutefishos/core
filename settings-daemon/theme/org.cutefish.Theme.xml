@@ -1,0 +1,50 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.cutefish.Theme">
+    <method name="setDarkMode">
+        <arg name="darkMode" type="b" direction="in"/>
+    </method>
+    <method name="setDarkModeDimsWallpaer">
+        <arg name="darkModeDimsWallpaer" type="b" direction="in"/>
+    </method>
+    <method name="setSystemFont">
+        <arg name="fontFamily" type="s" direction="in"/>
+    </method>
+    <method name="setSystemFixedFont">
+        <arg name="fontFamily" type="s" direction="in"/>
+    </method>
+    <method name="setSystemFontPointSize">
+        <arg name="fontSize" type="d" direction="in"/>
+    </method>
+    <method name="setDevicePixelRatio">
+        <arg name="ratio" type="d" direction="in"/>
+    </method>
+    <method name="setWallpaper">
+        <arg name="path" type="s" direction="in"/>
+    </method>
+    <method name="setAccentColor">
+        <arg name="accentColor" type="i" direction="in"/>
+    </method>
+
+    <property name="isDarkMode" type="b" access="read"/>
+    <property name="darkModeDimsWallpaer" type="b" access="read"/>
+    <property name="systemFont" type="s" access="read"/>
+    <property name="systemFixedFont" type="s" access="read"/>
+    <property name="systemFontPointSize" type="d" access="read"/>
+    <property name="devicePixelRatio" type="d" access="read"/>
+    <property name="wallpaper" type="s" access="read"/>
+    <property name="accentColor" type="i" access="read"/>
+
+    <signal name="darkModeChanged">
+        <arg type="b"/>
+    </signal>
+    <signal name="wallpaperChanged">
+        <arg type="s"/>
+    </signal>
+    <signal name="darkModeDimsWallpaerChanged">
+    </signal>
+    <signal name="accentColorChanged">
+        <arg type="i"/>
+    </signal>
+  </interface>
+</node>

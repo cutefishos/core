@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>icons/system-log-out.svg</file>
+        <file>icons/system-reboot.svg</file>
+        <file>icons/system-shutdown.svg</file>
+        <file>icons/system-suspend.svg</file>
+        <file>IconButton.qml</file>
+    </qresource>
+</RCC>

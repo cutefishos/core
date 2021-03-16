@@ -1,0 +1,12 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.cutefish.Language">
+    <method name="setLanguage">
+        <arg name="value" type="s" direction="in"/>
+    </method>
+
+    <property name="languageCode" type="s" access="read"/>
+
+    <signal name="languageChanged"></signal>
+  </interface>
+</node>

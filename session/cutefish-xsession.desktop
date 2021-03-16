@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Exec=cutefish-session
+TryExec=cutefish-session
+Name=Cutefish Desktop
+Keywords=session
+Comment=session

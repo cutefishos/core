@@ -1,0 +1,14 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.cutefish.Brightness">
+    <method name="setValue">
+        <arg name="value" type="i" direction="in"/>
+    </method>
+
+    <property name="maxBrightness" type="i" access="read"/>
+    <property name="brightness" type="i" access="read"/>
+    <property name="brightnessEnabled" type="b" access="read"/>
+
+    <signal name="brightnessChanged"></signal>
+  </interface>
+</node>

@@ -1,0 +1,22 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.cutefish.Audio">
+    <method name="setVolume">
+        <arg name="volume" type="i" direction="in"/>
+    </method>
+    <method name="toggleMute"></method>
+    <method name="setMute">
+        <arg name="state" type="b" direction="in"/>
+    </method>
+
+    <property name="volume" type="i" access="read"/>
+    <property name="mute" type="b" access="read"/>
+
+    <signal name="volumeChanged">
+        <arg type="i"/>
+    </signal>
+    <signal name="muteChanged">
+        <arg type="b"/>
+    </signal>
+  </interface>
+</node>
