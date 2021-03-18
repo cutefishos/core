@@ -89,6 +89,7 @@ Rectangle {
                     id: doneButton
                     text: qsTr("Done")
                     Layout.fillWidth: true
+                    flat: true
                     height: 50
                     onClicked: confirmation.setConfirmationResult(passwordInput.text)
                 }

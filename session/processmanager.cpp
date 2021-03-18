@@ -61,7 +61,7 @@ void ProcessManager::loadSystemProcess()
     list << qMakePair(QString("cutefish-xembedsniproxy"), QStringList());
 
     // Desktop components
-    list << qMakePair(QString("cutefish-fm"), QStringList("--desktop"));
+    list << qMakePair(QString("cutefish-filemanager"), QStringList("--desktop"));
     list << qMakePair(QString("cutefish-dock"), QStringList());
     list << qMakePair(QString("cutefish-launcher"), QStringList());
 
