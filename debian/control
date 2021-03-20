@@ -1,0 +1,28 @@
+Source: cutefish-components
+Section: devel
+Priority: optional
+Maintainer: CutefishOS <cutefishos@foxmail.com>
+Build-Depends: cmake,
+               debhelper (>= 9),
+               extra-cmake-modules,
+               pkg-config,
+               libpulse-dev,
+               libpolkit-qt5-1-dev,
+               libpolkit-agent-1-dev,
+               libkf5windowsystem-dev,
+               libqt5x11extras5-dev,
+               qtbase5-dev,
+               qtdeclarative5-dev,
+               qtquickcontrols2-5-dev,
+               qttools5-dev,
+               qttools5-dev-tools
+Standards-Version: 4.5.0
+Homepage: https://github.com/cutefishos/terminal
+
+Package: cutefish-components
+Architecture: any
+Depends: qml-module-qtquick-controls2,
+         qml-module-qtquick2,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: CutefishOS System Components
