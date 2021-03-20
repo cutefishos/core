@@ -57,7 +57,7 @@ ThemeManager::ThemeManager(QObject *parent)
     // init value
     m_isDarkMode = m_settings->value("DarkMode", false).toBool();
     m_darkModeDimsWallpaer = m_settings->value("DarkModeDimsWallpaer", false).toBool();
-    m_wallpaperPath = m_settings->value("Wallpaper", "/usr/share/backgrounds/cutefishos/unsplash-12.jpg").toString();
+    m_wallpaperPath = m_settings->value("Wallpaper", "/usr/share/wallpapers/cutefishos/unsplash-0.jpg").toString();
     m_accentColor = m_settings->value("AccentColor", 0).toInt();
 
     // Start the DE and need to update the settings again.
