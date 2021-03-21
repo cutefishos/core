@@ -25,6 +25,12 @@
     <method name="setAccentColor">
         <arg name="accentColor" type="i" direction="in"/>
     </method>
+    <method name="setBackgroundColor">
+        <arg name="color" type="s" direction="in"/>
+    </method>
+    <method name="setBackgroundType">
+        <arg name="type" type="i" direction="in"/>
+    </method>
 
     <property name="isDarkMode" type="b" access="read"/>
     <property name="darkModeDimsWallpaer" type="b" access="read"/>
@@ -34,6 +40,8 @@
     <property name="devicePixelRatio" type="d" access="read"/>
     <property name="wallpaper" type="s" access="read"/>
     <property name="accentColor" type="i" access="read"/>
+    <property name="backgroundType" type="i" access="read"/>
+    <property name="backgroundColor" type="s" access="read"/>
 
     <signal name="darkModeChanged">
         <arg type="b"/>
@@ -45,6 +53,10 @@
     </signal>
     <signal name="accentColorChanged">
         <arg type="i"/>
+    </signal>
+    <signal name="backgroundTypeChanged">
+    </signal>
+    <signal name="backgroundColorChanged">
     </signal>
   </interface>
 </node>

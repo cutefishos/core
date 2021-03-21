@@ -34,6 +34,8 @@ class ThemeManager : public QObject
     Q_PROPERTY(qreal devicePixelRatio READ devicePixelRatio WRITE setDevicePixelRatio)
     Q_PROPERTY(QString wallpaper READ wallpaper WRITE setWallpaper NOTIFY wallpaperChanged)
     Q_PROPERTY(int accentColor READ accentColor WRITE setAccentColor NOTIFY accentColorChanged)
+    Q_PROPERTY(int backgroundType READ backgroundType WRITE setBackgroundType NOTIFY backgroundTypeChanged)
+    Q_PROPERTY(QString backgroundColor READ backgroundColor WRITE setBackgroundColor NOTIFY backgroundColorChanged)
 
 public:
     ThemeManager(QObject *parent = nullptr);
@@ -59,6 +61,12 @@ public:
     QString wallpaper();
     void setWallpaper(const QString &path);
 
+    int backgroundType();
+    void setBackgroundType(int type);
+
+    QString backgroundColor();
+    void setBackgroundColor(QString color);
+
     int accentColor();
     void setAccentColor(int accentColor);
 
@@ -69,15 +77,20 @@ signals:
     void wallpaperChanged(QString path);
     void darkModeDimsWallpaerChanged();
     void accentColorChanged(int accentColor);
+    void backgroundTypeChanged();
+    void backgroundColorChanged();
 
 private:
     void updateGtkFont();
     void updateGtkDarkTheme();
 
     QSettings *m_settings;
+
     bool m_isDarkMode;
     bool m_darkModeDimsWallpaer;
     QString m_wallpaperPath;
+    int m_backgroundType;
+    QString m_backgroundColor;
     int m_accentColor;
 };
 

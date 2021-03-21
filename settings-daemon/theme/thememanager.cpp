@@ -59,6 +59,8 @@ ThemeManager::ThemeManager(QObject *parent)
     m_darkModeDimsWallpaer = m_settings->value("DarkModeDimsWallpaer", false).toBool();
     m_wallpaperPath = m_settings->value("Wallpaper", "/usr/share/wallpapers/cutefishos/unsplash-0.jpg").toString();
     m_accentColor = m_settings->value("AccentColor", 0).toInt();
+    m_backgroundType = m_settings->value("BackgroundType", 0).toInt();
+    m_backgroundColor = m_settings->value("BackgroundColor", "#2B8ADA").toString();
 
     // Start the DE and need to update the settings again.
     initGtkConfig();
@@ -167,6 +169,34 @@ void ThemeManager::setWallpaper(const QString &path)
         m_wallpaperPath = path;
         m_settings->setValue("Wallpaper", path);
         emit wallpaperChanged(path);
+    }
+}
+
+int ThemeManager::backgroundType()
+{
+    return m_backgroundType;
+}
+
+void ThemeManager::setBackgroundType(int type)
+{
+    if (m_backgroundType != type) {
+        m_backgroundType = type;
+        m_settings->setValue("BackgroundType", m_backgroundType);
+        emit backgroundTypeChanged();
+    }
+}
+
+QString ThemeManager::backgroundColor()
+{
+    return m_backgroundColor;
+}
+
+void ThemeManager::setBackgroundColor(QString color)
+{
+    if (m_backgroundColor != color) {
+        m_backgroundColor = color;
+        m_settings->setValue("BackgroundColor", m_backgroundColor);
+        emit backgroundColorChanged();
     }
 }
 
