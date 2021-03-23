@@ -265,20 +265,20 @@ QString Battery::formatDuration(qlonglong seconds) const
     int minutes = secs / SecsInMinute;
 
     if (days > 0)
-        result.push_back(QString("%1%2").arg(days).arg(tr("d")));
+        result.push_back(tr("%1d").arg(days));
 
     if (hours > 0) {
         if (days > 0)
             result.push_back(" ");
 
-        result.push_back(QString("%1%2").arg(hours).arg(tr("h")));
+        result.push_back(tr("%1h").arg(hours));
     }
 
     if (minutes > 0) {
         if (hours > 0)
             result.push_back(" ");
 
-        result.push_back(QString("%1%2").arg(minutes).arg(tr("m")));
+        result.push_back(tr("%1m").arg(minutes));
     }
 
     return result;
@@ -287,9 +287,9 @@ QString Battery::formatDuration(qlonglong seconds) const
 QString Battery::statusString() const
 {
     if (chargeState() == Battery::Charging) {
-        return QString("%1 ").arg(formatDuration(remainingTime())) + tr("until fully charged.");
+        return tr("%1 until fully charged").arg(formatDuration(remainingTime()));
     } else if (chargeState() == Battery::Discharging) {
-        return QString("%1 ").arg(formatDuration(remainingTime())) + tr("remaining.");
+        return tr("%1 remaining").arg(formatDuration(remainingTime()));
     } else if (chargeState() == Battery::FullyCharged) {
         return tr("Fully charged.");
     }
@@ -316,7 +316,7 @@ QString Battery::lastChargedTime() const
     if (minutes == 0)
         return tr("now");
 
-    return QString("%1 %2").arg(formatDuration(time.secsTo(now))).arg(tr("ago"));
+    return tr("%1 ago").arg(formatDuration(time.secsTo(now)));
 }
 
 void Battery::slotChanged()

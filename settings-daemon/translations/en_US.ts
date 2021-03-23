@@ -5,28 +5,28 @@
     <name>Battery</name>
     <message>
         <location filename="../battery/battery.cpp" line="268"/>
-        <source>d</source>
-        <translation>d</translation>
+        <source>%1d</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="274"/>
-        <source>h</source>
-        <translation>h</translation>
+        <source>%1h</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="281"/>
-        <source>m</source>
-        <translation>m</translation>
+        <source>%1m</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="290"/>
-        <source>until fully charged.</source>
-        <translation>until fully charged.</translation>
+        <source>%1 until fully charged</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="292"/>
-        <source>remaining.</source>
-        <translation>remaining.</translation>
+        <source>%1 remaining</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="294"/>
@@ -40,8 +40,8 @@
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="319"/>
-        <source>ago</source>
-        <translation>ago</translation>
+        <source>%1 ago</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

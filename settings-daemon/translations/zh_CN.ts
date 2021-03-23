@@ -5,28 +5,28 @@
     <name>Battery</name>
     <message>
         <location filename="../battery/battery.cpp" line="268"/>
-        <source>d</source>
-        <translation>天</translation>
+        <source>%1d</source>
+        <translation>%1天</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="274"/>
-        <source>h</source>
-        <translation>小时</translation>
+        <source>%1h</source>
+        <translation>%1小时</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="281"/>
-        <source>m</source>
-        <translation>分钟</translation>
+        <source>%1m</source>
+        <translation>%1分钟</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="290"/>
-        <source>until fully charged.</source>
-        <translation>充满电。</translation>
+        <source>%1 until fully charged</source>
+        <translation>预计%1充满</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="292"/>
-        <source>remaining.</source>
-        <translation>剩余。</translation>
+        <source>%1 remaining</source>
+        <translation>剩余%1</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="294"/>
@@ -40,8 +40,8 @@
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="319"/>
-        <source>ago</source>
-        <translation>之前</translation>
+        <source>%1 ago</source>
+        <translation>%1之前</translation>
     </message>
 </context>
 <context>
