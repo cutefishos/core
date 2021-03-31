@@ -23,6 +23,12 @@ Package: cutefish-components
 Architecture: any
 Depends: qml-module-qtquick-controls2,
          qml-module-qtquick2,
+         qml-module-qtquick-layouts,
+         qml-module-qt-labs-platform,
+         qml-module-qt-labs-settings,
+         qml-module-qtqml,
+         qml-module-qtquick-window2,
+         qml-module-qtquick-shapes,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: CutefishOS System Components
