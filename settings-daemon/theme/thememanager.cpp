@@ -57,7 +57,7 @@ ThemeManager::ThemeManager(QObject *parent)
     // init value
     m_isDarkMode = m_settings->value("DarkMode", false).toBool();
     m_darkModeDimsWallpaer = m_settings->value("DarkModeDimsWallpaer", false).toBool();
-    m_wallpaperPath = m_settings->value("Wallpaper", "/usr/share/wallpapers/cutefishos/unsplash-0.jpg").toString();
+    m_wallpaperPath = m_settings->value("Wallpaper", "/usr/share/backgrounds/cutefishos/default.jpg").toString();
     m_accentColor = m_settings->value("AccentColor", 0).toInt();
     m_backgroundType = m_settings->value("BackgroundType", 0).toInt();
     m_backgroundColor = m_settings->value("BackgroundColor", "#2B8ADA").toString();
