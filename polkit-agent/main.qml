@@ -1,7 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
-import MeuiKit 1.0 as Meui
+import FishUI 1.0 as FishUI
 
 Rectangle {
     id: root
@@ -9,12 +9,12 @@ Rectangle {
     width: 550
     height: column.implicitHeight + radius * 4
 
-    radius: Meui.Theme.bigRadius
-    color: Meui.Theme.backgroundColor
+    radius: FishUI.Theme.bigRadius
+    color: FishUI.Theme.backgroundColor
     border.color: Qt.rgba(0, 0, 0, 0.4)
     border.width: 1
 
-    Meui.WindowShadow {
+    FishUI.WindowShadow {
         view: rootWindow
         geometry: Qt.rect(root.x, root.y, root.width, root.height)
         radius: root.radius
@@ -35,7 +35,7 @@ Rectangle {
         }
 
         Item {
-            width: Meui.Units.smallSpacing
+            width: FishUI.Units.smallSpacing
         }
 
         ColumnLayout {
@@ -50,7 +50,7 @@ Rectangle {
             }
 
             Item {
-                height: Meui.Units.smallSpacing
+                height: FishUI.Units.smallSpacing
             }
 
             TextField {
@@ -74,7 +74,7 @@ Rectangle {
             }
 
             Item {
-                height: Meui.Units.smallSpacing
+                height: FishUI.Units.smallSpacing
             }
 
             RowLayout {
