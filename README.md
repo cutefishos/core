@@ -1,4 +1,4 @@
-# Components
+# Core
 
 System backend and start session and more.
 

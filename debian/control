@@ -1,4 +1,4 @@
-Source: cutefish-components
+Source: cutefish-core
 Section: devel
 Priority: optional
 Maintainer: CutefishOS <cutefishos@foxmail.com>
@@ -19,7 +19,7 @@ Build-Depends: cmake,
 Standards-Version: 4.5.0
 Homepage: https://github.com/cutefishos/terminal
 
-Package: cutefish-components
+Package: cutefish-core
 Architecture: any
 Depends: qml-module-qtquick-controls2,
          qml-module-qtquick2,

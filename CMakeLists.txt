@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(components)
+project(core)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
