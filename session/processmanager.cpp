@@ -9,23 +9,34 @@
 #include <QThread>
 #include <QDir>
 
+#include <QX11Info>
+#include <KWindowSystem>
+#include <KWindowSystem/NETWM>
+
 ProcessManager::ProcessManager(QObject *parent)
     : QObject(parent)
+    , m_wmStarted(false)
+    , m_waitLoop(nullptr)
 {
+    qApp->installNativeEventFilter(this);
 }
 
 ProcessManager::~ProcessManager()
 {
+    qApp->removeNativeEventFilter(this);
+
     QMapIterator<QString, QProcess *> i(m_systemProcess);
     while (i.hasNext()) {
         i.next();
         QProcess *p = i.value();
         delete p;
+        m_systemProcess[i.key()] = nullptr;
     }
 }
 
 void ProcessManager::start()
 {
+    startWindowManager();
     loadSystemProcess();
 
     QTimer::singleShot(100, this, &ProcessManager::loadAutoStartProcess);
@@ -53,10 +64,22 @@ void ProcessManager::logout()
     QCoreApplication::exit(0);
 }
 
+void ProcessManager::startWindowManager()
+{
+    QProcess *wmProcess = new QProcess;
+    wmProcess->start("kwin_x11", QStringList());
+
+    QEventLoop waitLoop;
+    m_waitLoop = &waitLoop;
+    // add a timeout to avoid infinite blocking if a WM fail to execute.
+    QTimer::singleShot(30 * 1000, &waitLoop, SLOT(quit()));
+    waitLoop.exec();
+    m_waitLoop = nullptr;
+}
+
 void ProcessManager::loadSystemProcess()
 {
     QList<QPair<QString, QStringList>> list;
-    list << qMakePair(QString("kwin_x11"), QStringList());
     list << qMakePair(QString("cutefish-settings-daemon"), QStringList());
     list << qMakePair(QString("cutefish-xembedsniproxy"), QStringList());
 
@@ -129,4 +152,25 @@ void ProcessManager::loadAutoStartProcess()
             process->deleteLater();
         }
     }
+}
+
+bool ProcessManager::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
+{
+    if (eventType != "xcb_generic_event_t") // We only want to handle XCB events
+        return false;
+
+    // ref: lxqt session
+    if (!m_wmStarted && m_waitLoop) {
+        // all window managers must set their name according to the spec
+        if (!QString::fromUtf8(NETRootInfo(QX11Info::connection(), NET::SupportingWMCheck).wmName()).isEmpty()) {
+            qDebug() << "Window manager started";
+            m_wmStarted = true;
+            if (m_waitLoop && m_waitLoop->isRunning())
+                m_waitLoop->exit();
+
+            qApp->removeNativeEventFilter(this);
+        }
+    }
+
+    return false;
 }

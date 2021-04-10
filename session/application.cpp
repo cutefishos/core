@@ -52,8 +52,17 @@ void Application::initEnvironments()
     qputenv("XDG_CURRENT_DESKTOP", "Cutefish");
     qputenv("XDG_SESSION_DESKTOP", "Cutefish");
 
+    // Qt
     qputenv("QT_QPA_PLATFORMTHEME", "cutefish");
     qputenv("QT_PLATFORM_PLUGIN", "cutefish");
+
+    qunsetenv("QT_AUTO_SCREEN_SCALE_FACTOR");
+    qunsetenv("QT_SCALE_FACTOR");
+    qunsetenv("QT_SCREEN_SCALE_FACTORS");
+    qunsetenv("QT_ENABLE_HIGHDPI_SCALING");
+    qunsetenv("QT_USE_PHYSICAL_DPI");
+    qunsetenv("QT_FONT_DPI");
+    qputenv("QT_SCALE_FACTOR_ROUNDING_POLICY", "PassThrough");
 
     // IM Config
     qputenv("GTK_IM_MODULE", "fcitx");
