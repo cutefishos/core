@@ -94,6 +94,12 @@ void Application::initLanguage()
     }
 }
 
+static bool isInteger(double x)
+{
+    int truncated = (int)x;
+    return (x == truncated);
+}
+
 void Application::initScreenScaleFactors()
 {
     QSettings settings(QSettings::UserScope, "cutefishos", "theme");
@@ -101,7 +107,11 @@ void Application::initScreenScaleFactors()
 
     qputenv("QT_SCREEN_SCALE_FACTORS", QByteArray::number(scaleFactor));
 
-    if (std::floor(scaleFactor) > 1) {
+    // GDK
+    if (!isInteger(scaleFactor)) {
+        qunsetenv("GDK_SCALE");
+        qputenv("GDK_DPI_SCALE", QByteArray::number(scaleFactor));
+    } else {
         qputenv("GDK_SCALE", QByteArray::number(scaleFactor, 'g', 0));
         qputenv("GDK_DPI_SCALE", QByteArray::number(1.0 / scaleFactor, 'g', 3));
     }
