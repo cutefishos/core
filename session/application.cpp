@@ -65,11 +65,11 @@ void Application::initEnvironments()
     qputenv("QT_SCALE_FACTOR_ROUNDING_POLICY", "PassThrough");
 
     // IM Config
-    qputenv("GTK_IM_MODULE", "fcitx");
-    qputenv("QT4_IM_MODULE", "fcitx");
-    qputenv("QT_IM_MODULE", "fcitx");
-    qputenv("CLUTTER_IM_MODULE", "fcitx");
-    qputenv("XMODIFIERS", "@im=fcitx");
+    qputenv("GTK_IM_MODULE", "fcitx5");
+    qputenv("QT4_IM_MODULE", "fcitx5");
+    qputenv("QT_IM_MODULE", "fcitx5");
+    qputenv("CLUTTER_IM_MODULE", "fcitx5");
+    qputenv("XMODIFIERS", "@im=fcitx5");
 }
 
 void Application::initLanguage()
