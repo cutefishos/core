@@ -1,6 +1,7 @@
 #include "processmanager.h"
 
 #include <QCoreApplication>
+#include <QStandardPaths>
 #include <QFileInfoList>
 #include <QFileInfo>
 #include <QSettings>
@@ -115,17 +116,14 @@ void ProcessManager::loadSystemProcess()
 void ProcessManager::loadAutoStartProcess()
 {
     QStringList execList;
-    QStringList xdgDesktopList;
-    xdgDesktopList << "/etc/xdg/autostart";
-
-    for (const QString &dirName : xdgDesktopList) {
-        QDir dir(dirName);
-        if (!dir.exists())
-            continue;
-
-        const QFileInfoList files = dir.entryInfoList(QStringList("*.desktop"), QDir::Files | QDir::Readable);
-        for (const QFileInfo &fi : files) {
-            QSettings desktop(fi.filePath(), QSettings::IniFormat);
+    const QStringList dirs = QStandardPaths::locateAll(QStandardPaths::GenericConfigLocation,
+                                                       QStringLiteral("autostart"),
+                                                       QStandardPaths::LocateDirectory);
+    for (const QString &dir : dirs) {
+        const QDir d(dir);
+        const QStringList fileNames = d.entryList(QStringList() << QStringLiteral("*.desktop"));
+        for (const QString &file : fileNames) {
+            QSettings desktop(d.absoluteFilePath(file), QSettings::IniFormat);
             desktop.setIniCodec("UTF-8");
             desktop.beginGroup("Desktop Entry");
 
