@@ -69,7 +69,7 @@ void Application::initEnvironments()
     qputenv("QT4_IM_MODULE", "fcitx5");
     qputenv("QT_IM_MODULE", "fcitx5");
     qputenv("CLUTTER_IM_MODULE", "fcitx5");
-    qputenv("XMODIFIERS", "@im=fcitx5");
+    qputenv("XMODIFIERS", "@im=fcitx");
 }
 
 void Application::initLanguage()
