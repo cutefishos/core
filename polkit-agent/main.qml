@@ -20,10 +20,14 @@ Rectangle {
         radius: root.radius
     }
 
+    FontMetrics {
+        id: fontMetrics
+    }
+
     RowLayout {
         id: mainLayout
         anchors.fill: parent
-        anchors.margins: parent.radius * 2
+        anchors.margins: FishUI.Theme.bigRadius * 2
 
         Image {
             id: icon
@@ -35,18 +39,21 @@ Rectangle {
         }
 
         Item {
-            width: FishUI.Units.smallSpacing
+            width: FishUI.Theme.bigRadius
         }
 
         ColumnLayout {
             id: column
+            spacing: FishUI.Units.smallSpacing
 
-            Label {
+            Text {
                 text: confirmation.message
-                wrapMode: Text.WordWrap
-                font.bold: true
-                Layout.fillHeight: true
+                font.bold: false
                 Layout.fillWidth: true
+                Layout.fillHeight: true
+                maximumLineCount: 2
+                wrapMode: Text.Wrap
+                elide: Text.ElideRight
             }
 
             Item {
@@ -78,6 +85,8 @@ Rectangle {
             }
 
             RowLayout {
+                spacing: FishUI.Units.largeSpacing
+
                 Button {
                     text: qsTr("Cancel")
                     Layout.fillWidth: true

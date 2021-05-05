@@ -1,6 +1,8 @@
 #include "polkitagentlistener.h"
 #include "dialog.h"
 
+#include <QDebug>
+
 PolKitAgentListener::PolKitAgentListener(QObject *parent)
     : PolkitQt1::Agent::Listener(parent)
     , m_dialog(nullptr)
