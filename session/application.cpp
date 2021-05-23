@@ -113,7 +113,8 @@ void Application::initScreenScaleFactors()
         qputenv("GDK_DPI_SCALE", QByteArray::number(scaleFactor));
     } else {
         qputenv("GDK_SCALE", QByteArray::number(scaleFactor, 'g', 0));
-        qputenv("GDK_DPI_SCALE", QByteArray::number(1.0 / scaleFactor, 'g', 3));
+        // Intger scale does not adjust GDK_DPI_SCALE.
+        // qputenv("GDK_DPI_SCALE", QByteArray::number(scaleFactor, 'g', 3));
     }
 }
 
