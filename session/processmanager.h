@@ -38,7 +38,8 @@ public:
     void logout();
 
     void startWindowManager();
-    void loadSystemProcess();
+    void startDesktopProcess();
+    void startDaemonProcess();
     void loadAutoStartProcess();
 
     bool nativeEventFilter(const QByteArray & eventType, void * message, long * result) override;

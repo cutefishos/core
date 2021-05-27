@@ -19,6 +19,8 @@
 
 #include "thememanager.h"
 #include "themeadaptor.h"
+
+#include <QDBusInterface>
 #include <QFile>
 #include <QDebug>
 
@@ -64,6 +66,13 @@ ThemeManager::ThemeManager(QObject *parent)
 
     // Start the DE and need to update the settings again.
     initGtkConfig();
+
+    // Start desktop UI component.
+    QDBusInterface sessionInterface("org.cutefish.Session", "/Session", "org.cutefish.Session",
+                                    QDBusConnection::sessionBus());
+    if (sessionInterface.isValid()) {
+        sessionInterface.call("startDesktopProcess");
+    }
 }
 
 bool ThemeManager::isDarkMode()

@@ -56,6 +56,11 @@ public slots:
         m_power.suspend();
     }
 
+    void startDesktopProcess()
+    {
+        m_processManager->startDesktopProcess();
+    }
+
 private:
     void initEnvironments();
     void initLanguage();

@@ -57,7 +57,7 @@ ProcessManager::~ProcessManager()
 void ProcessManager::start()
 {
     startWindowManager();
-    loadSystemProcess();
+    startDaemonProcess();
 
     QTimer::singleShot(100, this, &ProcessManager::loadAutoStartProcess);
 }
@@ -97,12 +97,12 @@ void ProcessManager::startWindowManager()
     m_waitLoop = nullptr;
 }
 
-void ProcessManager::loadSystemProcess()
+void ProcessManager::startDesktopProcess()
 {
-    QList<QPair<QString, QStringList>> list;
-    list << qMakePair(QString("cutefish-settings-daemon"), QStringList());
-    list << qMakePair(QString("cutefish-xembedsniproxy"), QStringList());
+    // When the cutefish-settings-daemon theme module is loaded, start the desktop.
+    // In the way, there will be no problem that desktop and launcher can't get wallpaper.
 
+    QList<QPair<QString, QStringList>> list;
     // Desktop components
     list << qMakePair(QString("cutefish-filemanager"), QStringList("--desktop"));
     list << qMakePair(QString("cutefish-statusbar"), QStringList());
@@ -117,11 +117,30 @@ void ProcessManager::loadSystemProcess()
         process->start();
         process->waitForStarted();
 
-        if (pair.first == "cutefish-settings-daemon") {
-            QThread::msleep(800);
-        }
-
         qDebug() << "Load DE components: " << pair.first << pair.second;
+
+        // Add to map
+        if (process->exitCode() == 0) {
+            m_autoStartProcess.insert(pair.first, process);
+        } else {
+            process->deleteLater();
+        }
+    }
+}
+
+void ProcessManager::startDaemonProcess()
+{
+    QList<QPair<QString, QStringList>> list;
+    list << qMakePair(QString("cutefish-settings-daemon"), QStringList());
+    list << qMakePair(QString("cutefish-xembedsniproxy"), QStringList());
+
+    for (QPair<QString, QStringList> pair : list) {
+        QProcess *process = new QProcess;
+        process->setProcessChannelMode(QProcess::ForwardedChannels);
+        process->setProgram(pair.first);
+        process->setArguments(pair.second);
+        process->start();
+        process->waitForStarted();
 
         // Add to map
         if (process->exitCode() == 0) {
