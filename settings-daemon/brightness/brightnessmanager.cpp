@@ -123,7 +123,7 @@ bool BrightnessManager::useWhitelistInit()
         return true; //Minor than 2.6.37, use whiteList based
     }
 
-    return false;//Use Type based interafce
+    return false;//Use Type based interface
 }
 
 void BrightnessManager::initUsingWhitelist()
