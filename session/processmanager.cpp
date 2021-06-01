@@ -104,9 +104,9 @@ void ProcessManager::startDesktopProcess()
 
     QList<QPair<QString, QStringList>> list;
     // Desktop components
-    list << qMakePair(QString("cutefish-filemanager"), QStringList("--desktop"));
     list << qMakePair(QString("cutefish-statusbar"), QStringList());
     list << qMakePair(QString("cutefish-dock"), QStringList());
+    list << qMakePair(QString("cutefish-filemanager"), QStringList("--desktop"));
     list << qMakePair(QString("cutefish-launcher"), QStringList());
 
     for (QPair<QString, QStringList> pair : list) {

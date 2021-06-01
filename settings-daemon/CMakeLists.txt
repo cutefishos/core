@@ -17,6 +17,8 @@ file (GLOB_RECURSE SRCS
   "battery/*.h"
   "language/*.cpp"
   "language/*.h"
+  "dock/*.cpp"
+  "dock/*.h"
 )
 
 set(SOURCES ${SRCS})
@@ -39,7 +41,9 @@ qt5_add_dbus_adaptor(DBUS_SOURCES
 qt5_add_dbus_adaptor(DBUS_SOURCES
                      language/org.cutefish.Language.xml
                      language/language.h Language)
-
+qt5_add_dbus_adaptor(DBUS_SOURCES
+                     dock/org.cutefish.Dock.xml
+                     dock/dock.h Dock)
 set_source_files_properties(${DBUS_SOURCES} PROPERTIES SKIP_AUTOGEN ON)
 
 add_executable(${TARGET} ${SOURCES} ${DBUS_SOURCES} ${HEADERS} ${FORMS} ${RESOURCES})
