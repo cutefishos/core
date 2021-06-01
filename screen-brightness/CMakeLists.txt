@@ -3,6 +3,8 @@ set(PROJECT_NAME cutefish-screen-brightness)
 
 set(SRCS
     main.cpp
+    brightnesshelper.h
+    brightnesshelper.cpp
 )
 
 add_executable(${PROJECT_NAME}
