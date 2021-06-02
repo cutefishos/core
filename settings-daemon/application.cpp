@@ -27,6 +27,7 @@
 #include <QDir>
 #include <QTranslator>
 #include <QLocale>
+#include <QTimer>
 
 Application::Application(int &argc, char **argv)
     : QApplication(argc, argv)
@@ -50,5 +51,17 @@ Application::Application(int &argc, char **argv)
         } else {
             translator->deleteLater();
         }
+    }
+
+    QTimer::singleShot(10, this, &Application::invokeDesktopProcess);
+}
+
+void Application::invokeDesktopProcess()
+{
+    // Start desktop UI component.
+    QDBusInterface sessionInterface("org.cutefish.Session", "/Session", "org.cutefish.Session",
+                                    QDBusConnection::sessionBus());
+    if (sessionInterface.isValid()) {
+        sessionInterface.call("startDesktopProcess");
     }
 }

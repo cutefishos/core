@@ -36,6 +36,8 @@ public:
 
     AudioManager *audioManager() { return m_audioManager; }
 
+    void invokeDesktopProcess();
+
 private:
     AudioManager *m_audioManager;
     ThemeManager *m_themeManager;
