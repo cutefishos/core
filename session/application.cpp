@@ -125,6 +125,7 @@ void Application::initScreenScaleFactors()
     qreal scaleFactor = settings.value("PixelRatio", 1.0).toReal();
 
     qputenv("QT_SCREEN_SCALE_FACTORS", QByteArray::number(scaleFactor));
+    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", QByteArray::number(1));
 
     // GDK
     if (!isInteger(scaleFactor)) {
