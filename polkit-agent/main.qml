@@ -11,8 +11,6 @@ Rectangle {
 
     radius: FishUI.Theme.bigRadius
     color: FishUI.Theme.backgroundColor
-    border.color: Qt.rgba(0, 0, 0, 0.4)
-    border.width: 1
 
     FishUI.WindowShadow {
         view: rootWindow
