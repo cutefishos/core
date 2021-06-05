@@ -212,6 +212,8 @@ void ThemeManager::initGtkConfig()
     settings.setValue("gtk-font-name", QString("%1 %2").arg(systemFont()).arg(systemFontPointSize()));
     // dark mode
     settings.setValue("gtk-application-prefer-dark-theme", isDarkMode());
+    // icon theme
+    settings.setValue("gtk-icon-theme-name", "Crule");
     // other
     settings.setValue("gtk-enable-animations", true);
     settings.sync();
