@@ -21,6 +21,7 @@
 #include "themeadaptor.h"
 
 #include <QDBusInterface>
+#include <QProcess>
 #include <QFile>
 #include <QDebug>
 
@@ -158,6 +159,30 @@ qreal ThemeManager::devicePixelRatio()
 void ThemeManager::setDevicePixelRatio(qreal ratio)
 {
     m_settings->setValue(s_devicePixelRatio, ratio);
+
+    // Set font dpi
+    // ref kscreen.
+    if (qFuzzyCompare(ratio, 1.0)) {
+        // if dpi is the default (96) remove the entry rather than setting it
+        QProcess proc;
+        proc.start(QStringLiteral("xrdb"), {QStringLiteral("-quiet"), QStringLiteral("-remove"), QStringLiteral("-nocpp")});
+        if (proc.waitForStarted()) {
+            proc.write(QByteArray("Xft.dpi\n"));
+            proc.closeWriteChannel();
+            proc.waitForFinished();
+        }
+        m_settings->setValue("forceFontDPI", 0);
+    } else {
+        const int scaleDpi = qRound(ratio * 96.0);
+        QProcess proc;
+        proc.start(QStringLiteral("xrdb"), {QStringLiteral("-quiet"), QStringLiteral("-merge"), QStringLiteral("-nocpp")});
+        if (proc.waitForStarted()) {
+            proc.write(QByteArray("Xft.dpi: " + QString::number(scaleDpi).toLatin1()));
+            proc.closeWriteChannel();
+            proc.waitForFinished();
+        }
+        m_settings->setValue("forceFontDPI", scaleDpi);
+    }
 }
 
 QString ThemeManager::wallpaper()

@@ -20,12 +20,65 @@
 #include "application.h"
 #include "sessionadaptor.h"
 
+// Qt
 #include <QDBusConnection>
 #include <QStandardPaths>
 #include <QSettings>
 #include <QProcess>
 #include <QDebug>
 #include <QDir>
+
+#include <QDBusConnectionInterface>
+#include <QDBusServiceWatcher>
+
+// STL
+#include <optional>
+
+std::optional<QStringList> getSystemdEnvironment()
+{
+    QStringList list;
+    auto msg = QDBusMessage::createMethodCall(QStringLiteral("org.freedesktop.systemd1"),
+                                              QStringLiteral("/org/freedesktop/systemd1"),
+                                              QStringLiteral("org.freedesktop.DBus.Properties"),
+                                              QStringLiteral("Get"));
+    msg << QStringLiteral("org.freedesktop.systemd1.Manager") << QStringLiteral("Environment");
+    auto reply = QDBusConnection::sessionBus().call(msg);
+    if (reply.type() == QDBusMessage::ErrorMessage) {
+        return std::nullopt;
+    }
+
+    // Make sure the returned type is correct.
+    auto arguments = reply.arguments();
+    if (arguments.isEmpty() || arguments[0].userType() != qMetaTypeId<QDBusVariant>()) {
+        return std::nullopt;
+    }
+    auto variant = qdbus_cast<QVariant>(arguments[0]);
+    if (variant.type() != QVariant::StringList) {
+        return std::nullopt;
+    }
+
+    return variant.toStringList();
+}
+
+bool isShellVariable(const QByteArray &name)
+{
+    return name == "_" || name.startsWith("SHLVL");
+}
+
+bool isSessionVariable(const QByteArray &name)
+{
+    // Check is variable is specific to session.
+    return name == "DISPLAY" || name == "XAUTHORITY" || //
+        name == "WAYLAND_DISPLAY" || name == "WAYLAND_SOCKET" || //
+        name.startsWith("XDG_");
+}
+
+void setEnvironmentVariable(const QByteArray &name, const QByteArray &value)
+{
+    if (qgetenv(name) != value) {
+        qputenv(name, value);
+    }
+}
 
 Application::Application(int &argc, char **argv)
     : QApplication(argc, argv)
@@ -38,14 +91,23 @@ Application::Application(int &argc, char **argv)
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Session"), this);
 
     createConfigDirectory();
-    initEnvironments();
     initLanguage();
     initScreenScaleFactors();
+    initFontDpi();
+
+    initEnvironments();
 
     if (!syncDBusEnvironment()) {
         // Startup error
         qDebug() << "Could not sync environment to dbus.";
+        qApp->exit(1);
     }
+
+    // We import systemd environment after we sync the dbus environment here.
+    // Otherwise it may leads to some unwanted order of applying environment
+    // variables (e.g. LANG and LC_*)
+    // ref plasma
+    importSystemdEnvrionment();
 
     QTimer::singleShot(100, m_processManager, &ProcessManager::start);
 }
@@ -75,7 +137,6 @@ void Application::initEnvironments()
     qputenv("QT_QPA_PLATFORMTHEME", "cutefish");
     qputenv("QT_PLATFORM_PLUGIN", "cutefish");
 
-    qunsetenv("QT_AUTO_SCREEN_SCALE_FACTOR");
     qunsetenv("QT_SCALE_FACTOR");
     qunsetenv("QT_SCREEN_SCALE_FACTORS");
     qunsetenv("QT_ENABLE_HIGHDPI_SCALING");
@@ -83,12 +144,29 @@ void Application::initEnvironments()
     qunsetenv("QT_FONT_DPI");
     qputenv("QT_SCALE_FACTOR_ROUNDING_POLICY", "PassThrough");
 
+    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
+
     // IM Config
     qputenv("GTK_IM_MODULE", "fcitx5");
     qputenv("QT4_IM_MODULE", "fcitx5");
     qputenv("QT_IM_MODULE", "fcitx5");
     qputenv("CLUTTER_IM_MODULE", "fcitx5");
     qputenv("XMODIFIERS", "@im=fcitx");
+}
+
+void Application::initFontDpi()
+{
+    QSettings settings(QSettings::UserScope, "cutefishos", "theme");
+    int fontDpi = settings.value("forceFontDPI", 0).toReal();
+
+    // TODO port to c++?
+    const QByteArray input = "Xft.dpi: " + QByteArray::number(fontDpi);
+    QProcess p;
+    p.start(QStringLiteral("xrdb"), {QStringLiteral("-quiet"), QStringLiteral("-merge"), QStringLiteral("-nocpp")});
+    p.setProcessChannelMode(QProcess::ForwardedChannels);
+    p.write(input);
+    p.closeWriteChannel();
+    p.waitForFinished(-1);
 }
 
 void Application::initLanguage()
@@ -125,16 +203,11 @@ void Application::initScreenScaleFactors()
     qreal scaleFactor = settings.value("PixelRatio", 1.0).toReal();
 
     qputenv("QT_SCREEN_SCALE_FACTORS", QByteArray::number(scaleFactor));
-    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", QByteArray::number(1));
 
-    // GDK
-    if (!isInteger(scaleFactor)) {
-        qunsetenv("GDK_SCALE");
-        qputenv("GDK_DPI_SCALE", QByteArray::number(scaleFactor));
-    } else {
+    // for Gtk
+    if (qFloor(scaleFactor) > 1) {
         qputenv("GDK_SCALE", QByteArray::number(scaleFactor, 'g', 0));
-        // Intger scale does not adjust GDK_DPI_SCALE.
-        // qputenv("GDK_DPI_SCALE", QByteArray::number(scaleFactor, 'g', 3));
+        qputenv("GDK_DPI_SCALE", QByteArray::number(1.0 / scaleFactor, 'g', 3));
     }
 }
 
@@ -148,6 +221,31 @@ bool Application::syncDBusEnvironment()
     }
 
     return exitCode == 0;
+}
+
+// Import systemd user environment.
+// Systemd read ~/.config/environment.d which applies to all systemd user unit.
+// But it won't work if cutefishDE is not started by systemd.
+void Application::importSystemdEnvrionment()
+{
+    auto environment = getSystemdEnvironment();
+    if (!environment) {
+        return;
+    }
+
+    for (auto &envString : environment.value()) {
+        const auto env = envString.toLocal8Bit();
+        const int idx = env.indexOf('=');
+        if (Q_UNLIKELY(idx <= 0)) {
+            continue;
+        }
+
+        const auto name = env.left(idx);
+        if (isShellVariable(name) || isSessionVariable(name)) {
+            continue;
+        }
+        setEnvironmentVariable(name, env.mid(idx + 1));
+    }
 }
 
 void Application::createConfigDirectory()

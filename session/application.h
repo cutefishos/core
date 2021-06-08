@@ -63,9 +63,11 @@ public slots:
 
 private:
     void initEnvironments();
+    void initFontDpi();
     void initLanguage();
     void initScreenScaleFactors();
     bool syncDBusEnvironment();
+    void importSystemdEnvrionment();
     void createConfigDirectory();
     int runSync(const QString &program, const QStringList &args, const QStringList &env = {});
 
