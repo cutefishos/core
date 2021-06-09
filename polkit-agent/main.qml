@@ -7,7 +7,7 @@ Rectangle {
     id: root
 
     width: 550
-    height: column.implicitHeight + radius * 4
+    height: mainLayout.implicitHeight + radius * 4
 
     radius: FishUI.Theme.bigRadius
     color: FishUI.Theme.backgroundColor
@@ -42,7 +42,7 @@ Rectangle {
 
         ColumnLayout {
             id: column
-            spacing: FishUI.Units.smallSpacing
+            spacing: FishUI.Units.largeSpacing
 
             Text {
                 text: confirmation.message
@@ -52,10 +52,7 @@ Rectangle {
                 maximumLineCount: 2
                 wrapMode: Text.Wrap
                 elide: Text.ElideRight
-            }
-
-            Item {
-                height: FishUI.Units.smallSpacing
+                color: FishUI.Theme.textColor
             }
 
             TextField {
