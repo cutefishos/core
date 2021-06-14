@@ -6,12 +6,12 @@
     <message>
         <location filename="../main.qml" line="67"/>
         <source>Shutdown</source>
-        <translation type="unfinished"></translation>
+        <translation>Slå av</translation>
     </message>
     <message>
         <location filename="../main.qml" line="75"/>
         <source>Reboot</source>
-        <translation type="unfinished"></translation>
+        <translation>Omstart</translation>
     </message>
     <message>
         <location filename="../main.qml" line="83"/>
@@ -21,7 +21,7 @@
     <message>
         <location filename="../main.qml" line="91"/>
         <source>Suspend</source>
-        <translation type="unfinished"></translation>
+        <translation>Hvilemodus</translation>
     </message>
 </context>
 </TS>
