@@ -41,7 +41,7 @@
     <message>
         <location filename="../battery/battery.cpp" line="290"/>
         <source>%1 until fully charged</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 до полной зарядки</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="292"/>
