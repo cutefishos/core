@@ -36,7 +36,7 @@
     <message>
         <location filename="../battery/battery.cpp" line="281"/>
         <source>%1m</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 m</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="290"/>
@@ -61,7 +61,7 @@
     <message>
         <location filename="../battery/battery.cpp" line="319"/>
         <source>%1 ago</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 siden</translation>
     </message>
     <message>
         <source>ago</source>
