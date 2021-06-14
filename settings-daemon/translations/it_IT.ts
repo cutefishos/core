@@ -5,27 +5,27 @@
     <name>Battery</name>
     <message>
         <location filename="../battery/battery.cpp" line="268"/>
-        <source>d</source>
+        <source>%1d</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="274"/>
-        <source>h</source>
+        <source>%1h</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="281"/>
-        <source>m</source>
+        <source>%1m</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="290"/>
-        <source>until fully charged.</source>
+        <source>%1 until fully charged</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="292"/>
-        <source>remaining.</source>
+        <source>%1 remaining</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -40,7 +40,7 @@
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="319"/>
-        <source>ago</source>
+        <source>%1 ago</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

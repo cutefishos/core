@@ -4,29 +4,49 @@
 <context>
     <name>Battery</name>
     <message>
-        <location filename="../battery/battery.cpp" line="268"/>
         <source>d</source>
-        <translation>Tage</translation>
+        <translation type="vanished">Tage</translation>
+    </message>
+    <message>
+        <source>h</source>
+        <translation type="vanished">Stunden</translation>
+    </message>
+    <message>
+        <source>m</source>
+        <translation type="vanished">Minuten</translation>
+    </message>
+    <message>
+        <source>until fully charged.</source>
+        <translation type="vanished">bis Akku voll.</translation>
+    </message>
+    <message>
+        <source>remaining.</source>
+        <translation type="vanished">übrig.</translation>
+    </message>
+    <message>
+        <location filename="../battery/battery.cpp" line="268"/>
+        <source>%1d</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="274"/>
-        <source>h</source>
-        <translation>Stunden</translation>
+        <source>%1h</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="281"/>
-        <source>m</source>
-        <translation>Minuten</translation>
+        <source>%1m</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="290"/>
-        <source>until fully charged.</source>
-        <translation>bis Akku voll.</translation>
+        <source>%1 until fully charged</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="292"/>
-        <source>remaining.</source>
-        <translation>übrig.</translation>
+        <source>%1 remaining</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="294"/>
@@ -40,8 +60,12 @@
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="319"/>
+        <source>%1 ago</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>ago</source>
-        <translation>vergangen</translation>
+        <translation type="vanished">vergangen</translation>
     </message>
 </context>
 <context>

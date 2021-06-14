@@ -4,30 +4,50 @@
 <context>
     <name>Battery</name>
     <message>
-        <location filename="../battery/battery.cpp" line="268"/>
         <source>d</source>
-        <translation>d.</translation>
+        <translation type="vanished">d.</translation>
+    </message>
+    <message>
+        <source>h</source>
+        <translation type="vanished">godz.</translation>
+    </message>
+    <message>
+        <source>m</source>
+        <translation type="vanished">min.</translation>
+    </message>
+    <message>
+        <source>until fully charged.</source>
+        <translation type="vanished">do pełnego naładowania.</translation>
+    </message>
+    <message>
+        <source>remaining.</source>
+        <translatorcomment>I don&apos;t know of a better way to translate this.</translatorcomment>
+        <translation type="vanished">czasu na baterii.</translation>
+    </message>
+    <message>
+        <location filename="../battery/battery.cpp" line="268"/>
+        <source>%1d</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="274"/>
-        <source>h</source>
-        <translation>godz.</translation>
+        <source>%1h</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="281"/>
-        <source>m</source>
-        <translation>min.</translation>
+        <source>%1m</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="290"/>
-        <source>until fully charged.</source>
-        <translation>do pełnego naładowania.</translation>
+        <source>%1 until fully charged</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="292"/>
-        <source>remaining.</source>
-        <translatorcomment>I don&apos;t know of a better way to translate this.</translatorcomment>
-        <translation>czasu na baterii.</translation>
+        <source>%1 remaining</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="294"/>
@@ -41,8 +61,12 @@
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="319"/>
+        <source>%1 ago</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>ago</source>
-        <translation>temu</translation>
+        <translation type="vanished">temu</translation>
     </message>
 </context>
 <context>
