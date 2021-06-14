@@ -26,17 +26,17 @@
     <message>
         <location filename="../battery/battery.cpp" line="268"/>
         <source>%1d</source>
-        <translation>%1d</translation>
+        <translation>%1g</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="274"/>
         <source>%1h</source>
-        <translation>%1h</translation>
+        <translation>%1s</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="281"/>
         <source>%1m</source>
-        <translation>%1m</translation>
+        <translation>%1d</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="290"/>
@@ -80,13 +80,13 @@
         <location filename="../battery/upowerdevice.cpp" line="87"/>
         <source>Lithium-ion</source>
         <comment>battery technology</comment>
-        <translation>Lityum iyon</translation>
+        <translation>Lityum İyon</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="89"/>
         <source>Lithium Polymer</source>
         <comment>battery technology</comment>
-        <translation>Lityum polimer</translation>
+        <translation>Lityum Polimer</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="91"/>
