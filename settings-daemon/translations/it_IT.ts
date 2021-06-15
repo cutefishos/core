@@ -74,7 +74,7 @@
         <location filename="../battery/upowerdevice.cpp" line="93"/>
         <source>Lead Acid</source>
         <comment>battery technology</comment>
-        <translation>acido di piombo</translation>
+        <translation>piombo-acido</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="95"/>
