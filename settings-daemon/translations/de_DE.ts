@@ -74,7 +74,7 @@
         <location filename="../battery/upowerdevice.cpp" line="71"/>
         <source>%1 Battery</source>
         <comment>%1 is battery technology</comment>
-        <translation>%1-Batterie</translation>
+        <translation>%1-Akku</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="87"/>
@@ -98,7 +98,7 @@
         <location filename="../battery/upowerdevice.cpp" line="93"/>
         <source>Lead Acid</source>
         <comment>battery technology</comment>
-        <translation>Bleisäure</translation>
+        <translation>Blei</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="95"/>
