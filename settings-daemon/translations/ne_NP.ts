@@ -51,7 +51,7 @@
     <message>
         <location filename="../battery/battery.cpp" line="294"/>
         <source>Fully charged.</source>
-        <translation>चार्ज पुर्ण</translation>
+        <translation>चार्ज पुर्ण।</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="317"/>
