@@ -26,12 +26,12 @@
     <message>
         <location filename="../battery/battery.cpp" line="268"/>
         <source>%1d</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 d</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="274"/>
         <source>%1h</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 t</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="281"/>
@@ -41,12 +41,12 @@
     <message>
         <location filename="../battery/battery.cpp" line="290"/>
         <source>%1 until fully charged</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 til helt oppladet</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="292"/>
         <source>%1 remaining</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 gjenstår</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="294"/>
