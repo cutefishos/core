@@ -6,17 +6,17 @@
     <message>
         <location filename="../main.qml" line="67"/>
         <source>Password</source>
-        <translation type="unfinished"></translation>
+        <translation>Пароль</translation>
     </message>
     <message>
         <location filename="../main.qml" line="94"/>
         <source>Done</source>
-        <translation type="unfinished"></translation>
+        <translation>Гатова</translation>
     </message>
     <message>
         <location filename="../main.qml" line="86"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Скасаваць</translation>
     </message>
 </context>
 </TS>
