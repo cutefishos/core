@@ -6,7 +6,7 @@
     <message>
         <location filename="../main.qml" line="67"/>
         <source>Shutdown</source>
-        <translation type="unfinished"></translation>
+        <translation>शट डाउन</translation>
     </message>
     <message>
         <location filename="../main.qml" line="75"/>
