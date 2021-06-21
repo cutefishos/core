@@ -86,7 +86,7 @@
         <location filename="../battery/upowerdevice.cpp" line="89"/>
         <source>Lithium Polymer</source>
         <comment>battery technology</comment>
-        <translation></translation>
+        <translation>Lithium-Polymer</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="91"/>

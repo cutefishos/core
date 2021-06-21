@@ -92,25 +92,25 @@
         <location filename="../battery/upowerdevice.cpp" line="91"/>
         <source>Lithium Iron Phosphate</source>
         <comment>battery technology</comment>
-        <translation>Литий-фосфат железа</translation>
+        <translation>LiFePO-батарея</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="93"/>
         <source>Lead Acid</source>
         <comment>battery technology</comment>
-        <translation>Свинцово-кислотные</translation>
+        <translation>Свинцово-кислотная батарея</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="95"/>
         <source>Nickel Cadmium</source>
         <comment>battery technology</comment>
-        <translation>Никель кадмий</translation>
+        <translation>Никель-кадмиевая батарея</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="97"/>
         <source>Nickel Metal Hydride</source>
         <comment>battery technology</comment>
-        <translation>Никель-металлогидрид</translation>
+        <translation>Никель-металлогидридная батарея</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="99"/>
