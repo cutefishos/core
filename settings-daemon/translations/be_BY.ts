@@ -51,12 +51,12 @@
     <message>
         <location filename="../battery/battery.cpp" line="294"/>
         <source>Fully charged.</source>
-        <translation>Цалкам зараджана.</translation>
+        <translation>Цалкам зараджаны.</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="317"/>
         <source>now</source>
-        <translation>Зараз</translation>
+        <translation>зараз</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="319"/>
@@ -80,43 +80,43 @@
         <location filename="../battery/upowerdevice.cpp" line="87"/>
         <source>Lithium-ion</source>
         <comment>battery technology</comment>
-        <translation>Літый-іённы</translation>
+        <translation>Тып батарэi: Li-Ion</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="89"/>
         <source>Lithium Polymer</source>
         <comment>battery technology</comment>
-        <translation>Літый-палімерны</translation>
+        <translation>Тып батарэі: Li-Poly</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="91"/>
         <source>Lithium Iron Phosphate</source>
         <comment>battery technology</comment>
-        <translation>LiFePO-батарэя</translation>
+        <translation>Тып батарэі: LFP</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="93"/>
         <source>Lead Acid</source>
         <comment>battery technology</comment>
-        <translation>Свінцова-кіслотная батарэя</translation>
+        <translation>Тып батарэі: Свінцова-кіслотная</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="95"/>
         <source>Nickel Cadmium</source>
         <comment>battery technology</comment>
-        <translation>Нікель-кадміевая батарэя</translation>
+        <translation>Тып батарэі: Ni-Cd</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="97"/>
         <source>Nickel Metal Hydride</source>
         <comment>battery technology</comment>
-        <translation>Нікель-металагідрыдныя батарэя</translation>
+        <translation>Тып батарэі: Ni-MH</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="99"/>
         <source>Unknown</source>
         <comment>battery technology</comment>
-        <translation>Невядома</translation>
+        <translation>Невядомы тып батарэі</translation>
     </message>
 </context>
 </TS>
