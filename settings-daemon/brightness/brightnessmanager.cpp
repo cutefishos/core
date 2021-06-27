@@ -151,7 +151,7 @@ void BrightnessManager::initUsingWhitelist()
         dir.setFilter(QDir::AllDirs | QDir::NoDot | QDir::NoDotDot | QDir::NoDotAndDotDot | QDir::Readable);
         QStringList dirList = dir.entryList();
         if (!dirList.isEmpty()) {
-            m_dirname = dirList.first();
+            m_dirname = PREFIX + dirList.first();
         }
     }
 }
