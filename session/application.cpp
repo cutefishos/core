@@ -208,11 +208,6 @@ void Application::initScreenScaleFactors()
     if (qFloor(scaleFactor) > 1) {
         qputenv("GDK_SCALE", QByteArray::number(scaleFactor, 'g', 0));
         qputenv("GDK_DPI_SCALE", QByteArray::number(1.0 / scaleFactor, 'g', 3));
-    } else {
-        // Reion: Why do we need to re-set ?
-        // Because the user is set to 2 and then log in, and then set to 1.25 or 1.5,
-        // it will also have an environment variable of 2.
-        qputenv("GDK_SCALE", "1");
     }
 }
 
