@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="hu">
+<TS version="2.1" language="sk">
 <context>
     <name>main</name>
     <message>
         <location filename="../main.qml" line="67"/>
         <source>Shutdown</source>
-        <translation>Leállítás</translation>
+        <translation>Vypnúť</translation>
     </message>
     <message>
         <location filename="../main.qml" line="75"/>
         <source>Reboot</source>
-        <translation>Újraindítás</translation>
+        <translation>Reštartovať</translation>
     </message>
     <message>
         <location filename="../main.qml" line="83"/>
         <source>Logout</source>
-        <translation>Kijelentkezés</translation>
+        <translation>Odhlásiť sa</translation>
     </message>
     <message>
         <location filename="../main.qml" line="91"/>
         <source>Suspend</source>
-        <translation>Alvó állapot</translation>
+        <translation>Uspať</translation>
     </message>
 </context>
 </TS>
