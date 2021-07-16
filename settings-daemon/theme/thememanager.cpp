@@ -142,7 +142,7 @@ void ThemeManager::setSystemFixedFont(const QString &fontFamily)
 
 qreal ThemeManager::systemFontPointSize()
 {
-    return m_settings->value(s_systemPointFontSize, 10.5).toReal();
+    return m_settings->value(s_systemPointFontSize, 9).toReal();
 }
 
 void ThemeManager::setSystemFontPointSize(qreal fontSize)
