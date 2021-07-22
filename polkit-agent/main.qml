@@ -3,19 +3,23 @@ import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
 import FishUI 1.0 as FishUI
 
-Rectangle {
+Item {
     id: root
 
     width: 550
-    height: mainLayout.implicitHeight + radius * 4
+    height: mainLayout.implicitHeight + _background.radius * 4
 
-    radius: FishUI.Theme.bigRadius
-    color: FishUI.Theme.backgroundColor
+    Rectangle {
+        id: _background
+        anchors.fill: parent
+        radius: FishUI.Theme.bigRadius
+        color: FishUI.Theme.secondBackgroundColor
+    }
 
     FishUI.WindowShadow {
         view: rootWindow
         geometry: Qt.rect(root.x, root.y, root.width, root.height)
-        radius: root.radius
+        radius: _background.radius
     }
 
     FontMetrics {
@@ -37,7 +41,7 @@ Rectangle {
         }
 
         Item {
-            width: FishUI.Theme.bigRadius
+            width: FishUI.Theme.bigRadius * 1.5
         }
 
         ColumnLayout {
@@ -73,10 +77,6 @@ Rectangle {
                     if (passwordInput.text)
                         confirmation.setConfirmationResult(passwordInput.text)
                 }
-            }
-
-            Item {
-                height: FishUI.Units.smallSpacing
             }
 
             RowLayout {
