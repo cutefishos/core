@@ -1,0 +1,27 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Source
+      uses: actions/checkout@v2
+      
+    - name: Update repository
+      run: sudo apt-get update -y
+      
+    - name: Install the basic dev packages
+      run: sudo apt-get install -y equivs curl git devscripts lintian build-essential automake autotools-dev cmake g++
+      
+    - name: Install build dependencies
+      run: sudo mk-build-deps -i -t "apt-get --yes" -r
+      
+    - name: Build
+      run: mkdir build; cd build; cmake .. ; make -j$(nproc);

@@ -132,6 +132,7 @@ void ProcessManager::startDaemonProcess()
 {
     QList<QPair<QString, QStringList>> list;
     list << qMakePair(QString("cutefish-settings-daemon"), QStringList());
+    list << qMakePair(QString("cutefish-powerman"), QStringList());
     list << qMakePair(QString("cutefish-xembedsniproxy"), QStringList());
 
     for (QPair<QString, QStringList> pair : list) {
