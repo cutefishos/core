@@ -31,6 +31,9 @@ jobs:
       
     - name: Install FishUI
       run: sudo make install
+      
+    - name: Back
+      run: cd ../../
 
     - name: Install build dependencies
       run: sudo mk-build-deps -i -t "apt-get --yes" -r
