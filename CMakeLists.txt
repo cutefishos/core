@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(QT Core Gui Widgets Quick QuickControls2 DBus X11Extras LinguistTools)
 find_package(Qt5 REQUIRED ${QT})
-find_package(FishUI REQUIRED)
+# find_package(FishUI REQUIRED)
 find_package(PkgConfig REQUIRED)
 find_package(ECM REQUIRED NO_MODULE)
 
