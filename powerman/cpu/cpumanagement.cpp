@@ -20,6 +20,7 @@
 #include "cpumanagement.h"
 #include "cpumanagementadaptor.h"
 
+#include <QProcess>
 #include <QDebug>
 #include <QDir>
 #include <QFile>
@@ -42,15 +43,16 @@ CPUManagement::CPUManagement(QObject *parent)
     }
 
     // Init mode
-    bool performance = true;
+    bool performance = false;
     for (CpuItem *item : m_items) {
-        if (item->policy() == "powersave")
-            performance = false;
+        qDebug() << item->policy();
+        if (item->policy() == "performance") {
+            performance = true;
+            break;
+        }
     }
     if (performance)
         m_currentMode = CPUManagement::Performance;
-
-    setMode(PowerSave);
 }
 
 void CPUManagement::setMode(int value)
@@ -61,8 +63,12 @@ void CPUManagement::setMode(int value)
     if (modeString.isEmpty() || mode == m_currentMode)
         return;
 
-    for (CpuItem *item : m_items) {
-        item->setPolicy(modeString);
+    QProcess process;
+    for (int i = 0; i <= m_items.count(); ++i) {
+        process.start("pkexec", QStringList() << "cutefish-cpufreq"
+                                              << "-s" << "-c" << QString::number(i)
+                                              << "-m" << modeString);
+        process.waitForFinished(-1);
     }
 
     m_currentMode = mode;
