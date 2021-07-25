@@ -20,6 +20,18 @@ jobs:
     - name: Install the basic dev packages
       run: sudo apt-get install -y equivs curl git devscripts lintian build-essential automake autotools-dev cmake g++
       
+    - name: Clone FishUI
+      run: git clone https://github.com/cutefishos/fishui.git
+      
+    - name: Install FishUI dependencies
+      run: cd fishui ; sudo mk-build-deps -i -t "apt-get --yes" -r
+      
+    - name: Build FishUI
+      run: mkdir build; cd build; cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr .. ; make -j$(nproc);
+      
+    - name: Install FishUI
+      run: sudo make install
+
     - name: Install build dependencies
       run: sudo mk-build-deps -i -t "apt-get --yes" -r
       
