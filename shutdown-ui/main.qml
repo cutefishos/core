@@ -21,9 +21,9 @@ import QtQuick 2.12
 import QtQuick.Window 2.3
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
+import FishUI 1.0 as FishUI
 
-ApplicationWindow
-{
+ApplicationWindow {
     width: Screen.width
     height: Screen.height
     visible: true
@@ -39,7 +39,14 @@ ApplicationWindow
 
     background: Rectangle {
         color: "black"
-        opacity: 0.8
+        opacity: 0.7
+    }
+
+    FishUI.WindowBlur {
+        view: root
+        geometry: Qt.rect(root.x, root.y, root.width, root.height)
+        windowRadius: 0
+        enabled: true
     }
 
     onActiveChanged: {
