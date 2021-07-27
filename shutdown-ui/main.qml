@@ -93,6 +93,14 @@ ApplicationWindow {
         }
 
         IconButton {
+            id: lockscreenButton
+            Layout.alignment: Qt.AlignVCenter
+            text: qsTr("Lock screen")
+            icon: "qrc:/icons/system-lock-screen.svg"
+            onClicked: actions.lockScreen()
+        }
+
+        IconButton {
             id: suspendButton
             Layout.alignment: Qt.AlignVCenter
             text: qsTr("Suspend")

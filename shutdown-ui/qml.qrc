@@ -6,5 +6,6 @@
         <file>icons/system-shutdown.svg</file>
         <file>icons/system-suspend.svg</file>
         <file>IconButton.qml</file>
+        <file>icons/system-lock-screen.svg</file>
     </qresource>
 </RCC>

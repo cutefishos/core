@@ -21,6 +21,7 @@
 #include <QCommandLineParser>
 #include <QDBusInterface>
 #include <QApplication>
+#include <QProcess>
 
 const static QString s_dbusName = "org.cutefish.Session";
 const static QString s_pathName = "/Session";
@@ -54,6 +55,12 @@ void Actions::reboot()
     if (iface.isValid()) {
         iface.call("reboot");
     }
+}
+
+void Actions::lockScreen()
+{
+    QProcess::startDetached("cutefish-screenlocker", QStringList());
+    qApp->exit(0);
 }
 
 void Actions::suspend()
