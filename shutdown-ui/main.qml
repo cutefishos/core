@@ -28,7 +28,7 @@ ApplicationWindow {
     height: Screen.height
     visible: true
     visibility: Window.FullScreen
-    flags: Qt.FramelessWindowHint | Qt.Popup
+    flags: Qt.FramelessWindowHint | Qt.X11BypassWindowManagerHint
     id: root
 
     color: "transparent"
@@ -59,57 +59,68 @@ ApplicationWindow {
         onClicked: exit()
     }
 
-    RowLayout {
-        id: layout
+    Item {
+        id: rootItem
         anchors.fill: parent
-        spacing: root.width * 0.05
+        focus: true
 
-        Item {
-            Layout.fillWidth: true
+        Keys.enabled: true
+        Keys.onEscapePressed: {
+            Qt.quit()
         }
 
-        IconButton {
-            id: shutdownButton
-            Layout.alignment: Qt.AlignVCenter
-            text: qsTr("Shutdown")
-            icon: "qrc:///icons/system-shutdown.svg"
-            onClicked: actions.shutdown()
-        }
+        RowLayout {
+            id: layout
+            anchors.fill: parent
+            spacing: root.width * 0.05
 
-        IconButton {
-            id: rebootButton
-            Layout.alignment: Qt.AlignVCenter
-            text: qsTr("Reboot")
-            icon: "qrc:///icons/system-reboot.svg"
-            onClicked: actions.reboot()
-        }
+            Item {
+                Layout.fillWidth: true
+            }
 
-        IconButton {
-            id: logoutButton
-            Layout.alignment: Qt.AlignVCenter
-            text: qsTr("Logout")
-            icon: "qrc:///icons/system-log-out.svg"
-            onClicked: actions.logout()
-        }
+            IconButton {
+                id: shutdownButton
+                Layout.alignment: Qt.AlignVCenter
+                text: qsTr("Shutdown")
+                icon: "qrc:///icons/system-shutdown.svg"
+                onClicked: actions.shutdown()
+            }
 
-        IconButton {
-            id: lockscreenButton
-            Layout.alignment: Qt.AlignVCenter
-            text: qsTr("Lock screen")
-            icon: "qrc:/icons/system-lock-screen.svg"
-            onClicked: actions.lockScreen()
-        }
+            IconButton {
+                id: rebootButton
+                Layout.alignment: Qt.AlignVCenter
+                text: qsTr("Reboot")
+                icon: "qrc:///icons/system-reboot.svg"
+                onClicked: actions.reboot()
+            }
 
-        IconButton {
-            id: suspendButton
-            Layout.alignment: Qt.AlignVCenter
-            text: qsTr("Suspend")
-            icon: "qrc:///icons/system-suspend.svg"
-            onClicked: actions.suspend()
-        }
+            IconButton {
+                id: logoutButton
+                Layout.alignment: Qt.AlignVCenter
+                text: qsTr("Logout")
+                icon: "qrc:///icons/system-log-out.svg"
+                onClicked: actions.logout()
+            }
 
-        Item {
-            Layout.fillWidth: true
+            IconButton {
+                id: lockscreenButton
+                Layout.alignment: Qt.AlignVCenter
+                text: qsTr("Lock screen")
+                icon: "qrc:/icons/system-lock-screen.svg"
+                onClicked: actions.lockScreen()
+            }
+
+            IconButton {
+                id: suspendButton
+                Layout.alignment: Qt.AlignVCenter
+                text: qsTr("Suspend")
+                icon: "qrc:///icons/system-suspend.svg"
+                onClicked: actions.suspend()
+            }
+
+            Item {
+                Layout.fillWidth: true
+            }
         }
     }
 }

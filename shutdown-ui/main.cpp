@@ -24,6 +24,7 @@
 #include <QFile>
 #include <QLocale>
 #include <QTranslator>
+#include <QDBusConnection>
 
 #include "actions.h"
 
@@ -32,6 +33,14 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
+
+    if (!QDBusConnection::sessionBus().registerService("org.cutefish.ShutdownUI")) {
+        return -1;
+    }
+
+    if (!QDBusConnection::sessionBus().registerObject("/ShutdownUI", &app)) {
+        return -1;
+    }
 
     // Translations
     QLocale locale;
