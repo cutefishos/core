@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QCoreApplication>
+#include <QApplication>
 #include "application.h"
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    QApplication a(argc, argv);
     Application app;
-    // a.setQuitOnLastWindowClosed(false);
+    a.setQuitOnLastWindowClosed(false);
     return a.exec();
 }
