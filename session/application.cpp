@@ -93,6 +93,7 @@ Application::Application(int &argc, char **argv)
     createConfigDirectory();
     initLanguage();
     initScreenScaleFactors();
+    initCursor();
     initFontDpi();
 
     initEnvironments();
@@ -167,6 +168,18 @@ void Application::initFontDpi()
     p.write(input);
     p.closeWriteChannel();
     p.waitForFinished(-1);
+}
+
+void Application::initCursor()
+{
+    QSettings settings(QSettings::UserScope, "cutefishos", "theme");
+    qreal scaleFactor = settings.value("PixelRatio", 1.0).toReal();
+    QString theme = settings.value("cursorTheme", "default").toString();
+    int size = settings.value("cursorSize", 24).toInt();
+
+    runSync("cupdatecursor", {theme, QString::number(size * scaleFactor)});
+    qputenv("XCURSOR_THEME", theme.toLatin1());
+    qputenv("XCURSOR_SIZE", QByteArray::number(size * scaleFactor));
 }
 
 void Application::initLanguage()

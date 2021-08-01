@@ -64,6 +64,7 @@ public slots:
 private:
     void initEnvironments();
     void initFontDpi();
+    void initCursor();
     void initLanguage();
     void initScreenScaleFactors();
     bool syncDBusEnvironment();
