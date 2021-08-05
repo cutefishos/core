@@ -22,6 +22,7 @@
 
 Application::Application(QObject *parent)
     : QObject(parent)
+    , m_lidWatcher(new LidWatcher)
     , m_cpuManagement(new CPUManagement)
 {
     QDBusConnection::sessionBus().registerService(QStringLiteral("org.cutefish.PowerManager"));

@@ -44,7 +44,7 @@ void Application::setupShortcuts()
 QAction *Application::addAction(const QString &name)
 {
     QAction *a = new QAction(this);
-    a->setProperty("componentDisplayName", QStringLiteral("kwin"));
+    a->setProperty("componentDisplayName", QStringLiteral("KWin"));
     a->setObjectName(name);
     a->setText(name);
     return a;

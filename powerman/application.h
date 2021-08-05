@@ -21,6 +21,7 @@
 #define APPLICATION_H
 
 #include <QObject>
+#include "lidwatcher.h"
 #include "cpu/cpumanagement.h"
 
 class Application : public QObject
@@ -31,6 +32,7 @@ public:
     explicit Application(QObject *parent = nullptr);
 
 private:
+    LidWatcher *m_lidWatcher;
     CPUManagement *m_cpuManagement;
 };
 

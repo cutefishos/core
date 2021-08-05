@@ -21,6 +21,9 @@ import QtQuick 2.12
 import QtQuick.Window 2.3
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
+import QtGraphicalEffects 1.0
+
+import Cutefish.Accounts 1.0 as Accounts
 import FishUI 1.0 as FishUI
 
 ApplicationWindow {
@@ -40,6 +43,10 @@ ApplicationWindow {
     background: Rectangle {
         color: "black"
         opacity: 0.7
+    }
+
+    Accounts.UserAccount {
+        id: currentUser
     }
 
     FishUI.WindowBlur {
@@ -69,57 +76,176 @@ ApplicationWindow {
             Qt.quit()
         }
 
-        RowLayout {
-            id: layout
-            anchors.fill: parent
-            spacing: root.width * 0.05
+        Keys.onEnterPressed: {
+            buttonsItem.action()
+        }
 
-            Item {
-                Layout.fillWidth: true
+        Keys.onReturnPressed: {
+            buttonsItem.action()
+        }
+
+        Keys.onLeftPressed: {
+            if (buttonsItem.currentIndex === -1 || buttonsItem.currentIndex === 0) {
+                buttonsItem.currentIndex = 0
+            } else {
+                buttonsItem.currentIndex = buttonsItem.currentIndex - 1
             }
 
-            IconButton {
-                id: shutdownButton
-                Layout.alignment: Qt.AlignVCenter
-                text: qsTr("Shutdown")
-                icon: "qrc:///icons/system-shutdown.svg"
-                onClicked: actions.shutdown()
+            buttonsItem.updateChecked()
+        }
+
+        Keys.onRightPressed: {
+            if (buttonsItem.currentIndex >= 4) {
+
+            } else {
+                buttonsItem.currentIndex = buttonsItem.currentIndex + 1
             }
 
-            IconButton {
-                id: rebootButton
-                Layout.alignment: Qt.AlignVCenter
-                text: qsTr("Reboot")
-                icon: "qrc:///icons/system-reboot.svg"
-                onClicked: actions.reboot()
+            buttonsItem.updateChecked()
+        }
+
+        Item {
+            id: userItem
+            anchors.top: parent.top
+            anchors.bottom: buttonsItem.top
+            anchors.bottomMargin: root.height * 0.05
+            anchors.left: parent.left
+            anchors.right: parent.right
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: FishUI.Units.largeSpacing
+
+                Item {
+                    Layout.fillHeight: true
+                }
+
+                Image {
+                    id: userIcon
+
+                    property int iconSize: 60
+
+                    Layout.preferredHeight: iconSize
+                    Layout.preferredWidth: iconSize
+                    sourceSize: String(source) === "image://icontheme/default-user" ? Qt.size(iconSize, iconSize) : undefined
+                    source: currentUser.iconFileName ? "file:///" + currentUser.iconFileName : "image://icontheme/default-user"
+                    Layout.alignment: Qt.AlignHCenter
+
+                    layer.enabled: true
+                    layer.effect: OpacityMask {
+                        maskSource: Item {
+                            width: userIcon.width
+                            height: userIcon.height
+
+                            Rectangle {
+                                anchors.fill: parent
+                                radius: parent.height / 2
+                            }
+                        }
+                    }
+
+                    // No Action
+                    MouseArea {
+                        anchors.fill: parent
+                    }
+                }
+
+                Label {
+                    Layout.alignment: Qt.AlignHCenter
+                    text: currentUser.userName
+                    color: "white"
+
+                    // No Action
+                    MouseArea {
+                        anchors.fill: parent
+                    }
+                }
+            }
+        }
+
+        Item {
+            id: buttonsItem
+            anchors.centerIn: parent
+            width: buttonsLayout.implicitWidth
+            height: buttonsLayout.implicitHeight
+
+            property int currentIndex: -1
+
+            function updateChecked() {
+                shutdownButton.checked = currentIndex === 0
+                rebootButton.checked = currentIndex === 1
+                logoutButton.checked = currentIndex === 2
+                lockscreenButton.checked = currentIndex === 3
+                suspendButton.checked = currentIndex === 4
             }
 
-            IconButton {
-                id: logoutButton
-                Layout.alignment: Qt.AlignVCenter
-                text: qsTr("Logout")
-                icon: "qrc:///icons/system-log-out.svg"
-                onClicked: actions.logout()
+            function action() {
+                if (buttonsItem.currentIndex === -1 || buttonsItem.currentIndex > 4)
+                    return
+
+                switch (currentIndex) {
+                case 0:
+                    actions.shutdown()
+                    break
+                case 1:
+                    actions.reboot()
+                    break
+                case 2:
+                    actions.logout()
+                    break
+                case 3:
+                    actions.lockScreen()
+                    break
+                case 4:
+                    actions.suspend()
+                    break
+                }
             }
 
-            IconButton {
-                id: lockscreenButton
-                Layout.alignment: Qt.AlignVCenter
-                text: qsTr("Lock screen")
-                icon: "qrc:/icons/system-lock-screen.svg"
-                onClicked: actions.lockScreen()
-            }
+            RowLayout {
+                id: buttonsLayout
+                anchors.fill: parent
+                spacing: root.width * 0.015
 
-            IconButton {
-                id: suspendButton
-                Layout.alignment: Qt.AlignVCenter
-                text: qsTr("Suspend")
-                icon: "qrc:///icons/system-suspend.svg"
-                onClicked: actions.suspend()
-            }
+                IconButton {
+                    id: shutdownButton
+                    Layout.alignment: Qt.AlignVCenter
+                    text: qsTr("Shutdown")
+                    icon: "qrc:///icons/system-shutdown.svg"
+                    onClicked: actions.shutdown()
+                }
 
-            Item {
-                Layout.fillWidth: true
+                IconButton {
+                    id: rebootButton
+                    Layout.alignment: Qt.AlignVCenter
+                    text: qsTr("Reboot")
+                    icon: "qrc:///icons/system-reboot.svg"
+                    onClicked: actions.reboot()
+                }
+
+                IconButton {
+                    id: logoutButton
+                    Layout.alignment: Qt.AlignVCenter
+                    text: qsTr("Logout")
+                    icon: "qrc:///icons/system-log-out.svg"
+                    onClicked: actions.logout()
+                }
+
+                IconButton {
+                    id: lockscreenButton
+                    Layout.alignment: Qt.AlignVCenter
+                    text: qsTr("Lock screen")
+                    icon: "qrc:/icons/system-lock-screen.svg"
+                    onClicked: actions.lockScreen()
+                }
+
+                IconButton {
+                    id: suspendButton
+                    Layout.alignment: Qt.AlignVCenter
+                    text: qsTr("Suspend")
+                    icon: "qrc:///icons/system-suspend.svg"
+                    onClicked: actions.suspend()
+                }
             }
         }
     }

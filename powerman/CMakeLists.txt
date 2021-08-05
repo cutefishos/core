@@ -4,6 +4,7 @@ set(TARGET cutefish-powerman)
 set(SOURCES
     main.cpp
     application.cpp
+    lidwatcher.cpp
     cpu/cpuitem.cpp
     cpu/cpumanagement.cpp
 )

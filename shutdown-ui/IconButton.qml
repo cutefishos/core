@@ -20,22 +20,29 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
+import FishUI 1.0 as FishUI
 
 Item {
     id: control
-    width: 150
+    width: 128
     height: width
 
     property string text
     property string icon
-    property color hoveredColor: Qt.rgba(255, 255, 255, 0.1)
-    property color pressedColor: Qt.rgba(255, 255, 255, 0.2)
+    property bool checked: false
     signal clicked
 
     Rectangle {
         anchors.fill: parent
-        color: mouseArea.pressed ? pressedColor : mouseArea.containsMouse ? hoveredColor : "transparent"
-        radius: 10
+        color: "white"
+        opacity: mouseArea.pressed || control.checked ? 0.1 : mouseArea.containsMouse ? 0.2 : 0
+        radius: height / 2
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: 100
+            }
+        }
     }
 
     MouseArea {
@@ -49,7 +56,7 @@ Item {
     ColumnLayout {
         id: layout
         anchors.fill: parent
-        spacing: 15
+        spacing: FishUI.Units.smallSpacing
 
         Item {
             Layout.fillHeight: true
