@@ -24,6 +24,7 @@ import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.0
 
 import Cutefish.Accounts 1.0 as Accounts
+import Cutefish.System 1.0 as System
 import FishUI 1.0 as FishUI
 
 ApplicationWindow {
@@ -34,26 +35,45 @@ ApplicationWindow {
     flags: Qt.FramelessWindowHint | Qt.X11BypassWindowManagerHint
     id: root
 
-    color: "transparent"
-
     function exit() {
         Qt.quit()
     }
 
-    background: Rectangle {
-        color: "black"
-        opacity: 0.7
+    System.Wallpaper {
+        id: wallpaper
+    }
+
+    Image {
+        id: wallpaperImage
+        anchors.fill: parent
+        source: "file://" + wallpaper.path
+        sourceSize: Qt.size(width * Screen.devicePixelRatio,
+                            height * Screen.devicePixelRatio)
+        fillMode: Image.PreserveAspectCrop
+        asynchronous: false
+        clip: true
+        cache: false
+        smooth: true
+
+        ColorOverlay {
+            anchors.fill: parent
+            source: parent
+            color: "#000000"
+            opacity: 0.5
+        }
+    }
+
+    FastBlur {
+        id: wallpaperBlur
+        anchors.fill: parent
+        radius: 64
+        source: wallpaperImage
+        cached: true
+        visible: true
     }
 
     Accounts.UserAccount {
         id: currentUser
-    }
-
-    FishUI.WindowBlur {
-        view: root
-        geometry: Qt.rect(root.x, root.y, root.width, root.height)
-        windowRadius: 0
-        enabled: true
     }
 
     onActiveChanged: {

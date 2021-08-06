@@ -17,13 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QCoreApplication>
+#include <QApplication>
 #include <QDBusConnection>
 #include "application.h"
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    QApplication a(argc, argv);
+    a.setQuitOnLastWindowClosed(true);
 
     if (!QDBusConnection::sessionBus().registerService("org.cutefish.Chotkeys")) {
         return -1;
