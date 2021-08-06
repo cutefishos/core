@@ -145,7 +145,7 @@ void Application::initEnvironments()
     qunsetenv("QT_FONT_DPI");
     qputenv("QT_SCALE_FACTOR_ROUNDING_POLICY", "PassThrough");
 
-    // qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
+    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
 
     // IM Config
     qputenv("GTK_IM_MODULE", "fcitx5");
@@ -159,7 +159,7 @@ void Application::initFontDpi()
 {
     QSettings settings(QSettings::UserScope, "cutefishos", "theme");
     qreal scaleFactor = settings.value("PixelRatio", 1.0).toReal();
-    int fontDpi = settings.value("forceFontDPI", 96).toReal() * scaleFactor;
+    int fontDpi = 96 * scaleFactor;
 
     // TODO port to c++?
     const QByteArray input = "Xft.dpi: " + QByteArray::number(fontDpi);
