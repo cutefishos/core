@@ -29,6 +29,7 @@ Item {
 
     property string text
     property string icon
+    property int iconSize: 52
     property bool checked: false
     signal clicked
 
@@ -56,7 +57,7 @@ Item {
     ColumnLayout {
         id: layout
         anchors.fill: parent
-        spacing: FishUI.Units.smallSpacing
+        spacing: FishUI.Units.largeSpacing
 
         Item {
             Layout.fillHeight: true
@@ -65,10 +66,9 @@ Item {
         Image {
             id: image
             source: control.icon
-            width: control.width * 0.5
+            sourceSize: Qt.size(width, height)
+            width: control.iconSize
             height: width
-            sourceSize.width: width
-            sourceSize.height: width
             Layout.alignment: Qt.AlignCenter
         }
 

@@ -145,7 +145,7 @@ void Application::initEnvironments()
     qunsetenv("QT_FONT_DPI");
     qputenv("QT_SCALE_FACTOR_ROUNDING_POLICY", "PassThrough");
 
-    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
+    // qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
 
     // IM Config
     qputenv("GTK_IM_MODULE", "fcitx5");
