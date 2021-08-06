@@ -53,13 +53,13 @@ ApplicationWindow {
         asynchronous: false
         clip: true
         cache: false
-        smooth: true
+        smooth: false
 
         ColorOverlay {
             anchors.fill: parent
             source: parent
             color: "#000000"
-            opacity: 0.5
+            opacity: 0.4
         }
     }
 

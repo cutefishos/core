@@ -33,19 +33,6 @@ Item {
     property bool checked: false
     signal clicked
 
-    Rectangle {
-        anchors.fill: parent
-        color: "white"
-        opacity: mouseArea.pressed ? 0.1 : mouseArea.containsMouse || control.checked ? 0.2 : 0
-        radius: height / 2
-
-        Behavior on opacity {
-            NumberAnimation {
-                duration: 100
-            }
-        }
-    }
-
     MouseArea {
         id: mouseArea
         anchors.fill: parent
@@ -57,19 +44,40 @@ Item {
     ColumnLayout {
         id: layout
         anchors.fill: parent
-        spacing: FishUI.Units.largeSpacing
+        spacing: FishUI.Units.largeSpacing * 1.5
 
         Item {
             Layout.fillHeight: true
         }
 
-        Image {
-            id: image
-            source: control.icon
-            sourceSize: Qt.size(width, height)
-            width: control.iconSize
-            height: width
-            Layout.alignment: Qt.AlignCenter
+        Item {
+            height: control.iconSize
+            Layout.fillWidth: true
+
+            Rectangle {
+                anchors.centerIn: parent
+                width: parent.height + FishUI.Units.largeSpacing * 2
+                height: parent.height + FishUI.Units.largeSpacing * 2
+                z: -1
+                color: "white"
+                opacity: mouseArea.pressed ? 0.1 : mouseArea.containsMouse || control.checked ? 0.2 : 0
+                radius: height / 2
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: 100
+                    }
+                }
+            }
+
+            Image {
+                id: image
+                anchors.centerIn: parent
+                source: control.icon
+                sourceSize: Qt.size(width, height)
+                width: control.iconSize
+                height: width
+            }
         }
 
         Label {
