@@ -181,7 +181,7 @@ void ThemeManager::setDevicePixelRatio(qreal ratio)
 //            proc.waitForFinished();
 //        }
 
-        m_settings->setValue("forceFontDPI", 0);
+        m_settings->setValue("forceFontDPI", 96);
     } else {
         const int scaleDpi = qRound(ratio * 96.0);
         QProcess proc;
