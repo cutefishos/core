@@ -158,41 +158,18 @@ qreal ThemeManager::devicePixelRatio()
 
 void ThemeManager::setDevicePixelRatio(qreal ratio)
 {
-    m_settings->setValue(s_devicePixelRatio, ratio);
+    int scaleDpi = qRound(ratio * 96.0);
+    QProcess process;
+    process.start(QStringLiteral("xrdb"), {QStringLiteral("-quiet"), QStringLiteral("-merge"), QStringLiteral("-nocpp")});
 
-    // Set font dpi
-    // ref kscreen.
-    if (qFuzzyCompare(ratio, 1.0)) {
-        const int scaleDpi = qRound(ratio * 96.0);
-        QProcess proc;
-        proc.start(QStringLiteral("xrdb"), {QStringLiteral("-quiet"), QStringLiteral("-merge"), QStringLiteral("-nocpp")});
-        if (proc.waitForStarted()) {
-            proc.write(QByteArray("Xft.dpi: " + QString::number(scaleDpi).toLatin1()));
-            proc.closeWriteChannel();
-            proc.waitForFinished();
-        }
-
-        // if dpi is the default (96) remove the entry rather than setting it
-//        QProcess proc;
-//        proc.start(QStringLiteral("xrdb"), {QStringLiteral("-quiet"), QStringLiteral("-remove"), QStringLiteral("-nocpp")});
-//        if (proc.waitForStarted()) {
-//            proc.write(QByteArray("Xft.dpi\n"));
-//            proc.closeWriteChannel();
-//            proc.waitForFinished();
-//        }
-
-        m_settings->setValue("forceFontDPI", 96);
-    } else {
-        const int scaleDpi = qRound(ratio * 96.0);
-        QProcess proc;
-        proc.start(QStringLiteral("xrdb"), {QStringLiteral("-quiet"), QStringLiteral("-merge"), QStringLiteral("-nocpp")});
-        if (proc.waitForStarted()) {
-            proc.write(QByteArray("Xft.dpi: " + QString::number(scaleDpi).toLatin1()));
-            proc.closeWriteChannel();
-            proc.waitForFinished();
-        }
-        m_settings->setValue("forceFontDPI", scaleDpi);
+    if (process.waitForStarted()) {
+        process.write(QByteArray("Xft.dpi: " + QString::number(scaleDpi).toLatin1()));
+        process.closeWriteChannel();
+        process.waitForFinished();
     }
+
+    m_settings->setValue(s_devicePixelRatio, ratio);
+    m_settings->setValue("forceFontDPI", scaleDpi);
 }
 
 QString ThemeManager::wallpaper()

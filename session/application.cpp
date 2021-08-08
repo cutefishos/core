@@ -138,14 +138,7 @@ void Application::initEnvironments()
     qputenv("QT_QPA_PLATFORMTHEME", "cutefish");
     qputenv("QT_PLATFORM_PLUGIN", "cutefish");
 
-    qunsetenv("QT_SCALE_FACTOR");
-    qunsetenv("QT_SCREEN_SCALE_FACTORS");
-    qunsetenv("QT_ENABLE_HIGHDPI_SCALING");
-    qunsetenv("QT_USE_PHYSICAL_DPI");
-    qunsetenv("QT_FONT_DPI");
-    qputenv("QT_SCALE_FACTOR_ROUNDING_POLICY", "PassThrough");
-
-    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
+    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "0");
 
     // IM Config
     qputenv("GTK_IM_MODULE", "fcitx5");
