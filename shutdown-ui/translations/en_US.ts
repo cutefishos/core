@@ -21,7 +21,7 @@
     <message>
         <location filename="../main.qml" line="98"/>
         <source>Lock screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Lock screen</translation>
     </message>
     <message>
         <location filename="../main.qml" line="106"/>
