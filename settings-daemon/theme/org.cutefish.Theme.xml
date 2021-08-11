@@ -31,6 +31,12 @@
     <method name="setBackgroundType">
         <arg name="type" type="i" direction="in"/>
     </method>
+    <method name="setCursorTheme">
+        <arg name="type" type="s" direction="in"/>
+    </method>
+    <method name="setCursorSize">
+        <arg name="type" type="i" direction="in"/>
+    </method>
 
     <property name="isDarkMode" type="b" access="read"/>
     <property name="darkModeDimsWallpaer" type="b" access="read"/>
@@ -42,6 +48,8 @@
     <property name="accentColor" type="i" access="read"/>
     <property name="backgroundType" type="i" access="read"/>
     <property name="backgroundColor" type="s" access="read"/>
+    <property name="cursorTheme" type="s" access="read"/>
+    <property name="cursorSize" type="i" access="read"/>
 
     <signal name="darkModeChanged">
         <arg type="b"/>
@@ -54,9 +62,9 @@
     <signal name="accentColorChanged">
         <arg type="i"/>
     </signal>
-    <signal name="backgroundTypeChanged">
-    </signal>
-    <signal name="backgroundColorChanged">
-    </signal>
+    <signal name="backgroundTypeChanged"></signal>
+    <signal name="backgroundColorChanged"></signal>
+    <signal name="cursorThemeChanged"></signal>
+    <signal name="cursorSizeChanged"></signal>
   </interface>
 </node>

@@ -64,6 +64,8 @@ ThemeManager::ThemeManager(QObject *parent)
     m_accentColor = m_settings->value("AccentColor", 0).toInt();
     m_backgroundType = m_settings->value("BackgroundType", 0).toInt();
     m_backgroundColor = m_settings->value("BackgroundColor", "#2B8ADA").toString();
+    m_cursorTheme = m_settings->value("CursorTheme", "default").toString();
+    m_cursorSize = m_settings->value("CursorSize", 24).toInt();
 
     // Start the DE and need to update the settings again.
     initGtkConfig();
@@ -119,6 +121,38 @@ void ThemeManager::setAccentColor(int accentColor)
     emit accentColorChanged(m_accentColor);
 }
 
+QString ThemeManager::cursorTheme() const
+{
+    return m_cursorTheme;
+}
+
+void ThemeManager::setCursorTheme(const QString &theme)
+{
+    if (m_cursorTheme != theme) {
+        m_cursorTheme = theme;
+        m_settings->setValue("CursorTheme", m_cursorTheme);
+        applyXResource();
+        applyCursor();
+        emit cursorThemeChanged();
+    }
+}
+
+int ThemeManager::cursorSize() const
+{
+    return m_cursorSize;
+}
+
+void ThemeManager::setCursorSize(int size)
+{
+    if (m_cursorSize != size) {
+        m_cursorSize = size;
+        m_settings->setValue("CursorSize", m_cursorSize);
+        applyXResource();
+        applyCursor();
+        emit cursorSizeChanged();
+    }
+}
+
 QString ThemeManager::systemFont()
 {
     return m_settings->value(s_systemFontName, "Noto Sans").toString();
@@ -158,18 +192,11 @@ qreal ThemeManager::devicePixelRatio()
 
 void ThemeManager::setDevicePixelRatio(qreal ratio)
 {
-    int scaleDpi = qRound(ratio * 96.0);
-    QProcess process;
-    process.start(QStringLiteral("xrdb"), {QStringLiteral("-quiet"), QStringLiteral("-merge"), QStringLiteral("-nocpp")});
-
-    if (process.waitForStarted()) {
-        process.write(QByteArray("Xft.dpi: " + QString::number(scaleDpi).toLatin1()));
-        process.closeWriteChannel();
-        process.waitForFinished();
-    }
-
+    int fontDpi = qRound(ratio * 96.0);
     m_settings->setValue(s_devicePixelRatio, ratio);
-    m_settings->setValue("forceFontDPI", scaleDpi);
+    m_settings->setValue("forceFontDPI", fontDpi);
+    m_settings->sync();
+    applyXResource();
 }
 
 QString ThemeManager::wallpaper()
@@ -229,6 +256,39 @@ void ThemeManager::initGtkConfig()
     // other
     settings.setValue("gtk-enable-animations", true);
     settings.sync();
+}
+
+void ThemeManager::applyXResource()
+{
+    qreal scaleFactor = this->devicePixelRatio();
+    int fontDpi = 96 * scaleFactor;
+
+    const QString datas = QString("Xft.dpi: %1\n"
+                                  "Xcursor.theme: %2\n"
+                                  "Xcursor.size: %3")
+                          .arg(fontDpi)
+                          .arg(m_cursorTheme)
+                          .arg(m_cursorSize * scaleFactor);
+
+    QProcess p;
+    p.start(QStringLiteral("xrdb"), {QStringLiteral("-quiet"), QStringLiteral("-merge"), QStringLiteral("-nocpp")});
+    p.setProcessChannelMode(QProcess::ForwardedChannels);
+    p.write(datas.toLatin1());
+    p.closeWriteChannel();
+    p.waitForFinished(-1);
+}
+
+void ThemeManager::applyCursor()
+{
+    QProcess p;
+    p.start("cupdatecursor", QStringList() << cursorTheme() << QString::number(cursorSize() * devicePixelRatio()));
+    p.waitForFinished(-1);
+
+    QDBusMessage message = QDBusMessage::createSignal("/KGlobalSettings", "org.kde.KGlobalSettings", "notifyChange");
+    // ChangeCursor
+    message << 5;
+    message << 0;
+    QDBusConnection::sessionBus().send(message);
 }
 
 void ThemeManager::updateGtkFont()

@@ -36,6 +36,8 @@ class ThemeManager : public QObject
     Q_PROPERTY(int accentColor READ accentColor WRITE setAccentColor NOTIFY accentColorChanged)
     Q_PROPERTY(int backgroundType READ backgroundType WRITE setBackgroundType NOTIFY backgroundTypeChanged)
     Q_PROPERTY(QString backgroundColor READ backgroundColor WRITE setBackgroundColor NOTIFY backgroundColorChanged)
+    Q_PROPERTY(QString cursorTheme READ cursorTheme WRITE setCursorTheme NOTIFY cursorThemeChanged)
+    Q_PROPERTY(int cursorSize READ cursorSize WRITE setCursorSize NOTIFY cursorSizeChanged)
 
 public:
     ThemeManager(QObject *parent = nullptr);
@@ -70,7 +72,15 @@ public:
     int accentColor();
     void setAccentColor(int accentColor);
 
+    QString cursorTheme() const;
+    void setCursorTheme(const QString &theme);
+
+    int cursorSize() const;
+    void setCursorSize(int size);
+
     void initGtkConfig();
+    void applyXResource();
+    void applyCursor();
 
 signals:
     void darkModeChanged(bool darkMode);
@@ -79,6 +89,8 @@ signals:
     void accentColorChanged(int accentColor);
     void backgroundTypeChanged();
     void backgroundColorChanged();
+    void cursorThemeChanged();
+    void cursorSizeChanged();
 
 private:
     void updateGtkFont();
@@ -92,6 +104,9 @@ private:
     int m_backgroundType;
     QString m_backgroundColor;
     int m_accentColor;
+
+    QString m_cursorTheme;
+    int m_cursorSize;
 };
 
 #endif

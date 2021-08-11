@@ -93,8 +93,7 @@ Application::Application(int &argc, char **argv)
     createConfigDirectory();
     initLanguage();
     initScreenScaleFactors();
-    initCursor();
-    initFontDpi();
+    initXResource();
 
     initEnvironments();
 
@@ -109,6 +108,9 @@ Application::Application(int &argc, char **argv)
     // variables (e.g. LANG and LC_*)
     // ref plasma
     importSystemdEnvrionment();
+
+    qunsetenv("XCURSOR_THEME");
+    qunsetenv("XCURSOR_SIZE");
 
     QTimer::singleShot(100, m_processManager, &ProcessManager::start);
 }
@@ -141,39 +143,11 @@ void Application::initEnvironments()
     qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "0");
 
     // IM Config
-    qputenv("GTK_IM_MODULE", "fcitx5");
-    qputenv("QT4_IM_MODULE", "fcitx5");
-    qputenv("QT_IM_MODULE", "fcitx5");
-    qputenv("CLUTTER_IM_MODULE", "fcitx5");
-    qputenv("XMODIFIERS", "@im=fcitx");
-}
-
-void Application::initFontDpi()
-{
-    QSettings settings(QSettings::UserScope, "cutefishos", "theme");
-    qreal scaleFactor = settings.value("PixelRatio", 1.0).toReal();
-    int fontDpi = 96 * scaleFactor;
-
-    // TODO port to c++?
-    const QByteArray input = "Xft.dpi: " + QByteArray::number(fontDpi);
-    QProcess p;
-    p.start(QStringLiteral("xrdb"), {QStringLiteral("-quiet"), QStringLiteral("-merge"), QStringLiteral("-nocpp")});
-    p.setProcessChannelMode(QProcess::ForwardedChannels);
-    p.write(input);
-    p.closeWriteChannel();
-    p.waitForFinished(-1);
-}
-
-void Application::initCursor()
-{
-    QSettings settings(QSettings::UserScope, "cutefishos", "theme");
-    qreal scaleFactor = settings.value("PixelRatio", 1.0).toReal();
-    QString theme = settings.value("cursorTheme", "default").toString();
-    int size = settings.value("cursorSize", 24).toInt();
-
-    runSync("cupdatecursor", {theme, QString::number(size * scaleFactor)});
-    qputenv("XCURSOR_THEME", theme.toLatin1());
-    qputenv("XCURSOR_SIZE", QByteArray::number(size * scaleFactor));
+    // qputenv("GTK_IM_MODULE", "fcitx5");
+    // qputenv("QT4_IM_MODULE", "fcitx5");
+    // qputenv("QT_IM_MODULE", "fcitx5");
+    // qputenv("CLUTTER_IM_MODULE", "fcitx5");
+    // qputenv("XMODIFIERS", "@im=fcitx");
 }
 
 void Application::initLanguage()
@@ -213,6 +187,34 @@ void Application::initScreenScaleFactors()
         qputenv("GDK_SCALE", QByteArray::number(qFloor(scaleFactor), 'g', 0));
         qputenv("GDK_DPI_SCALE", QByteArray::number(qFloor(scaleFactor), 'g', 0));
     }
+}
+
+void Application::initXResource()
+{
+    QSettings settings(QSettings::UserScope, "cutefishos", "theme");
+    qreal scaleFactor = settings.value("PixelRatio", 1.0).toReal();
+    int fontDpi = 96 * scaleFactor;
+    QString cursorTheme = settings.value("CursorTheme", "default").toString();
+    int cursorSize = settings.value("CursorSize", 24).toInt() * scaleFactor;
+
+    const QString datas = QString("Xft.dpi: %1\n"
+                                  "Xcursor.theme: %2\n"
+                                  "Xcursor.size: %3")
+                          .arg(fontDpi)
+                          .arg(cursorTheme)
+                          .arg(cursorSize);
+
+    QProcess p;
+    p.start(QStringLiteral("xrdb"), {QStringLiteral("-quiet"), QStringLiteral("-merge"), QStringLiteral("-nocpp")});
+    p.setProcessChannelMode(QProcess::ForwardedChannels);
+    p.write(datas.toLatin1());
+    p.closeWriteChannel();
+    p.waitForFinished(-1);
+
+    // Init cursor
+    runSync("cupdatecursor", {cursorTheme, QString::number(cursorSize * scaleFactor)});
+    // qputenv("XCURSOR_THEME", cursorTheme.toLatin1());
+    // qputenv("XCURSOR_SIZE", QByteArray::number(cursorSize * scaleFactor));
 }
 
 bool Application::syncDBusEnvironment()

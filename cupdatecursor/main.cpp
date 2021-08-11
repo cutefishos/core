@@ -15,7 +15,7 @@ inline void applyTheme(const QString &theme, int size)
     if (!theme.isEmpty())
         XcursorSetTheme(display, QFile::encodeName(theme));
 
-    if (size >= 0)
+    if (size > 0)
         XcursorSetDefaultSize(display, size);
 
     Cursor handle = XcursorLibraryLoadCursor(display, "left_ptr");
