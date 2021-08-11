@@ -26,6 +26,7 @@
 #include "brightness/brightnessmanager.h"
 #include "battery/upowermanager.h"
 #include "language/language.h"
+#include "mouse/mousemanager.h"
 
 class Application : public QApplication
 {
@@ -44,6 +45,7 @@ private:
     BrightnessManager *m_brightnessManager;
     UPowerManager *m_upowerManager;
     Language *m_language;
+    Mouse *m_mouse;
 };
 
 #endif // APPLICATION_H

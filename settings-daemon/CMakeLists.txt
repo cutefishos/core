@@ -2,6 +2,8 @@ project(cutefish-settings-daemon)
 set(TARGET cutefish-settings-daemon)
 
 find_package(PulseAudio)
+find_package(X11 REQUIRED)
+pkg_check_modules(XORGLIBINPUT xorg-libinput IMPORTED_TARGET)
 
 file (GLOB_RECURSE SRCS
   "*.cpp"
@@ -19,6 +21,8 @@ file (GLOB_RECURSE SRCS
   "language/*.h"
   "dock/*.cpp"
   "dock/*.h"
+  "mouse/*.h"
+  "mouse/*.cpp"
 )
 
 set(SOURCES ${SRCS})
@@ -44,6 +48,9 @@ qt5_add_dbus_adaptor(DBUS_SOURCES
 qt5_add_dbus_adaptor(DBUS_SOURCES
                      dock/org.cutefish.Dock.xml
                      dock/dock.h Dock)
+qt5_add_dbus_adaptor(DBUS_SOURCES
+                     mouse/org.cutefish.Mouse.xml
+                     mouse/mousemanager.h Mouse)
 set_source_files_properties(${DBUS_SOURCES} PROPERTIES SKIP_AUTOGEN ON)
 
 add_executable(${TARGET} ${SOURCES} ${DBUS_SOURCES} ${HEADERS} ${FORMS} ${RESOURCES})
@@ -54,6 +61,10 @@ target_link_libraries(${TARGET}
         Qt5::DBus
         Qt5::X11Extras
         ${PULSEAUDIO_LIBRARY}
+        ${X11_LIBRARIES}
+        X11::X11
+        X11::Xi
+        PkgConfig::XORGLIBINPUT
 )
 
 file(GLOB TS_FILES translations/*.ts)

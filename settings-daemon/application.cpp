@@ -36,6 +36,7 @@ Application::Application(int &argc, char **argv)
     , m_brightnessManager(new BrightnessManager(this))
     , m_upowerManager(new UPowerManager(this))
     , m_language(new Language(this))
+    , m_mouse(new Mouse)
 {
     new DBusAdaptor(this);
     // connect to D-Bus and register as an object:
