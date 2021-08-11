@@ -38,6 +38,8 @@
         <arg name="type" type="i" direction="in"/>
     </method>
 
+    <method name="applyXResources"></method>
+
     <property name="isDarkMode" type="b" access="read"/>
     <property name="darkModeDimsWallpaer" type="b" access="read"/>
     <property name="systemFont" type="s" access="read"/>

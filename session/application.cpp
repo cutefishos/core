@@ -196,13 +196,20 @@ void Application::initXResource()
     int fontDpi = 96 * scaleFactor;
     QString cursorTheme = settings.value("CursorTheme", "default").toString();
     int cursorSize = settings.value("CursorSize", 24).toInt() * scaleFactor;
+    int xftAntialias = settings.value("XftAntialias", 1).toBool();
+    QString xftHintStyle = settings.value("XftHintStyle", "hintslight").toString();
 
     const QString datas = QString("Xft.dpi: %1\n"
                                   "Xcursor.theme: %2\n"
-                                  "Xcursor.size: %3")
+                                  "Xcursor.size: %3\n"
+                                  "Xft.antialias: %4\n"
+                                  "Xft.hintstyle: %5\n"
+                                  "Xft.rgba: rgb")
                           .arg(fontDpi)
                           .arg(cursorTheme)
-                          .arg(cursorSize);
+                          .arg(cursorSize)
+                          .arg(xftAntialias)
+                          .arg(xftHintStyle);
 
     QProcess p;
     p.start(QStringLiteral("xrdb"), {QStringLiteral("-quiet"), QStringLiteral("-merge"), QStringLiteral("-nocpp")});

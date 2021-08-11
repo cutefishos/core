@@ -79,7 +79,7 @@ public:
     void setCursorSize(int size);
 
     void initGtkConfig();
-    void applyXResource();
+    void applyXResources();
     void applyCursor();
 
 signals:

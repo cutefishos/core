@@ -131,7 +131,7 @@ void ThemeManager::setCursorTheme(const QString &theme)
     if (m_cursorTheme != theme) {
         m_cursorTheme = theme;
         m_settings->setValue("CursorTheme", m_cursorTheme);
-        applyXResource();
+        applyXResources();
         applyCursor();
         emit cursorThemeChanged();
     }
@@ -147,7 +147,7 @@ void ThemeManager::setCursorSize(int size)
     if (m_cursorSize != size) {
         m_cursorSize = size;
         m_settings->setValue("CursorSize", m_cursorSize);
-        applyXResource();
+        applyXResources();
         applyCursor();
         emit cursorSizeChanged();
     }
@@ -196,7 +196,7 @@ void ThemeManager::setDevicePixelRatio(qreal ratio)
     m_settings->setValue(s_devicePixelRatio, ratio);
     m_settings->setValue("forceFontDPI", fontDpi);
     m_settings->sync();
-    applyXResource();
+    applyXResources();
 }
 
 QString ThemeManager::wallpaper()
@@ -258,17 +258,26 @@ void ThemeManager::initGtkConfig()
     settings.sync();
 }
 
-void ThemeManager::applyXResource()
+void ThemeManager::applyXResources()
 {
+    m_settings->sync();
+
     qreal scaleFactor = this->devicePixelRatio();
     int fontDpi = 96 * scaleFactor;
 
+    int xftAntialias = m_settings->value("XftAntialias", 1).toBool();
+    QString xftHintStyle = m_settings->value("XftHintStyle").toString();
+
     const QString datas = QString("Xft.dpi: %1\n"
                                   "Xcursor.theme: %2\n"
-                                  "Xcursor.size: %3")
+                                  "Xcursor.size: %3\n"
+                                  "Xft.antialias: %4\n"
+                                  "Xft.hintstyle: %5")
                           .arg(fontDpi)
                           .arg(m_cursorTheme)
-                          .arg(m_cursorSize * scaleFactor);
+                          .arg(m_cursorSize * scaleFactor)
+                          .arg(xftAntialias)
+                          .arg(xftHintStyle);
 
     QProcess p;
     p.start(QStringLiteral("xrdb"), {QStringLiteral("-quiet"), QStringLiteral("-merge"), QStringLiteral("-nocpp")});
