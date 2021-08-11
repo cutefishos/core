@@ -219,7 +219,7 @@ void Application::initXResource()
     p.waitForFinished(-1);
 
     // Init cursor
-    runSync("cupdatecursor", {cursorTheme, QString::number(cursorSize * scaleFactor)});
+    runSync("cupdatecursor", {cursorTheme, QString::number(cursorSize)});
     // qputenv("XCURSOR_THEME", cursorTheme.toLatin1());
     // qputenv("XCURSOR_SIZE", QByteArray::number(cursorSize * scaleFactor));
 }
