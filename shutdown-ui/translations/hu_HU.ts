@@ -24,4 +24,7 @@
         <translation>Alvó állapot</translation>
     </message>
 </context>
+<context>
+    <name></name>
+</context>
 </TS>
