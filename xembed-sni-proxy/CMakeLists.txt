@@ -76,4 +76,4 @@ target_link_libraries(cutefish-xembedsniproxy
     ${X11_XTest_LIB}
 )
 
-install(TARGETS cutefish-xembedsniproxy DESTINATION /usr/bin)
+install(TARGETS cutefish-xembedsniproxy DESTINATION ${CMAKE_INSTALL_BINDIR})

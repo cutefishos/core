@@ -35,7 +35,7 @@ add_custom_target(polkit-agent-translations DEPENDS ${QM_FILES} SOURCES ${TS_FIL
 add_dependencies(cutefish-polkit-agent polkit-agent-translations)
 
 install(TARGETS cutefish-polkit-agent
-    DESTINATION /usr/bin
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT Runtime
 )
 

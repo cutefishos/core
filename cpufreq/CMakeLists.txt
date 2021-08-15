@@ -13,5 +13,5 @@ target_link_libraries(${TARGET}
         Qt5::X11Extras
 )
 
-install(TARGETS ${TARGET} DESTINATION /usr/bin)
+install(TARGETS ${TARGET} DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(FILES org.cutefish.cpufreq.pkexec.policy DESTINATION /usr/share/polkit-1/actions/)
