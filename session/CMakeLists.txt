@@ -30,5 +30,5 @@ target_link_libraries(${TARGET}
         KF5::WindowSystem
 )
 
-install(TARGETS ${TARGET} DESTINATION /usr/bin)
+install(TARGETS ${TARGET} DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(FILES cutefish-xsession.desktop DESTINATION /usr/share/xsessions/)

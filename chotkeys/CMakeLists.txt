@@ -17,4 +17,4 @@ target_link_libraries(chotkeys
     KF5::GlobalAccel
 )
 
-install(TARGETS chotkeys RUNTIME DESTINATION /usr/bin)
+install(TARGETS chotkeys RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

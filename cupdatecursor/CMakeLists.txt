@@ -14,4 +14,4 @@ target_link_libraries(cupdatecursor
     X11::Xcursor
 )
 
-install(TARGETS cupdatecursor DESTINATION /usr/bin)
+install(TARGETS cupdatecursor DESTINATION ${CMAKE_INSTALL_BINDIR})
