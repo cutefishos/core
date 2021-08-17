@@ -21,7 +21,7 @@
 #define APPLICATION_H
 
 #include <QObject>
-#include <QAction>
+#include "hotkeys.h"
 
 class Application : public QObject
 {
@@ -32,7 +32,13 @@ public:
 
 private:
     void setupShortcuts();
-    QAction *addAction(const QString &name);
+
+private slots:
+    void onPressed(QKeySequence keySeq);
+    void onReleased(QKeySequence keySeq);
+
+private:
+    Hotkeys *m_hotKeys;
 };
 
 #endif // APPLICATION_H

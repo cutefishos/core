@@ -18,34 +18,41 @@
  */
 
 #include "application.h"
-#include <KGlobalAccel>
-#include <QAction>
+#include "hotkeys.h"
+
 #include <QProcess>
 
 Application::Application(QObject *parent)
     : QObject(parent)
+    , m_hotKeys(new Hotkeys)
 {
     setupShortcuts();
+
+    connect(m_hotKeys, &Hotkeys::pressed, this, &Application::onPressed);
+    connect(m_hotKeys, &Hotkeys::released, this, &Application::onReleased);
 }
 
 void Application::setupShortcuts()
 {
-    QAction *a = addAction("Log Out");
-    KGlobalAccel::self()->setGlobalShortcut(a, QList<QKeySequence>() << Qt::ALT + Qt::CTRL + Qt::Key_Delete);
-    connect(a, &QAction::triggered, this, [=] { QProcess::startDetached("cutefish-shutdown", QStringList()); });
-
-    a = addAction("Lock Screen");
-    a->setProperty("isConfigurationAction", true);
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_L);
-    KGlobalAccel::self()->setGlobalShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_L);
-    connect(a, &QAction::triggered, this, [=] { QProcess::startDetached("cutefish-screenlocker", QStringList()); });
+    m_hotKeys->registerKey(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_Delete));
+    m_hotKeys->registerKey(QKeySequence(Qt::META + Qt::Key_L));
+    // m_hotKeys->registerKey(QKeySequence(Qt::Key_Super_L));
 }
 
-QAction *Application::addAction(const QString &name)
+void Application::onPressed(QKeySequence keySeq)
 {
-    QAction *a = new QAction(this);
-    a->setProperty("componentDisplayName", QStringLiteral("KWin"));
-    a->setObjectName(name);
-    a->setText(name);
-    return a;
+    if (keySeq.toString() == "Ctrl+Alt+Del") {
+        QProcess::startDetached("cutefish-shutdown", QStringList());
+    }
+
+    if (keySeq.toString() == "Meta+L") {
+        QProcess::startDetached("cutefish-screenlocker", QStringList());
+    }
+}
+
+void Application::onReleased(QKeySequence keySeq)
+{
+    if (keySeq == QKeySequence(Qt::Key_Super_L)) {
+        QProcess::startDetached("cutefish-launcher", QStringList());
+    }
 }
