@@ -91,6 +91,7 @@ Application::Application(int &argc, char **argv)
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Session"), this);
 
     createConfigDirectory();
+    initKWinConfig();
     initLanguage();
     initScreenScaleFactors();
     initXResource();
@@ -222,6 +223,32 @@ void Application::initXResource()
     runSync("cupdatecursor", {cursorTheme, QString::number(cursorSize)});
     // qputenv("XCURSOR_THEME", cursorTheme.toLatin1());
     // qputenv("XCURSOR_SIZE", QByteArray::number(cursorSize * scaleFactor));
+}
+
+void Application::initKWinConfig()
+{
+    QSettings settings(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/kwinrc",
+                       QSettings::IniFormat);
+
+    settings.beginGroup("Effect-Blur");
+    settings.setValue("BlurStrength", 7);
+    settings.setValue("NoiseStrength", 1);
+    settings.endGroup();
+
+    settings.beginGroup("Windows");
+    settings.setValue("FocusStealingPreventionLevel", 0);
+    settings.setValue("HideUtilityWindowsForInactive", false);
+    settings.setValue("BorderlessMaximizedWindows", false);
+    settings.setValue("Placement", "Centered");
+    settings.endGroup();
+
+    settings.beginGroup("org.kde.kdecoration2");
+    settings.setValue("BorderSize", "Normal");
+    settings.setValue("ButtonsOnLeft", "");
+    settings.setValue("ButtonsOnRight", "HIAX");
+    settings.setValue("library", "org.cutefish.decoration");
+    settings.setValue("theme", "");
+    settings.endGroup();
 }
 
 bool Application::syncDBusEnvironment()

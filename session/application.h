@@ -66,6 +66,7 @@ private:
     void initLanguage();
     void initScreenScaleFactors();
     void initXResource();
+    void initKWinConfig();
     bool syncDBusEnvironment();
     void importSystemdEnvrionment();
     void createConfigDirectory();

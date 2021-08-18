@@ -37,10 +37,17 @@ Application::Application(int &argc, char **argv)
     , m_upowerManager(new UPowerManager(this))
     , m_language(new Language(this))
     , m_mouse(new Mouse)
+    , m_kwinTimer(new QTimer(this))
 {
     new DBusAdaptor(this);
     // connect to D-Bus and register as an object:
     QDBusConnection::sessionBus().registerService(QStringLiteral("org.cutefish.Settings"));
+
+    m_kwinTimer->setSingleShot(false);
+    m_kwinTimer->setInterval(50);
+    connect(m_kwinTimer, &QTimer::timeout, this, &Application::initKWin);
+    m_kwinTimer->start();
+    initKWin();
 
     // Translations
     QLocale locale;
@@ -54,6 +61,8 @@ Application::Application(int &argc, char **argv)
         }
     }
 
+    initKWin();
+
     QTimer::singleShot(10, this, &Application::invokeDesktopProcess);
 }
 
@@ -62,7 +71,33 @@ void Application::invokeDesktopProcess()
     // Start desktop UI component.
     QDBusInterface sessionInterface("org.cutefish.Session", "/Session", "org.cutefish.Session",
                                     QDBusConnection::sessionBus());
+
     if (sessionInterface.isValid()) {
         sessionInterface.call("startDesktopProcess");
+    }
+}
+
+void Application::initKWin()
+{
+    QDBusInterface effect("org.kde.KWin", "/Effects", "org.kde.kwin.Effects",
+                           QDBusConnection::sessionBus());
+
+    if (effect.isValid() && !effect.lastError().isValid()) {
+        // KWin
+        effect.call("loadEffect", "kwin4_effect_dialogparent");
+
+        effect.call("unloadEffect", "kwin4_effect_fadingpopups");
+        effect.call("unloadEffect", "kwin4_effect_fade");
+        effect.call("unloadEffect", "kwin4_effect_scale");
+        effect.call("unloadEffect", "kwin4_effect_grayscale");
+        effect.call("unloadEffect", "kwin4_effect_squash");
+        effect.call("unloadEffect", "kwin4_effect_translucency");
+        effect.call("unloadEffect", "magiclamp");
+
+        effect.call("loadEffect", "cutefish_popups");
+        effect.call("loadEffect", "cutefish_scale");
+        effect.call("loadEffect", "cutefish_squash");
+
+        m_kwinTimer->stop();
     }
 }

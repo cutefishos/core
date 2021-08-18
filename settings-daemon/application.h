@@ -28,6 +28,8 @@
 #include "language/language.h"
 #include "mouse/mousemanager.h"
 
+#include <QTimer>
+
 class Application : public QApplication
 {
     Q_OBJECT
@@ -38,6 +40,7 @@ public:
     AudioManager *audioManager() { return m_audioManager; }
 
     void invokeDesktopProcess();
+    void initKWin();
 
 private:
     AudioManager *m_audioManager;
@@ -46,6 +49,8 @@ private:
     UPowerManager *m_upowerManager;
     Language *m_language;
     Mouse *m_mouse;
+
+    QTimer *m_kwinTimer;
 };
 
 #endif // APPLICATION_H
