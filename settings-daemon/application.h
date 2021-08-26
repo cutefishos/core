@@ -40,7 +40,7 @@ public:
     AudioManager *audioManager() { return m_audioManager; }
 
     void invokeDesktopProcess();
-    void initKWin();
+//    void initKWin();
 
 private:
     AudioManager *m_audioManager;
@@ -50,7 +50,7 @@ private:
     Language *m_language;
     Mouse *m_mouse;
 
-    QTimer *m_kwinTimer;
+//    QTimer *m_kwinTimer;
 };
 
 #endif // APPLICATION_H
