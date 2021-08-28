@@ -29,6 +29,8 @@
 #include <QThread>
 #include <QDir>
 
+#include <QDBusInterface>
+
 #include <QX11Info>
 #include <KWindowSystem>
 #include <KWindowSystem/NETWM>
@@ -80,6 +82,13 @@ void ProcessManager::logout()
             p->kill();
         }
     }
+
+    QDBusInterface iface("org.freedesktop.login1",
+                        "/org/freedesktop/login1/session/self",
+                        "org.freedesktop.login1.Session",
+                        QDBusConnection::systemBus());
+    if (iface.isValid())
+        iface.call("Terminate");
 
     QCoreApplication::exit(0);
 }

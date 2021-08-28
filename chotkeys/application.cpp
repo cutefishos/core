@@ -35,6 +35,7 @@ Application::Application(QObject *parent)
 void Application::setupShortcuts()
 {
     m_hotKeys->registerKey(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_Delete));
+    m_hotKeys->registerKey(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_A));
     m_hotKeys->registerKey(QKeySequence(Qt::META + Qt::Key_L));
     // m_hotKeys->registerKey(QKeySequence(Qt::Key_Super_L));
 }
@@ -47,6 +48,10 @@ void Application::onPressed(QKeySequence keySeq)
 
     if (keySeq.toString() == "Meta+L") {
         QProcess::startDetached("cutefish-screenlocker", QStringList());
+    }
+
+    if (keySeq.toString() == "Ctrl+Alt+A") {
+        QProcess::startDetached("cutefish-screenshot", QStringList());
     }
 }
 
