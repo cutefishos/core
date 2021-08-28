@@ -24,4 +24,7 @@
         <translation>Спячы рэжым</translation>
     </message>
 </context>
+<context>
+    <name></name>
+</context>
 </TS>

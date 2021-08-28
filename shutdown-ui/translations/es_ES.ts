@@ -16,7 +16,7 @@
     <message>
         <location filename="../main.qml" line="83"/>
         <source>Logout</source>
-        <translation type="unfinished">Cerrar la sesión</translation>
+        <translation>Cerrar sesión</translation>
     </message>
     <message>
         <location filename="../main.qml" line="91"/>

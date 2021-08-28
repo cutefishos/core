@@ -6,27 +6,27 @@
     <message>
         <location filename="../main.qml" line="74"/>
         <source>Shutdown</source>
-        <translation type="unfinished"></translation>
+        <translation>إيقاف التشغيل</translation>
     </message>
     <message>
         <location filename="../main.qml" line="82"/>
         <source>Reboot</source>
-        <translation type="unfinished"></translation>
+        <translation>اعادة التشغيل</translation>
     </message>
     <message>
         <location filename="../main.qml" line="90"/>
         <source>Logout</source>
-        <translation type="unfinished"></translation>
+        <translation>تسجيل الخروج</translation>
     </message>
     <message>
         <location filename="../main.qml" line="98"/>
         <source>Lock screen</source>
-        <translation type="unfinished"></translation>
+        <translation>قفل الشاشة</translation>
     </message>
     <message>
         <location filename="../main.qml" line="106"/>
         <source>Suspend</source>
-        <translation type="unfinished"></translation>
+        <translation>تعليق</translation>
     </message>
 </context>
 </TS>
