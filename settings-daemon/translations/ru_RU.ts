@@ -51,7 +51,7 @@
     <message>
         <location filename="../battery/battery.cpp" line="294"/>
         <source>Fully charged.</source>
-        <translation>Полностью заряжена.</translation>
+        <translation>Полностью заряжен.</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="317"/>
@@ -74,7 +74,7 @@
         <location filename="../battery/upowerdevice.cpp" line="71"/>
         <source>%1 Battery</source>
         <comment>%1 is battery technology</comment>
-        <translation>%1 Батарея</translation>
+        <translation>%1 аккумулятор</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="87"/>
@@ -92,31 +92,31 @@
         <location filename="../battery/upowerdevice.cpp" line="91"/>
         <source>Lithium Iron Phosphate</source>
         <comment>battery technology</comment>
-        <translation>LiFePO-батарея</translation>
+        <translation>Литий-железо-фосфатный</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="93"/>
         <source>Lead Acid</source>
         <comment>battery technology</comment>
-        <translation>Свинцово-кислотная батарея</translation>
+        <translation>Свинцово-кислотный</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="95"/>
         <source>Nickel Cadmium</source>
         <comment>battery technology</comment>
-        <translation>Никель-кадмиевая батарея</translation>
+        <translation>Никель-кадмиевый</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="97"/>
         <source>Nickel Metal Hydride</source>
         <comment>battery technology</comment>
-        <translation>Никель-металлогидридная батарея</translation>
+        <translation>Никель-металлогидридный</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="99"/>
         <source>Unknown</source>
         <comment>battery technology</comment>
-        <translation>Неизвестно</translation>
+        <translation>Неизвестный</translation>
     </message>
 </context>
 </TS>
