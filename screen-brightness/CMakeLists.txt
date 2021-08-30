@@ -17,5 +17,11 @@ target_link_libraries(${PROJECT_NAME}
         Qt5::Widgets
 )
 
+configure_file(
+    org.cutefish.brightness.pkexec.policy.in
+    org.cutefish.brightness.pkexec.policy
+    @ONLY
+)
+
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(FILES org.cutefish.brightness.pkexec.policy DESTINATION /usr/share/polkit-1/actions/)
+install(FILES org.cutefish.brightness.pkexec.policy DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/polkit-1/actions/)

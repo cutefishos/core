@@ -18,6 +18,8 @@ find_package(ECM REQUIRED NO_MODULE)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
 
+include(GNUInstallDirs)
+
 add_subdirectory(polkit-agent)
 add_subdirectory(screen-brightness)
 add_subdirectory(session)

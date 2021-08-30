@@ -41,8 +41,8 @@ install(TARGETS cutefish-polkit-agent
 
 install(FILES
 cutefish-polkit-agent.desktop
-    DESTINATION "/etc/xdg/autostart"
+    DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}/xdg/autostart"
     COMPONENT Runtime
 )
 
-install(FILES ${QM_FILES} DESTINATION /usr/share/cutefish-polkit-agent/translations)
+install(FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cutefish-polkit-agent/translations)
