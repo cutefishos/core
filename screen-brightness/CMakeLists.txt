@@ -24,4 +24,4 @@ configure_file(
 )
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(FILES org.cutefish.brightness.pkexec.policy DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/polkit-1/actions/)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.cutefish.brightness.pkexec.policy DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/polkit-1/actions/)
