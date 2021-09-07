@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ar" sourcelanguage="de_DE">
+<TS version="2.1" language="lt" sourcelanguage="de_DE">
 <context>
     <name>Battery</name>
     <message>
@@ -26,42 +26,42 @@
     <message>
         <location filename="../battery/battery.cpp" line="268"/>
         <source>%1d</source>
-        <translation>%1ي</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="274"/>
         <source>%1h</source>
-        <translation>%1س</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="281"/>
         <source>%1m</source>
-        <translation>%1د</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="290"/>
         <source>%1 until fully charged</source>
-        <translation>%1 حتى اكتمال الشحن</translation>
+        <translation>%1 iki pilnai įkrauto</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="292"/>
         <source>%1 remaining</source>
-        <translation>%1 متبقي</translation>
+        <translation>Liko %1</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="294"/>
         <source>Fully charged.</source>
-        <translation>مشحون بالكامل.</translation>
+        <translation>Pilnai įkrautas.</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="317"/>
         <source>now</source>
-        <translation>حالياً</translation>
+        <translation>dabar</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="319"/>
         <source>%1 ago</source>
-        <translation>%1 مضى</translation>
+        <translation>Prieš %1</translation>
     </message>
     <message>
         <source>ago</source>
@@ -74,49 +74,49 @@
         <location filename="../battery/upowerdevice.cpp" line="71"/>
         <source>%1 Battery</source>
         <comment>%1 is battery technology</comment>
-        <translation>%1 بطارية</translation>
+        <translation>%1 akumuliatorius</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="87"/>
         <source>Lithium-ion</source>
         <comment>battery technology</comment>
-        <translation>أيونات الليثيوم</translation>
+        <translation>Ličio jonų</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="89"/>
         <source>Lithium Polymer</source>
         <comment>battery technology</comment>
-        <translation>بوليمر الليثيوم</translation>
+        <translation>Ličio polimero</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="91"/>
         <source>Lithium Iron Phosphate</source>
         <comment>battery technology</comment>
-        <translation>خليط فوسفات حديد الليثيوم</translation>
+        <translation>Ličio geležies fosfato</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="93"/>
         <source>Lead Acid</source>
         <comment>battery technology</comment>
-        <translation>حامض الرصاص</translation>
+        <translation>Rūgštinis</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="95"/>
         <source>Nickel Cadmium</source>
         <comment>battery technology</comment>
-        <translation>سبيكة نيكل وكادميوم</translation>
+        <translation>Nikelio-kadmio</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="97"/>
         <source>Nickel Metal Hydride</source>
         <comment>battery technology</comment>
-        <translation>هجين معدن النيكل</translation>
+        <translation>Nikelio metališkojo hidrido</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="99"/>
         <source>Unknown</source>
         <comment>battery technology</comment>
-        <translation>غير معروف</translation>
+        <translation>Nežinomas</translation>
     </message>
 </context>
 </TS>
