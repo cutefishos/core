@@ -35,7 +35,8 @@ Homepage: https://github.com/cutefishos/terminal
 
 Package: cutefish-core
 Architecture: any
-Depends: qml-module-qtquick-controls2,
+Depends: accountsservice,
+         qml-module-qtquick-controls2,
          qml-module-qtquick2,
          qml-module-qtquick-layouts,
          qml-module-qt-labs-platform,
