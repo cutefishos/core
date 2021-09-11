@@ -221,26 +221,24 @@ void MenuProxy::writeGtk3Settings()
 
     // mostly taken from kde-gtk-config
     QSettings cfg(gtk3SettingsIniPath(), QSettings::IniFormat);
-    // cfg.beginGroup("Settings");
-    // auto cfg = KSharedConfig::openConfig(gtk3SettingsIniPath(), KConfig::NoGlobals);
-    // KConfigGroup group(cfg, "Settings");
+    cfg.beginGroup(QStringLiteral("Settings"));
 
-    // QStringList gtkModules = group.readEntry("gtk-modules", QString()).split(QLatin1Char(':'), Qt::SkipEmptyParts);
-    // addOrRemoveAppMenuGtkModule(gtkModules);
+    QStringList gtkModules = cfg.value(QStringLiteral("gtk-modules")).toString().split(QLatin1Char(':'));
+    addOrRemoveAppMenuGtkModule(gtkModules);
 
-    // if (!gtkModules.isEmpty()) {
-    //     group.writeEntry("gtk-modules", gtkModules.join(QLatin1Char(':')));
-    // } else {
-    //     group.deleteEntry("gtk-modules");
-    // }
+    if (!gtkModules.isEmpty()) {
+        cfg.setValue(QStringLiteral("gtk-modules"), gtkModules.join(QLatin1Char(':')));
+    } else {
+        cfg.remove(QStringLiteral("gtk-modules"));
+    }
 
-    // qDebug() << "  gtk-modules:" << gtkModules;
+    qDebug() << "  gtk-modules:" << gtkModules;
 
-    // if (m_enabled) {
-    //     group.writeEntry("gtk-shell-shows-menubar", 1);
-    // } else {
-    //     group.deleteEntry("gtk-shell-shows-menubar");
-    // }
+    if (m_enabled) {
+        cfg.setValue(QStringLiteral("gtk-shell-shows-menubar"), 1);
+    } else {
+        cfg.remove(QStringLiteral("gtk-shell-shows-menubar"));
+    }
 
     qDebug() << "  gtk-shell-shows-menubar:" << (m_enabled ? 1 : 0);
 
