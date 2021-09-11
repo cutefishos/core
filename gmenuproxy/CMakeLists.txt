@@ -21,12 +21,13 @@ set(GMENU_DBUSMENU_PROXY_SRCS
     window.cpp
     menu.cpp
     actions.cpp
+    dbusmenuadaptor.cpp
     gdbusmenutypes_p.cpp
     icons.cpp
     utils.cpp
  )
 
-qt_add_dbus_adaptor(GMENU_DBUSMENU_PROXY_SRCS ./com.canonical.dbusmenu.xml window.h Window)
+# qt_add_dbus_adaptor(GMENU_DBUSMENU_PROXY_SRCS ./com.canonical.dbusmenu.xml window.h Window)
 
 add_executable(cutefish-gmenuproxy ${GMENU_DBUSMENU_PROXY_SRCS})
 
