@@ -32,6 +32,7 @@ class Application : public QApplication
 public:
     explicit Application(int &argc, char **argv);
 
+    bool wayland() const;
 
 public slots:
     void logout()
@@ -75,6 +76,8 @@ private:
 private:
     ProcessManager *m_processManager;
     Power m_power;
+
+    bool m_wayland;
 };
 
 #endif // APPLICATION_H

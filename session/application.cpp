@@ -21,6 +21,7 @@
 #include "sessionadaptor.h"
 
 // Qt
+#include <QCommandLineOption>
 #include <QDBusConnection>
 #include <QStandardPaths>
 #include <QSettings>
@@ -82,13 +83,24 @@ void setEnvironmentVariable(const QByteArray &name, const QByteArray &value)
 
 Application::Application(int &argc, char **argv)
     : QApplication(argc, argv)
-    , m_processManager(new ProcessManager)
+    , m_processManager(new ProcessManager(this))
+    , m_wayland(false)
 {
     new SessionAdaptor(this);
 
     // connect to D-Bus and register as an object:
     QDBusConnection::sessionBus().registerService(QStringLiteral("org.cutefish.Session"));
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Session"), this);
+
+    QCommandLineParser parser;
+    parser.setApplicationDescription(QStringLiteral("Cutefish Session"));
+    parser.addHelpOption();
+
+    QCommandLineOption waylandOption(QStringList() << "w" << "wayland" << "Wayland Mode");
+    parser.addOption(waylandOption);
+    parser.process(*this);
+
+    m_wayland = parser.isSet(waylandOption);
 
     createConfigDirectory();
     initKWinConfig();
@@ -114,6 +126,11 @@ Application::Application(int &argc, char **argv)
     qunsetenv("XCURSOR_SIZE");
 
     QTimer::singleShot(100, m_processManager, &ProcessManager::start);
+}
+
+bool Application::wayland() const
+{
+    return m_wayland;
 }
 
 void Application::initEnvironments()
@@ -232,7 +249,7 @@ void Application::initKWinConfig()
 
     settings.beginGroup("Effect-Blur");
     settings.setValue("BlurStrength", 7);
-    settings.setValue("NoiseStrength", 1);
+    settings.setValue("NoiseStrength", 0);
     settings.endGroup();
 
     settings.beginGroup("Windows");

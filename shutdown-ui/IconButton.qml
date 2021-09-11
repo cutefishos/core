@@ -62,12 +62,6 @@ Item {
                 color: "white"
                 opacity: mouseArea.pressed ? 0.1 : mouseArea.containsMouse || control.checked ? 0.2 : 0
                 radius: height / 2
-
-                Behavior on opacity {
-                    NumberAnimation {
-                        duration: 100
-                    }
-                }
             }
 
             Image {

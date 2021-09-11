@@ -26,12 +26,13 @@
 #include <QEventLoop>
 #include <QMap>
 
+class Application;
 class ProcessManager : public QObject, public QAbstractNativeEventFilter
 {
     Q_OBJECT
 
 public:
-    explicit ProcessManager(QObject *parent = nullptr);
+    explicit ProcessManager(Application *app, QObject *parent = nullptr);
     ~ProcessManager();
 
     void start();
@@ -45,6 +46,7 @@ public:
     bool nativeEventFilter(const QByteArray & eventType, void * message, long * result) override;
 
 private:
+    Application *m_app;
     QMap<QString, QProcess *> m_systemProcess;
     QMap<QString, QProcess *> m_autoStartProcess;
 

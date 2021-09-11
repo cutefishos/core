@@ -18,6 +18,7 @@
  */
 
 #include "processmanager.h"
+#include "application.h"
 
 #include <QCoreApplication>
 #include <QStandardPaths>
@@ -35,8 +36,9 @@
 #include <KWindowSystem>
 #include <KWindowSystem/NETWM>
 
-ProcessManager::ProcessManager(QObject *parent)
+ProcessManager::ProcessManager(Application *app, QObject *parent)
     : QObject(parent)
+    , m_app(app)
     , m_wmStarted(false)
     , m_waitLoop(nullptr)
 {
@@ -96,14 +98,17 @@ void ProcessManager::logout()
 void ProcessManager::startWindowManager()
 {
     QProcess *wmProcess = new QProcess;
-    wmProcess->start("kwin_x11", QStringList());
 
-    QEventLoop waitLoop;
-    m_waitLoop = &waitLoop;
-    // add a timeout to avoid infinite blocking if a WM fail to execute.
-    QTimer::singleShot(30 * 1000, &waitLoop, SLOT(quit()));
-    waitLoop.exec();
-    m_waitLoop = nullptr;
+    wmProcess->start(m_app->wayland() ? "kwin_wayland" : "kwin_x11", QStringList());
+
+    if (!m_app->wayland()) {
+        QEventLoop waitLoop;
+        m_waitLoop = &waitLoop;
+        // add a timeout to avoid infinite blocking if a WM fail to execute.
+        QTimer::singleShot(30 * 1000, &waitLoop, SLOT(quit()));
+        waitLoop.exec();
+        m_waitLoop = nullptr;
+    }
 }
 
 void ProcessManager::startDesktopProcess()
@@ -143,6 +148,7 @@ void ProcessManager::startDaemonProcess()
     list << qMakePair(QString("cutefish-settings-daemon"), QStringList());
     list << qMakePair(QString("cutefish-powerman"), QStringList());
     list << qMakePair(QString("cutefish-xembedsniproxy"), QStringList());
+    list << qMakePair(QString("cutefish-gmenuproxy"), QStringList());
     list << qMakePair(QString("chotkeys"), QStringList());
 
     for (QPair<QString, QStringList> pair : list) {

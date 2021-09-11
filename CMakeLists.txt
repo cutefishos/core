@@ -9,6 +9,7 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake;${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 set(QT Core Gui Widgets Quick QuickControls2 DBus X11Extras LinguistTools)
 find_package(Qt5 REQUIRED ${QT})
@@ -30,3 +31,4 @@ add_subdirectory(powerman)
 add_subdirectory(cpufreq)
 add_subdirectory(chotkeys)
 add_subdirectory(cupdatecursor)
+add_subdirectory(gmenuproxy)
