@@ -1,6 +1,6 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
-  <interface name="org.cutefish.Dock">
+  <interface name="com.cutefish.Dock">
     <property name="iconSize" type="i" access="read"/>
     <method name="setIconSize">
         <arg name="value" type="i" direction="in"/>

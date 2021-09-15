@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     PolKitAgentListener listener;
     PolkitQt1::UnixSessionSubject session(getpid());
 
-    if (!listener.registerListener(session, QStringLiteral("/org/cutefishos/PolicyKit1/AuthenticationAgent")))
+    if (!listener.registerListener(session, QStringLiteral("/com/cutefish/PolicyKit1/AuthenticationAgent")))
         return -1;
 
     return app.exec();

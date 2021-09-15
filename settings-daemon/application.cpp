@@ -41,7 +41,7 @@ Application::Application(int &argc, char **argv)
 {
     new DBusAdaptor(this);
     // connect to D-Bus and register as an object:
-    QDBusConnection::sessionBus().registerService(QStringLiteral("org.cutefish.Settings"));
+    QDBusConnection::sessionBus().registerService(QStringLiteral("com.cutefish.Settings"));
 
 //    m_kwinTimer->setSingleShot(false);
 //    m_kwinTimer->setInterval(50);
@@ -66,7 +66,7 @@ Application::Application(int &argc, char **argv)
 void Application::invokeDesktopProcess()
 {
     // Start desktop UI component.
-    QDBusInterface sessionInterface("org.cutefish.Session", "/Session", "org.cutefish.Session",
+    QDBusInterface sessionInterface("com.cutefish.Session", "/Session", "com.cutefish.Session",
                                     QDBusConnection::sessionBus());
 
     if (sessionInterface.isValid()) {

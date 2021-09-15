@@ -89,7 +89,7 @@ Application::Application(int &argc, char **argv)
     new SessionAdaptor(this);
 
     // connect to D-Bus and register as an object:
-    QDBusConnection::sessionBus().registerService(QStringLiteral("org.cutefish.Session"));
+    QDBusConnection::sessionBus().registerService(QStringLiteral("com.cutefish.Session"));
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Session"), this);
 
     QCommandLineParser parser;

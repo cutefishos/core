@@ -10,7 +10,7 @@ set(SOURCES
 )
 
 qt5_add_dbus_adaptor(DBUS_SOURCES
-                     cpu/org.cutefish.CPUManagement.xml
+                     cpu/com.cutefish.CPUManagement.xml
                      cpu/cpumanagement.h CPUManagement)
 set_source_files_properties(${DBUS_SOURCES} PROPERTIES SKIP_AUTOGEN ON)
 

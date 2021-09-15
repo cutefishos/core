@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    if (!QDBusConnection::sessionBus().registerService("org.cutefish.ShutdownUI")) {
+    if (!QDBusConnection::sessionBus().registerService("com.cutefish.ShutdownUI")) {
         return -1;
     }
 

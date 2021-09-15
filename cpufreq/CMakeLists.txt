@@ -14,10 +14,10 @@ target_link_libraries(${TARGET}
 )
 
 configure_file(
-    org.cutefish.cpufreq.pkexec.policy.in
-    org.cutefish.cpufreq.pkexec.policy
+    com.cutefish.cpufreq.pkexec.policy.in
+    com.cutefish.cpufreq.pkexec.policy
     @ONLY
 )
 
 install(TARGETS ${TARGET} DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.cutefish.cpufreq.pkexec.policy DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/polkit-1/actions/)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/com.cutefish.cpufreq.pkexec.policy DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/polkit-1/actions/)

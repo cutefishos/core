@@ -31,25 +31,25 @@ set(FORMS "")
 set(RESOURCES "")
 
 qt5_add_dbus_adaptor(DBUS_SOURCES
-                     audio/org.cutefish.Audio.xml
+                     audio/com.cutefish.Audio.xml
                      audio/audiomanager.h AudioManager)
 qt5_add_dbus_adaptor(DBUS_SOURCES
-                     brightness/org.cutefish.Brightness.xml
+                     brightness/com.cutefish.Brightness.xml
                      brightness/brightnessmanager.h BrightnessManager)
 qt5_add_dbus_adaptor(DBUS_SOURCES
-                     theme/org.cutefish.Theme.xml
+                     theme/com.cutefish.Theme.xml
                      theme/thememanager.h ThemeManager)
 qt5_add_dbus_adaptor(DBUS_SOURCES
-                     battery/org.cutefish.PrimaryBattery.xml
+                     battery/com.cutefish.PrimaryBattery.xml
                      battery/battery.h Battery)
 qt5_add_dbus_adaptor(DBUS_SOURCES
-                     language/org.cutefish.Language.xml
+                     language/com.cutefish.Language.xml
                      language/language.h Language)
 qt5_add_dbus_adaptor(DBUS_SOURCES
-                     dock/org.cutefish.Dock.xml
+                     dock/com.cutefish.Dock.xml
                      dock/dock.h Dock)
 qt5_add_dbus_adaptor(DBUS_SOURCES
-                     mouse/org.cutefish.Mouse.xml
+                     mouse/com.cutefish.Mouse.xml
                      mouse/mousemanager.h Mouse)
 set_source_files_properties(${DBUS_SOURCES} PROPERTIES SKIP_AUTOGEN ON)
 

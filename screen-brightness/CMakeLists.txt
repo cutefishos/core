@@ -18,10 +18,10 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 configure_file(
-    org.cutefish.brightness.pkexec.policy.in
-    org.cutefish.brightness.pkexec.policy
+    com.cutefish.brightness.pkexec.policy.in
+    com.cutefish.brightness.pkexec.policy
     @ONLY
 )
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.cutefish.brightness.pkexec.policy DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/polkit-1/actions/)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/com.cutefish.brightness.pkexec.policy DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/polkit-1/actions/)
