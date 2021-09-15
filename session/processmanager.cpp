@@ -187,6 +187,10 @@ void ProcessManager::loadAutoStartProcess()
 
             const QString execValue = desktop.value("Exec").toString();
 
+            // 避免冲突
+            if (execValue.contains("gmenudbusmenuproxy"))
+                continue;
+
             if (!execValue.isEmpty()) {
                 execList << execValue;
             }
