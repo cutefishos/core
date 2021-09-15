@@ -32,7 +32,7 @@ Build-Depends: cmake,
                qttools5-dev,
                qttools5-dev-tools
 Standards-Version: 4.5.0
-Homepage: https://github.com/cutefishos/terminal
+Homepage: https://github.com/cutefishos/core
 
 Package: cutefish-core
 Architecture: any
