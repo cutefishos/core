@@ -192,7 +192,11 @@ void MenuProxy::writeGtk2Settings()
             continue;
         }
 
-        gtkModules = line.mid(equalSignIdx + 1).split(QLatin1Char(':'), Qt::SkipEmptyParts);
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+      gtkModules = line.mid(equalSignIdx + 1).split(QLatin1Char(':'), QString::SkipEmptyParts);
+#else
+      gtkModules = line.mid(equalSignIdx + 1).split(QLatin1Char(':'), Qt::SkipEmptyParts);
+#endif
 
         break;
     }
