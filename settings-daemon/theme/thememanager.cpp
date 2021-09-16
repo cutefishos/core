@@ -266,7 +266,7 @@ void ThemeManager::applyXResources()
     int fontDpi = 96 * scaleFactor;
 
     int xftAntialias = m_settings->value("XftAntialias", 1).toBool();
-    QString xftHintStyle = m_settings->value("XftHintStyle").toString();
+    QString xftHintStyle = m_settings->value("XftHintStyle", "hintfull").toString();
 
     const QString datas = QString("Xft.dpi: %1\n"
                                   "Xcursor.theme: %2\n"
