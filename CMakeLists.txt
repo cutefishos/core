@@ -32,3 +32,5 @@ add_subdirectory(cpufreq)
 add_subdirectory(chotkeys)
 add_subdirectory(cupdatecursor)
 add_subdirectory(gmenuproxy)
+
+install(FILES cutefish DESTINATION /etc/ COMPONENT Runtime)

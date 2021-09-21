@@ -248,7 +248,7 @@ void Application::initKWinConfig()
                        QSettings::IniFormat);
 
     settings.beginGroup("Effect-Blur");
-    settings.setValue("BlurStrength", 7);
+    settings.setValue("BlurStrength", 10);
     settings.setValue("NoiseStrength", 0);
     settings.endGroup();
 
