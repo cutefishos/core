@@ -45,6 +45,22 @@
     </message>
 </context>
 <context>
+    <name>Language</name>
+    <message>
+        <location filename="../language/language.cpp" line="62"/>
+        <source>The system language has been changed, please log out and log in</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ThemeManager</name>
+    <message>
+        <location filename="../theme/thememanager.cpp" line="211"/>
+        <source>Screen scaling needs to be re-login to take effect</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>UPowerDevice</name>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="71"/>
