@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="cs" sourcelanguage="de_DE">
+<TS version="2.1" language="sr" sourcelanguage="de_DE">
 <context>
     <name>Battery</name>
     <message>
@@ -31,7 +31,7 @@
     <message>
         <location filename="../battery/battery.cpp" line="274"/>
         <source>%1h</source>
-        <translation>%1h</translation>
+        <translation>%1s</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="281"/>
@@ -41,27 +41,27 @@
     <message>
         <location filename="../battery/battery.cpp" line="290"/>
         <source>%1 until fully charged</source>
-        <translation>%1 zbývá do plného nabití</translation>
+        <translation>još 1% dok se ne napuni</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="292"/>
         <source>%1 remaining</source>
-        <translation>%1 zbývá</translation>
+        <translation>%1 ostalo</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="294"/>
         <source>Fully charged.</source>
-        <translation>Plně nabito.</translation>
+        <translation>Napunjeno.</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="317"/>
         <source>now</source>
-        <translation>teď</translation>
+        <translation>sad</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="319"/>
         <source>%1 ago</source>
-        <translation>před %1</translation>
+        <translation>Prije %1</translation>
     </message>
     <message>
         <source>ago</source>
@@ -74,49 +74,49 @@
         <location filename="../battery/upowerdevice.cpp" line="71"/>
         <source>%1 Battery</source>
         <comment>%1 is battery technology</comment>
-        <translation>%1 Baterie</translation>
+        <translation>%1 baterija</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="87"/>
         <source>Lithium-ion</source>
         <comment>battery technology</comment>
-        <translation>Lithium-iontová</translation>
+        <translation>Litijum-jonska</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="89"/>
         <source>Lithium Polymer</source>
         <comment>battery technology</comment>
-        <translation>Lithium-polymerová</translation>
+        <translation>Litij polimer</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="91"/>
         <source>Lithium Iron Phosphate</source>
         <comment>battery technology</comment>
-        <translation>Lithium-železo-fosfátová</translation>
+        <translation>Litijum-željezni fosfat</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="93"/>
         <source>Lead Acid</source>
         <comment>battery technology</comment>
-        <translation>Olověná</translation>
+        <translation>Olovna kiselina</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="95"/>
         <source>Nickel Cadmium</source>
         <comment>battery technology</comment>
-        <translation>Nikl-kadmiová</translation>
+        <translation>Nikl-kadmij</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="97"/>
         <source>Nickel Metal Hydride</source>
         <comment>battery technology</comment>
-        <translation>Nikl-metal-hydridová</translation>
+        <translation>Nikl-metal hibrid</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="99"/>
         <source>Unknown</source>
         <comment>battery technology</comment>
-        <translation>Neznámá</translation>
+        <translation>Nepoznata</translation>
     </message>
 </context>
 </TS>
