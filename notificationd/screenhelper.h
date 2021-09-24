@@ -17,4 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "notification.h"
+#ifndef SCREENHELPER_H
+#define SCREENHELPER_H
+
+#include <QObject>
+#include <QRect>
+
+class ScreenHelper : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QRect screenGeometry READ screenGeometry NOTIFY screenGeometryChanged)
+    Q_PROPERTY(QRect availableScreenRect READ availableScreenRect NOTIFY availableScreenRectChanged)
+
+public:
+    explicit ScreenHelper(QObject *parent = nullptr);
+
+    QRect screenGeometry() const;
+    QRect availableScreenRect() const;
+
+signals:
+    void screenGeometryChanged();
+    void availableScreenRectChanged();
+};
+
+#endif // SCREENHELPER_H

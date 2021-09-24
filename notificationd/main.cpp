@@ -17,4 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "notification.h"
+#include <QApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
+
+#include "view.h"
+#include "notificationsmodel.h"
+#include "screenhelper.h"
+
+int main(int argc, char *argv[])
+{
+    // QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps, true);
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling, true);
+
+    QApplication a(argc, argv);
+
+    qmlRegisterType<NotificationsModel>("Cutefish.Notification", 1, 0, "NotificationsModel");
+    qmlRegisterType<ScreenHelper>("Cutefish.Notification", 1, 0, "ScreenHelper");
+
+    QQmlApplicationEngine engine;
+    engine.load(QUrl("qrc:/qml/main.qml"));
+
+    return a.exec();
+}

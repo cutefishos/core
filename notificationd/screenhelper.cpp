@@ -17,4 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "notification.h"
+#include "screenhelper.h"
+#include <QApplication>
+#include <QScreen>
+
+ScreenHelper::ScreenHelper(QObject *parent)
+    : QObject(parent)
+{
+    connect(qApp->primaryScreen(), &QScreen::geometryChanged, this, &ScreenHelper::screenGeometryChanged);
+    connect(qApp->primaryScreen(), &QScreen::availableGeometryChanged, this, &ScreenHelper::availableScreenRectChanged);
+}
+
+QRect ScreenHelper::screenGeometry() const
+{
+    return qApp->primaryScreen()->geometry();
+}
+
+QRect ScreenHelper::availableScreenRect() const
+{
+    return qApp->primaryScreen()->availableGeometry();
+}
