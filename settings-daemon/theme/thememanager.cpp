@@ -197,6 +197,23 @@ void ThemeManager::setDevicePixelRatio(qreal ratio)
     m_settings->setValue("forceFontDPI", fontDpi);
     m_settings->sync();
     applyXResources();
+
+    QDBusInterface iface("org.freedesktop.Notifications",
+                         "/org/freedesktop/Notifications",
+                         "org.freedesktop.Notifications",
+                         QDBusConnection::sessionBus());
+    if (iface.isValid()) {
+        QList<QVariant> args;
+        args << "cutefish-settings";
+        args << ((unsigned int) 0);
+        args << "preferences-system";
+        args << "";
+        args << tr("Screen scaling needs to be re-login to take effect");
+        args << QStringList();
+        args << QVariantMap();
+        args << (int) 10;
+        iface.asyncCallWithArgumentList("Notify", args);
+    }
 }
 
 QString ThemeManager::wallpaper()

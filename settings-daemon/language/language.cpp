@@ -20,6 +20,8 @@
 #include "language.h"
 #include "languageadaptor.h"
 
+#include <QDBusInterface>
+
 Language::Language(QObject *parent)
     : QObject(parent)
     , m_settings(new QSettings(QStringLiteral("cutefishos"), QStringLiteral("language")))
@@ -40,7 +42,27 @@ QString Language::languageCode() const
 
 void Language::setLanguage(const QString &code)
 {
-    m_settings->setValue("language", code);
+    if (m_settings->value("language").toString() == code) {
+        return;
+    }
 
+    m_settings->setValue("language", code);
     emit languageChanged();
+
+    QDBusInterface iface("org.freedesktop.Notifications",
+                         "/org/freedesktop/Notifications",
+                         "org.freedesktop.Notifications",
+                         QDBusConnection::sessionBus());
+    if (iface.isValid()) {
+        QList<QVariant> args;
+        args << "cutefish-settings";
+        args << ((unsigned int) 0);
+        args << "preferences-system";
+        args << "";
+        args << tr("The system language has been changed, please log out and log in");
+        args << QStringList();
+        args << QVariantMap();
+        args << (int) 10;
+        iface.asyncCallWithArgumentList("Notify", args);
+    }
 }

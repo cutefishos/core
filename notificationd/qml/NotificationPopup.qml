@@ -97,29 +97,38 @@ Window {
                 visible: text
                 elide: Text.ElideRight
                 Layout.fillWidth: true
+                rightPadding: FishUI.Units.smallSpacing
             }
 
             Label {
                 text: model.body
                 visible: text
+                rightPadding: FishUI.Units.smallSpacing
+                maximumLineCount: 2
                 elide: Text.ElideRight
+                wrapMode: Text.Wrap
                 Layout.fillWidth: true
+                // Layout.fillHeight: true
+                Layout.alignment: Qt.AlignVCenter
             }
 
             Item {
                 Layout.fillHeight: true
             }
         }
-
-        Image {
-            width: 24
-            height: 24
-            source: "qrc:/images/" + (FishUI.Theme.darkMode ? "dark" : "light") + "/close.svg"
-            sourceSize: Qt.size(width, height)
-            visible: _mouseArea.containsMouse
-            Layout.alignment: Qt.AlignTop
-        }
     }
+
+//    Image {
+//        anchors.top: parent.top
+//        anchors.right: parent.right
+//        anchors.topMargin: FishUI.Units.smallSpacing / 2
+//        anchors.rightMargin: FishUI.Units.smallSpacing
+//        width: 24
+//        height: 24
+//        source: "qrc:/images/" + (FishUI.Theme.darkMode ? "dark" : "light") + "/close.svg"
+//        sourceSize: Qt.size(width, height)
+//        visible: _mouseArea.containsMouse
+//    }
 
     Timer {
         id: timer
