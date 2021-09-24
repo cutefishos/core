@@ -3,10 +3,12 @@ set(SRCS main.cpp
          notificationsmodel.cpp
          notificationserver.cpp
          notification.cpp
+         dbus/notificationsadaptor.cpp
          resources.qrc
 )
 
-qt_add_dbus_adaptor(SRCS org.freedesktop.Notifications.xml notificationserver.h NotificationServer)
+# for Ubuntu
+# qt_add_dbus_adaptor(SRCS org.freedesktop.Notifications.xml notificationserver.h NotificationServer)
 
 add_executable(cutefish-notificationd ${SRCS})
 

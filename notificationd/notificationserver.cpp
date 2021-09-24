@@ -5,7 +5,7 @@
 */
 
 #include "notificationserver.h"
-#include "notificationsadaptor.h"
+#include "dbus/notificationsadaptor.h"
 
 #include <QDebug>
 
