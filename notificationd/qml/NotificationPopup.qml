@@ -88,6 +88,8 @@ Window {
             source: "image://icontheme/%1".arg(model.iconName)
             sourceSize: Qt.size(width, height)
             Layout.alignment: Qt.AlignVCenter
+            antialiasing: true
+            smooth: true
         }
 
         ColumnLayout {

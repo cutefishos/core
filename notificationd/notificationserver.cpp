@@ -6,6 +6,7 @@
 
 #include "notificationserver.h"
 #include "dbus/notificationsadaptor.h"
+#include "utils.h"
 
 #include <QDebug>
 
@@ -69,6 +70,9 @@ uint NotificationServer::Notify(const QString &app_name,
     notification.actions = actions;
     notification.timeout = timeout;
 
+    if (notification.appIcon.startsWith("file://"))
+        notification.appIcon = notification.appIcon.replace("file://", "");
+
     uint pid = 0;
     QDBusReply<uint> pidReply = connection().interface()->servicePid(message().service());
     if (pidReply.isValid()) {
@@ -77,8 +81,9 @@ uint NotificationServer::Notify(const QString &app_name,
 
     if (pid > 0) {
         // 查找 app name
-        if (notification.appName.isEmpty()) {
-
+        if (notification.appIcon.isEmpty()) {
+            // const QString processName = Utils::processNameFromPid(pid);
+            // notification.appIcon = processName;
         }
     }
 

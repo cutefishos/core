@@ -3,6 +3,7 @@ set(SRCS main.cpp
          notificationsmodel.cpp
          notificationserver.cpp
          notification.cpp
+         utils.cpp
          dbus/notificationsadaptor.cpp
          resources.qrc
 )
