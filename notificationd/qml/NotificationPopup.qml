@@ -27,16 +27,14 @@ import Cutefish.Notification 1.0
 
 Window {
     id: control
-
     flags: Qt.WindowDoesNotAcceptFocus | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Popup
-
     width: 400
     height: 70
     color: "transparent"
-
     visible: false
-
     onVisibleChanged: if (visible) timer.restart()
+
+    property int defaultTimeout: 7000
 
     FishUI.WindowShadow {
         view: control
@@ -118,21 +116,22 @@ Window {
         }
     }
 
-//    Image {
-//        anchors.top: parent.top
-//        anchors.right: parent.right
-//        anchors.topMargin: FishUI.Units.smallSpacing / 2
-//        anchors.rightMargin: FishUI.Units.smallSpacing
-//        width: 24
-//        height: 24
-//        source: "qrc:/images/" + (FishUI.Theme.darkMode ? "dark" : "light") + "/close.svg"
-//        sourceSize: Qt.size(width, height)
-//        visible: _mouseArea.containsMouse
-//    }
+    Image {
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.topMargin: FishUI.Units.smallSpacing / 2
+        anchors.rightMargin: FishUI.Units.smallSpacing
+        width: 24
+        height: 24
+        source: "qrc:/images/" + (FishUI.Theme.darkMode ? "dark" : "light") + "/close.svg"
+        sourceSize: Qt.size(width, height)
+        visible: _mouseArea.containsMouse
+    }
 
     Timer {
         id: timer
-        interval: 5000
+        interval: control.defaultTimeout
+
         onTriggered: {
             notificationsModel.close(model.notificationId)
         }

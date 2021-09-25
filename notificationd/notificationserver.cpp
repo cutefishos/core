@@ -82,6 +82,15 @@ uint NotificationServer::Notify(const QString &app_name,
         }
     }
 
+    if (m_lastNotification.appName == notification.appName &&
+            m_lastNotification.summary == notification.summary &&
+            m_lastNotification.body == notification.body &&
+            m_lastNotification.created.msecsTo(notification.created) < 1000) {
+        return 0;
+    }
+
+    m_lastNotification = notification;
+
     if (wasReplaced) {
         notification.updated = QDateTime::currentDateTimeUtc();
         emit notificationReplaced(replaces_id, notification);

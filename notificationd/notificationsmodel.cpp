@@ -186,7 +186,6 @@ void NotificationsModel::onNotificationAdded(const Notification &notification)
 
 void NotificationsModel::onNotificationReplaced(uint replacedId, const Notification &notification)
 {
-
 }
 
 void NotificationsModel::onNotificationRemoved(uint removedId, NotificationServer::CloseReason reason)

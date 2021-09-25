@@ -32,6 +32,8 @@ Item {
         return rect
     }
 
+    onScreenRectChanged: positionPopups()
+
     property Instantiator popupInstantiator: Instantiator {
         model: notificationsModel
         delegate: NotificationPopup {}
