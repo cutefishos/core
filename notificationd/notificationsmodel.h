@@ -27,6 +27,7 @@ public:
         UpdatedRole,
         BodyRole,
         IconNameRole,
+        HasDefaultActionRole
     };
     Q_ENUM(Roles)
 
@@ -38,6 +39,7 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     Q_INVOKABLE void close(uint id);
+    Q_INVOKABLE void invokeDefaultAction(uint id);
 
     int rowOfNotification(uint id) const;
     void removeRows(const QVector<int> &rows);

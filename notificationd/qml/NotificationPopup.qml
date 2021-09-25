@@ -60,10 +60,17 @@ Window {
         id: _mouseArea
         z: 999
         anchors.fill: parent
-        onClicked: notificationsModel.close(model.notificationId)
         hoverEnabled: true
         onEntered: timer.stop()
         onExited: timer.restart()
+
+        onClicked: {
+            if (model.hasDefaultAction) {
+                notificationsModel.invokeDefaultAction(model.notificationId)
+            }
+
+            notificationsModel.close(model.notificationId)
+        }
     }
 
     RowLayout {
@@ -125,7 +132,29 @@ Window {
         height: 24
         source: "qrc:/images/" + (FishUI.Theme.darkMode ? "dark" : "light") + "/close.svg"
         sourceSize: Qt.size(width, height)
-        visible: _mouseArea.containsMouse
+        visible: _mouseArea.containsMouse || _closeBtnArea.containsMouse
+        z: 9999
+
+        Rectangle {
+            property color hoveredColor: FishUI.Theme.darkMode ? Qt.lighter(FishUI.Theme.backgroundColor, 2)
+                                                           : Qt.darker(FishUI.Theme.backgroundColor, 1.2)
+            property color pressedColor: FishUI.Theme.darkMode ? Qt.lighter(FishUI.Theme.backgroundColor, 1.5)
+                                                             : Qt.darker(FishUI.Theme.backgroundColor, 1.3)
+
+            z: -1
+            anchors.fill: parent
+            color: _closeBtnArea.pressed ? pressedColor : _closeBtnArea.containsMouse ? hoveredColor : "transparent"
+            radius: height / 2
+        }
+
+        MouseArea {
+            id: _closeBtnArea
+            anchors.fill: parent
+            hoverEnabled: true
+            onClicked: {
+                notificationsModel.close(model.notificationId)
+            }
+        }
     }
 
     Timer {

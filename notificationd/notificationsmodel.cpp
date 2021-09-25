@@ -54,6 +54,8 @@ QVariant NotificationsModel::data(const QModelIndex &index, int role) const
         return notification.body;
     case NotificationsModel::IconNameRole:
         return notification.appIcon;
+    case NotificationsModel::HasDefaultActionRole:
+        return notification.actions.contains("default");
     default:
         break;
     }
@@ -109,6 +111,22 @@ void NotificationsModel::close(uint id)
     if (rowOfNotification(id) > -1) {
         NotificationServer::self()->closeNotification(id, NotificationServer::CloseReason::DismissedByUser);
     }
+}
+
+void NotificationsModel::invokeDefaultAction(uint notificationId)
+{
+    const int row = rowOfNotification(notificationId);
+
+    if (row == -1) {
+        return;
+    }
+
+    const Notification &notification = m_notifications.at(row);
+    if (!notification.actions.contains("default")) {
+        return;
+    }
+
+    NotificationServer::self()->InvokeAction(notificationId, "default");
 }
 
 int NotificationsModel::rowOfNotification(uint id) const
