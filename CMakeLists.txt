@@ -15,9 +15,8 @@ set(QT Core Gui Widgets Quick QuickControls2 DBus X11Extras LinguistTools)
 find_package(Qt5 REQUIRED ${QT})
 # find_package(FishUI REQUIRED)
 find_package(PkgConfig REQUIRED)
-find_package(ECM REQUIRED NO_MODULE)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH})
 
 include(GNUInstallDirs)
 

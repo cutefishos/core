@@ -317,7 +317,7 @@ void XlibBackend::devicePlugged(int device)
         if (m_device) {
             qWarning() << "Touchpad reset";
             m_notifications.reset();
-            // watchForEvents(m_keyboard);
+            watchForEvents(m_keyboard);
             Q_EMIT touchpadReset();
         }
     }
