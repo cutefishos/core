@@ -1,0 +1,21 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="com.cutefish.Touchpad">
+    <property name="available" type="b" access="read"/>
+    <property name="enabled" type="b" access="read"/>
+    <property name="tapToClick" type="b" access="read"/>
+    <property name="pointerAcceleration" type="d" access="read"/>
+
+    <method name="setEnabled">
+      <arg name="enabled" type="b" direction="in"/>
+    </method>
+
+    <method name="setTapToClick">
+      <arg name="enabled" type="b" direction="in"/>
+    </method>
+
+    <method name="setPointerAcceleration">
+      <arg name="value" type="d" direction="in"/>
+    </method>
+  </interface>
+</node>

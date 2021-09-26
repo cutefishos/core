@@ -3,7 +3,12 @@ set(TARGET cutefish-settings-daemon)
 
 find_package(PulseAudio)
 find_package(X11 REQUIRED)
+find_package(X11_XCB REQUIRED)
+find_package(XCB REQUIRED)
+
 pkg_check_modules(XORGLIBINPUT xorg-libinput IMPORTED_TARGET)
+pkg_check_modules(XORGSERVER xorg-server IMPORTED_TARGET)
+pkg_check_modules(SYNAPTICS xorg-synaptics IMPORTED_TARGET GLOBAL)
 
 file (GLOB_RECURSE SRCS
   "*.cpp"
@@ -23,6 +28,10 @@ file (GLOB_RECURSE SRCS
   "dock/*.h"
   "mouse/*.h"
   "mouse/*.cpp"
+  "touchpad/*.h"
+  "touchpad/*.cpp"
+  "touchpad/x11/*.h"
+  "touchpad/x11/*.cpp"
 )
 
 set(SOURCES ${SRCS})
@@ -51,6 +60,9 @@ qt5_add_dbus_adaptor(DBUS_SOURCES
 qt5_add_dbus_adaptor(DBUS_SOURCES
                      mouse/com.cutefish.Mouse.xml
                      mouse/mousemanager.h Mouse)
+qt5_add_dbus_adaptor(DBUS_SOURCES
+                     touchpad/com.cutefish.Touchpad.xml
+                     touchpad/touchpadmanager.h TouchpadManager)
 set_source_files_properties(${DBUS_SOURCES} PROPERTIES SKIP_AUTOGEN ON)
 
 add_executable(${TARGET} ${SOURCES} ${DBUS_SOURCES} ${HEADERS} ${FORMS} ${RESOURCES})
@@ -64,7 +76,11 @@ target_link_libraries(${TARGET}
         ${X11_LIBRARIES}
         X11::X11
         X11::Xi
+        X11::XCB
+        ${XCB_LIBRARIES}
         PkgConfig::XORGLIBINPUT
+        PkgConfig::XORGSERVER
+        PkgConfig::SYNAPTICS
 )
 
 file(GLOB TS_FILES translations/*.ts)

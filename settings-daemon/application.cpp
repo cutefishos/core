@@ -37,6 +37,7 @@ Application::Application(int &argc, char **argv)
     , m_upowerManager(new UPowerManager(this))
     , m_language(new Language(this))
     , m_mouse(new Mouse)
+    , m_touchpad(new TouchpadManager)
 //    , m_kwinTimer(new QTimer(this))
 {
     new DBusAdaptor(this);
