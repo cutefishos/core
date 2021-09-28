@@ -124,6 +124,14 @@ void ProcessManager::startDesktopProcess()
     list << qMakePair(QString("cutefish-filemanager"), QStringList("--desktop"));
     list << qMakePair(QString("cutefish-launcher"), QStringList());
 
+    // For CutefishOS.
+    if (QFile("/usr/bin/cutefish-welcome").exists()) {
+        QSettings settings("cutefishos", "login");
+        if (!settings.value("Finished", false).toBool()) {
+            list << qMakePair(QString("/usr/bin/cutefish-welcome"), QStringList());
+        }
+    }
+
     for (QPair<QString, QStringList> pair : list) {
         QProcess *process = new QProcess;
         process->setProcessChannelMode(QProcess::ForwardedChannels);
