@@ -125,7 +125,8 @@ void ProcessManager::startDesktopProcess()
     list << qMakePair(QString("cutefish-launcher"), QStringList());
 
     // For CutefishOS.
-    if (QFile("/usr/bin/cutefish-welcome").exists()) {
+    if (QFile("/usr/bin/cutefish-welcome").exists() &&
+            !QFile("/run/live/medium/live/filesystem.squashfs").exists()) {
         QSettings settings("cutefishos", "login");
         if (!settings.value("Finished", false).toBool()) {
             list << qMakePair(QString("/usr/bin/cutefish-welcome"), QStringList());
