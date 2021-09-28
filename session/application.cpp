@@ -171,7 +171,31 @@ void Application::initEnvironments()
 void Application::initLanguage()
 {
     QSettings settings(QSettings::UserScope, "cutefishos", "language");
-    QString value = settings.value("language", "en_US").toString();
+    QString value = settings.value("language", "").toString();
+
+    // Init Language
+    if (value.isEmpty()) {
+        QFile file("/etc/locale.gen");
+        if (file.open(QIODevice::ReadOnly)) {
+            QStringList lines = QString(file.readAll()).split('\n');
+
+            for (const QString &line : lines) {
+                if (line.startsWith('#'))
+                    continue;
+
+                if (line.trimmed().isEmpty())
+                    continue;
+
+                value = line.split(' ').first().split('.').first();
+            }
+        }
+    }
+
+    if (value.isEmpty())
+        value = "en_US";
+
+    settings.setValue("language", value);
+
     QString str = QString("%1.UTF-8").arg(value);
 
     const auto lcValues = {
