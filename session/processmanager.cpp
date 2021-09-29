@@ -31,6 +31,7 @@
 #include <QDir>
 
 #include <QDBusInterface>
+#include <QDBusPendingCall>
 
 #include <QX11Info>
 #include <KWindowSystem>
@@ -68,6 +69,16 @@ void ProcessManager::start()
 
 void ProcessManager::logout()
 {
+    QDBusInterface kwinIface("org.kde.KWin",
+                             "/Session",
+                             "org.kde.KWin.Session",
+                             QDBusConnection::sessionBus());
+
+    if (kwinIface.isValid()) {
+        // kwinIface.call("aboutToSaveSession", "cutefish");
+        kwinIface.call("setState", uint(2)); // Quit
+    }
+
     QMapIterator<QString, QProcess *> i(m_systemProcess);
 
     while (i.hasNext()) {
