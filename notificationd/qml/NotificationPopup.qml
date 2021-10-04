@@ -139,13 +139,14 @@ Window {
 
         Rectangle {
             property color hoveredColor: FishUI.Theme.darkMode ? Qt.lighter(FishUI.Theme.backgroundColor, 2)
-                                                           : Qt.darker(FishUI.Theme.backgroundColor, 1.2)
+                                                               : Qt.darker(FishUI.Theme.backgroundColor, 1.2)
             property color pressedColor: FishUI.Theme.darkMode ? Qt.lighter(FishUI.Theme.backgroundColor, 1.5)
-                                                             : Qt.darker(FishUI.Theme.backgroundColor, 1.3)
+                                                               : Qt.darker(FishUI.Theme.backgroundColor, 1.3)
 
             z: -1
             anchors.fill: parent
-            color: _closeBtnArea.pressed ? pressedColor : _closeBtnArea.containsMouse ? hoveredColor : "transparent"
+            color: "transparent"
+            // color: _closeBtnArea.pressed ? pressedColor : _closeBtnArea.containsMouse ? hoveredColor : "transparent"
             radius: height / 2
         }
 
@@ -153,6 +154,7 @@ Window {
             id: _closeBtnArea
             anchors.fill: parent
             hoverEnabled: true
+            onEntered: timer.stop()
             onClicked: {
                 notificationsModel.close(model.notificationId)
             }

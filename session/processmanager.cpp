@@ -75,26 +75,13 @@ void ProcessManager::logout()
                              QDBusConnection::sessionBus());
 
     if (kwinIface.isValid()) {
-        // kwinIface.call("aboutToSaveSession", "cutefish");
+        kwinIface.call("aboutToSaveSession", "cutefish");
         kwinIface.call("setState", uint(2)); // Quit
     }
 
-    QMapIterator<QString, QProcess *> i(m_systemProcess);
-
-    while (i.hasNext()) {
-        i.next();
-        QProcess *p = i.value();
-        p->terminate();
-    }
-    i.toFront();
-
-    while (i.hasNext()) {
-        i.next();
-        QProcess *p = i.value();
-        if (p->state() != QProcess::NotRunning && !p->waitForFinished(2000)) {
-            p->kill();
-        }
-    }
+    QProcess s;
+    s.start("killall", QStringList() << "kglobalaccel5");
+    s.waitForFinished(-1);
 
     QDBusInterface iface("org.freedesktop.login1",
                         "/org/freedesktop/login1/session/self",

@@ -16,6 +16,17 @@ Item {
         color: FishUI.Theme.secondBackgroundColor
     }
 
+    DragHandler {
+        target: null
+        acceptedDevices: PointerDevice.GenericPointer
+        grabPermissions: TapHandler.CanTakeOverFromAnything
+        onActiveChanged: if (active) { windowHelper.startSystemMove(rootWindow) }
+    }
+
+    FishUI.WindowHelper {
+        id: windowHelper
+    }
+
     FishUI.WindowShadow {
         view: rootWindow
         geometry: Qt.rect(root.x, root.y, root.width, root.height)

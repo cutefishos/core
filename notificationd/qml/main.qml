@@ -80,6 +80,9 @@ Item {
             popup.y = y
             y += popup.height + (popup.height > 0 ? popupSpacing : 0)
 
+            // Horizontal
+            popup.x = screenRect.x + (screenRect.width - popup.width) / 2
+
             // don't let notifications take more than popupMaximumScreenFill of the screen
             var visible = true
             if (i > 0) { // however always show at least one popup
