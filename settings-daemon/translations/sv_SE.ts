@@ -104,7 +104,7 @@
         <location filename="../battery/upowerdevice.cpp" line="95"/>
         <source>Nickel Cadmium</source>
         <comment>battery technology</comment>
-        <translation>Nickel Cadmium</translation>
+        <translation>Nickel Kadmium</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="97"/>
