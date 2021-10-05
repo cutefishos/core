@@ -6,8 +6,18 @@ import FishUI 1.0 as FishUI
 Item {
     id: root
 
-    width: 550
-    height: mainLayout.implicitHeight + _background.radius * 4
+    property var heightValue: mainLayout.implicitHeight + FishUI.Units.largeSpacing * 2
+
+    width: 450
+    height: heightValue
+
+    onHeightValueChanged: {
+        rootWindow.height = heightValue
+        rootWindow.maximumHeight = heightValue
+        rootWindow.minimumHeight = heightValue
+        rootWindow.maximumWidth = root.width
+        rootWindow.minimumWidth = root.width
+    }
 
     Rectangle {
         id: _background
@@ -40,19 +50,19 @@ Item {
     RowLayout {
         id: mainLayout
         anchors.fill: parent
-        anchors.margins: FishUI.Theme.bigRadius * 2
+        anchors.margins: FishUI.Units.largeSpacing
 
         Image {
             id: icon
             source: "qrc:/svg/emblem-warning.svg"
-            sourceSize.width: 96
-            sourceSize.height: 96
+            sourceSize.width: 64
+            sourceSize.height: 64
             smooth: true
             Layout.alignment: Qt.AlignTop
         }
 
         Item {
-            width: FishUI.Theme.bigRadius * 1.5
+            width: FishUI.Units.largeSpacing
         }
 
         ColumnLayout {
