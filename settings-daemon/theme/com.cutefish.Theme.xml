@@ -37,6 +37,9 @@
     <method name="setCursorSize">
         <arg name="type" type="i" direction="in"/>
     </method>
+    <method name="setIconTheme">
+        <arg name="type" type="s" direction="in"/>
+    </method>
 
     <method name="applyXResources"></method>
 
@@ -52,6 +55,7 @@
     <property name="backgroundColor" type="s" access="read"/>
     <property name="cursorTheme" type="s" access="read"/>
     <property name="cursorSize" type="i" access="read"/>
+    <property name="iconTheme" type="s" access="read"/>
 
     <signal name="darkModeChanged">
         <arg type="b"/>
@@ -68,5 +72,6 @@
     <signal name="backgroundColorChanged"></signal>
     <signal name="cursorThemeChanged"></signal>
     <signal name="cursorSizeChanged"></signal>
+    <signal name="iconThemeChanged"></signal>
   </interface>
 </node>

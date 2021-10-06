@@ -126,8 +126,11 @@ void ProcessManager::startDesktopProcess()
     if (QFile("/usr/bin/cutefish-welcome").exists() &&
             !QFile("/run/live/medium/live/filesystem.squashfs").exists()) {
         QSettings settings("cutefishos", "login");
+
         if (!settings.value("Finished", false).toBool()) {
             list << qMakePair(QString("/usr/bin/cutefish-welcome"), QStringList());
+        } else {
+            list << qMakePair(QString("/usr/bin/cutefish-welcome"), QStringList() << "-d");
         }
     }
 

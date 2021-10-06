@@ -38,6 +38,7 @@ class ThemeManager : public QObject
     Q_PROPERTY(QString backgroundColor READ backgroundColor WRITE setBackgroundColor NOTIFY backgroundColorChanged)
     Q_PROPERTY(QString cursorTheme READ cursorTheme WRITE setCursorTheme NOTIFY cursorThemeChanged)
     Q_PROPERTY(int cursorSize READ cursorSize WRITE setCursorSize NOTIFY cursorSizeChanged)
+    Q_PROPERTY(QString iconTheme READ iconTheme WRITE setIconTheme NOTIFY iconThemeChanged)
 
 public:
     ThemeManager(QObject *parent = nullptr);
@@ -82,6 +83,9 @@ public:
     void applyXResources();
     void applyCursor();
 
+    QString iconTheme() const;
+    void setIconTheme(const QString &iconTheme);
+
 signals:
     void darkModeChanged(bool darkMode);
     void wallpaperChanged(QString path);
@@ -91,10 +95,12 @@ signals:
     void backgroundColorChanged();
     void cursorThemeChanged();
     void cursorSizeChanged();
+    void iconThemeChanged();
 
 private:
     void updateGtkFont();
     void updateGtkDarkTheme();
+    void updateGtkIconTheme();
 
     QSettings *m_settings;
 
@@ -107,6 +113,8 @@ private:
 
     QString m_cursorTheme;
     int m_cursorSize;
+
+    QString m_iconTheme;
 };
 
 #endif

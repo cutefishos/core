@@ -66,6 +66,7 @@ ThemeManager::ThemeManager(QObject *parent)
     m_backgroundColor = m_settings->value("BackgroundColor", "#2B8ADA").toString();
     m_cursorTheme = m_settings->value("CursorTheme", "default").toString();
     m_cursorSize = m_settings->value("CursorSize", 24).toInt();
+    m_iconTheme = m_settings->value("IconTheme", "Crule").toString();
 
     // Start the DE and need to update the settings again.
     initGtkConfig();
@@ -264,12 +265,13 @@ void ThemeManager::initGtkConfig()
     settings.clear();
     settings.setIniCodec("UTF-8");
     settings.beginGroup("Settings");
+
     // font
     settings.setValue("gtk-font-name", QString("%1 %2").arg(systemFont()).arg(systemFontPointSize()));
     // dark mode
     settings.setValue("gtk-application-prefer-dark-theme", isDarkMode());
     // icon theme
-    settings.setValue("gtk-icon-theme-name", "Crule");
+    settings.setValue("gtk-icon-theme-name", m_iconTheme);
     // other
     settings.setValue("gtk-enable-animations", true);
     settings.sync();
@@ -310,7 +312,9 @@ void ThemeManager::applyCursor()
     p.start("cupdatecursor", QStringList() << cursorTheme() << QString::number(cursorSize() * devicePixelRatio()));
     p.waitForFinished(-1);
 
-    QDBusMessage message = QDBusMessage::createSignal("/KGlobalSettings", "org.kde.KGlobalSettings", "notifyChange");
+    QDBusMessage message = QDBusMessage::createSignal("/KGlobalSettings",
+                                                      "org.kde.KGlobalSettings",
+                                                      "notifyChange");
     // ChangeCursor
     message << 5;
     message << 0;
@@ -331,6 +335,31 @@ void ThemeManager::updateGtkDarkTheme()
     QSettings settings(gtk3SettingsIniPath(), QSettings::IniFormat);
     settings.setIniCodec("UTF-8");
     settings.beginGroup("Settings");
+    settings.setValue("gtk-icon-theme-name", m_iconTheme);
+    settings.sync();
+}
+
+void ThemeManager::updateGtkIconTheme()
+{
+    QSettings settings(gtk3SettingsIniPath(), QSettings::IniFormat);
+    settings.setIniCodec("UTF-8");
+    settings.beginGroup("Settings");
     settings.setValue("gtk-application-prefer-dark-theme", isDarkMode());
     settings.sync();
+}
+
+QString ThemeManager::iconTheme() const
+{
+    return m_iconTheme;
+}
+
+void ThemeManager::setIconTheme(const QString &iconTheme)
+{
+    if (m_iconTheme == iconTheme)
+        return;
+
+    m_iconTheme = iconTheme;
+    m_settings->setValue("IconTheme", m_iconTheme);
+    updateGtkDarkTheme();
+    emit iconThemeChanged();
 }
