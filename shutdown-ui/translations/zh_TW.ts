@@ -24,4 +24,7 @@
         <translation>掛起</translation>
     </message>
 </context>
+<context>
+    <name></name>
+</context>
 </TS>
