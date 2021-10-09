@@ -83,8 +83,8 @@ QHash<int, QByteArray> HistoryModel::roleNames() const
 
 void HistoryModel::add(const Notification &notification)
 {
-    beginInsertRows(QModelIndex(), m_notifications.size(), m_notifications.size());
-    m_notifications.append(std::move(notification));
+    beginInsertRows(QModelIndex(), 0, 0);
+    m_notifications.prepend(std::move(notification));
     endInsertRows();
     save();
 }
