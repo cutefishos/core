@@ -147,6 +147,12 @@ Item {
                                                        : 0.03
                     }
 
+                    MouseArea {
+                        id: _itemMouseArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                    }
+
                     RowLayout {
                         anchors.fill: parent
                         anchors.margins: FishUI.Units.smallSpacing
@@ -205,7 +211,7 @@ Item {
                         height: 24
                         source: "qrc:/images/" + (FishUI.Theme.darkMode ? "dark" : "light") + "/close.svg"
                         sourceSize: Qt.size(width, height)
-                        visible: true
+                        visible: _itemMouseArea.containsMouse
                         z: 9999
 
                         Rectangle {
@@ -216,14 +222,14 @@ Item {
 
                             z: -1
                             anchors.fill: parent
-                            color: _closeBtnArea.pressed ? pressedColor : _closeBtnArea.containsMouse ? hoveredColor : "transparent"
+                            color: "transparent"
                             radius: height / 2
                         }
 
                         MouseArea {
                             id: _closeBtnArea
                             anchors.fill: parent
-                            hoverEnabled: true
+                            // hoverEnabled: true
                             onClicked: {
                                 historyModel.remove(index)
                             }
