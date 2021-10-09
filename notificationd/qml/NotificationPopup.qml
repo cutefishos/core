@@ -166,7 +166,7 @@ Window {
         interval: control.defaultTimeout
 
         onTriggered: {
-            notificationsModel.close(model.notificationId)
+            notificationsModel.expired(model.notificationId)
         }
     }
 }

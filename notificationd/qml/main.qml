@@ -51,10 +51,6 @@ Item {
         id: screen
     }
 
-    NotificationsModel {
-        id: notificationsModel
-    }
-
     function positionPopups() {
         const screenRect = root.screenRect
 

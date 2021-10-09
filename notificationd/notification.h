@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QDateTime>
+#include <QMetaType>
 
 class Notification
 {
@@ -37,6 +38,20 @@ public:
 
     QDateTime created;
     QDateTime updated;
+
+    inline bool operator==(const Notification &other) const {
+        return service == other.service &&
+                summary == other.summary &&
+                body == other.body &&
+                appName == other.appName &&
+                appIcon == other.appIcon &&
+                created == other.created &&
+                updated == other.updated;
+    }
+    friend QDataStream &operator<<(QDataStream &argument, const Notification &info);
+    friend const QDataStream &operator>>(QDataStream &argument, Notification &info);
 };
+
+Q_DECLARE_METATYPE(Notification)
 
 #endif // NOTIFICATION_H

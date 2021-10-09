@@ -5,12 +5,22 @@
 */
 
 #include "notificationsmodel.h"
+#include "historymodel.h"
 #include "notification.h"
 
 #include <QMetaEnum>
 #include <QDebug>
 
 static const int s_notificationsLimit = 1000;
+static NotificationsModel *NOTIFICATIONS_MODEL = nullptr;
+
+NotificationsModel *NotificationsModel::self()
+{
+    if (!NOTIFICATIONS_MODEL)
+        NOTIFICATIONS_MODEL = new NotificationsModel;
+
+    return NOTIFICATIONS_MODEL;
+}
 
 NotificationsModel::NotificationsModel(QObject *parent)
     : QAbstractListModel(parent)
@@ -104,6 +114,15 @@ QHash<int, QByteArray> NotificationsModel::roleNames() const
     }
 
     return s_roles;
+}
+
+void NotificationsModel::expired(uint id)
+{
+    int row = rowOfNotification(id);
+
+    if (row > -1) {
+        onNotificationRemoved(id, NotificationServer::CloseReason::Expired);
+    }
 }
 
 void NotificationsModel::close(uint id)
@@ -221,7 +240,10 @@ void NotificationsModel::onNotificationRemoved(uint removedId, NotificationServe
         // notification.setExpired(true);
         notification.actions.clear();
         emit dataChanged(idx, idx);
-        return;
+
+        HistoryModel::self()->add(notification);
+
+        // return;
     }
 
     // Otherwise if explicitly closed by either user or app, mark it for removal

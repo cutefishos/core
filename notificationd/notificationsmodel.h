@@ -31,12 +31,15 @@ public:
     };
     Q_ENUM(Roles)
 
+    static NotificationsModel *self();
     explicit NotificationsModel(QObject *parent = nullptr);
 
     QVariant data(const QModelIndex &index, int role) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QHash<int, QByteArray> roleNames() const override;
+
+    Q_INVOKABLE void expired(uint id);
 
     Q_INVOKABLE void close(uint id);
     Q_INVOKABLE void invokeDefaultAction(uint id);

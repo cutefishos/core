@@ -17,19 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef APPLICATION_H
+#define APPLICATION_H
 
-#include <QObject>
+#include <QApplication>
+#include "notificationwindow.h"
 
-class Utils : public QObject
+class NotificationServer;
+class NotificationsModel;
+class Application : public QApplication
 {
     Q_OBJECT
 
 public:
-    explicit Utils(QObject *parent = nullptr);
+    explicit Application(int& argc, char** argv);
 
-    static QString processNameFromPid(uint pid);
+    void showWindow();
+
+    int run();
+    bool parseCommandLineArgs();
+
+private:
+    NotificationServer *m_notificationServer;
+    NotificationsModel *m_model;
+    NotificationWindow *m_window;
+    bool m_instance;
 };
 
-#endif // UTILS_H
+#endif // APPLICATION_H

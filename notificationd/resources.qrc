@@ -4,5 +4,9 @@
         <file>qml/NotificationPopup.qml</file>
         <file>images/dark/close.svg</file>
         <file>images/light/close.svg</file>
+        <file>qml/NotificationWindow.qml</file>
+        <file>images/dark/clear.svg</file>
+        <file>images/light/clear.svg</file>
+        <file>qml/IconButton.qml</file>
     </qresource>
 </RCC>

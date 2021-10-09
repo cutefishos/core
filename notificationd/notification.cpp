@@ -18,3 +18,21 @@
  */
 
 #include "notification.h"
+
+QDataStream &operator<<(QDataStream &argument, const Notification &info)
+{
+    argument << info.service << info.summary
+             << info.body << info.appName << info.appIcon
+             << info.created << info.updated;
+
+    return argument;
+}
+
+const QDataStream &operator>>(QDataStream &argument, Notification &info)
+{
+    argument >> info.service >> info.summary;
+    argument >> info.body >> info.appName >> info.appIcon;
+    argument >> info.created >> info.updated;
+
+    return argument;
+}
