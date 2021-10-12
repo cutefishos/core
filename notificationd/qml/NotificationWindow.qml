@@ -127,11 +127,11 @@ Item {
                 }
 
                 addDisplaced: Transition {
-                    NumberAnimation { properties: "x, y"; duration: 300 }
+                    NumberAnimation { properties: "x, y"; duration: 250 }
                 }
 
                 removeDisplaced: Transition {
-                    NumberAnimation { properties: "x, y"; duration: 300 }
+                    NumberAnimation { properties: "x, y"; duration: 250 }
                 }
 
                 delegate: Item {
@@ -151,6 +151,7 @@ Item {
                         id: _itemMouseArea
                         anchors.fill: parent
                         hoverEnabled: true
+                        z: 999
                     }
 
                     RowLayout {
