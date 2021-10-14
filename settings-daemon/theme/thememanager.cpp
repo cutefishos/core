@@ -184,6 +184,7 @@ void ThemeManager::setSystemFontPointSize(qreal fontSize)
 {
     m_settings->setValue(s_systemPointFontSize, fontSize);
     updateGtkFont();
+    emit systemFontPointSizeChanged();
 }
 
 qreal ThemeManager::devicePixelRatio()
