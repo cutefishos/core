@@ -19,6 +19,11 @@ Item {
         rootWindow.minimumWidth = root.width
     }
 
+    Keys.enabled: true
+    Keys.onEscapePressed: {
+        confirmation.setConfirmationResult("")
+    }
+
     Rectangle {
         id: _background
         anchors.fill: parent
@@ -97,6 +102,10 @@ Item {
                 onAccepted: {
                     if (passwordInput.text)
                         confirmation.setConfirmationResult(passwordInput.text)
+                }
+
+                Keys.onEscapePressed: {
+                    confirmation.setConfirmationResult("")
                 }
             }
 

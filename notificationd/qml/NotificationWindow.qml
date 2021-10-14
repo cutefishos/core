@@ -35,7 +35,7 @@ Item {
         id: _background
         anchors.fill: parent
         color: FishUI.Theme.secondBackgroundColor
-        radius: NotificationDialog.width * 0.05 //FishUI.Theme.bigRadius
+        radius: NotificationDialog.width * 0.02 //FishUI.Theme.bigRadius
         opacity: 0.7
 
         border.width: 1
