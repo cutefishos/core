@@ -163,6 +163,8 @@ void ThemeManager::setSystemFont(const QString &fontFamily)
 {
     m_settings->setValue(s_systemFontName, fontFamily);
     updateGtkFont();
+
+    emit systemFontChanged();
 }
 
 QString ThemeManager::systemFixedFont()

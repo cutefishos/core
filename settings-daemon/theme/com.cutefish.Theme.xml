@@ -74,6 +74,7 @@
     <signal name="cursorSizeChanged"></signal>
     <signal name="iconThemeChanged"></signal>
     <signal name="systemFontPointSizeChanged"></signal>
+    <signal name="systemFontChanged"></signal>
 
   </interface>
 </node>

@@ -28,7 +28,7 @@ class ThemeManager : public QObject
     Q_OBJECT
     Q_PROPERTY(bool isDarkMode READ isDarkMode WRITE setDarkMode NOTIFY darkModeChanged)
     Q_PROPERTY(bool darkModeDimsWallpaer READ darkModeDimsWallpaer WRITE setDarkModeDimsWallpaer NOTIFY darkModeDimsWallpaerChanged)
-    Q_PROPERTY(QString systemFont READ systemFont WRITE setSystemFont)
+    Q_PROPERTY(QString systemFont READ systemFont WRITE setSystemFont NOTIFY systemFontChanged)
     Q_PROPERTY(QString systemFixedFont READ systemFixedFont WRITE setSystemFixedFont)
     Q_PROPERTY(qreal systemFontPointSize READ systemFontPointSize WRITE setSystemFontPointSize NOTIFY systemFontPointSizeChanged)
     Q_PROPERTY(qreal devicePixelRatio READ devicePixelRatio WRITE setDevicePixelRatio)
@@ -97,6 +97,7 @@ signals:
     void cursorSizeChanged();
     void iconThemeChanged();
     void systemFontPointSizeChanged();
+    void systemFontChanged();
 
 private:
     void updateGtkFont();
