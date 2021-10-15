@@ -43,6 +43,12 @@ ApplicationWindow {
         id: wallpaper
     }
 
+    Rectangle {
+        anchors.fill: parent
+        color: wallpaper.color
+        visible: wallpaper.type === 1
+    }
+
     Image {
         id: wallpaperImage
         anchors.fill: parent
@@ -54,13 +60,14 @@ ApplicationWindow {
         clip: true
         cache: false
         smooth: false
+        visible: wallpaper.type === 0
+    }
 
-        ColorOverlay {
-            anchors.fill: parent
-            source: parent
-            color: "#000000"
-            opacity: 0.4
-        }
+    ColorOverlay {
+        anchors.fill: parent
+        source: parent
+        color: "#000000"
+        opacity: 0.4
     }
 
     FastBlur {
@@ -69,7 +76,7 @@ ApplicationWindow {
         radius: 64
         source: wallpaperImage
         cached: true
-        visible: true
+        visible: wallpaperImage.visible
     }
 
     Accounts.UserAccount {
