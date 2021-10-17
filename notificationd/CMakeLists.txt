@@ -1,5 +1,6 @@
 set(SRCS main.cpp
          application.cpp
+         datehelper.cpp
          screenhelper.cpp
          notificationsmodel.cpp
          notificationserver.cpp

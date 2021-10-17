@@ -18,6 +18,7 @@
  */
 
 #include "historymodel.h"
+#include "datehelper.h"
 
 #include <QSettings>
 #include <QDataStream>
@@ -51,7 +52,9 @@ QVariant HistoryModel::data(const QModelIndex &index, int role) const
     case HistoryModel::ImageRole:
         return "";
     case HistoryModel::CreatedRole:
-        return notification.created;
+        return DateHelper::friendlyTime(notification.created);
+    case HistoryModel::UpdatedRole:
+        return DateHelper::friendlyTime(notification.updated);
     case HistoryModel::BodyRole:
         return notification.body;
     case HistoryModel::IconNameRole:
@@ -146,4 +149,9 @@ void HistoryModel::initDatas()
     QByteArray listByteArray = settings.value("datas").toByteArray();
     QDataStream in(&listByteArray, QIODevice::ReadOnly);
     in >> m_notifications;
+}
+
+void HistoryModel::updateTime()
+{
+    emit layoutChanged();
 }

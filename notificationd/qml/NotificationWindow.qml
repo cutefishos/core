@@ -35,7 +35,7 @@ Item {
         id: _background
         anchors.fill: parent
         color: FishUI.Theme.secondBackgroundColor
-        radius: NotificationDialog.width * 0.02 //FishUI.Theme.bigRadius
+        radius: NotificationDialog.width * 0.05 //FishUI.Theme.bigRadius
         opacity: 0.7
 
         border.width: 1
@@ -126,10 +126,6 @@ Item {
                     visible: _view.count === 0
                 }
 
-                addDisplaced: Transition {
-                    NumberAnimation { properties: "x, y"; duration: 250 }
-                }
-
                 removeDisplaced: Transition {
                     NumberAnimation { properties: "x, y"; duration: 250 }
                 }
@@ -185,16 +181,25 @@ Item {
                                 rightPadding: FishUI.Units.smallSpacing
                             }
 
-                            Label {
-                                text: model.body
-                                visible: text
-                                rightPadding: FishUI.Units.smallSpacing
-                                maximumLineCount: 2
-                                elide: Text.ElideRight
-                                wrapMode: Text.Wrap
-                                Layout.fillWidth: true
-                                // Layout.fillHeight: true
-                                Layout.alignment: Qt.AlignVCenter
+                            RowLayout {
+                                Label {
+                                    id: bodyLabel
+                                    text: model.body
+                                    visible: text
+                                    rightPadding: FishUI.Units.smallSpacing
+                                    maximumLineCount: 2
+                                    elide: Text.ElideRight
+                                    wrapMode: Text.Wrap
+                                    Layout.fillWidth: true
+                                    // Layout.fillHeight: true
+                                    Layout.alignment: Qt.AlignVCenter
+                                }
+
+                                Label {
+                                    text: model.created
+                                    rightPadding: FishUI.Units.smallSpacing
+                                    Layout.alignment: Qt.AlignRight
+                                }
                             }
 
                             Item {

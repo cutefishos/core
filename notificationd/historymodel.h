@@ -53,6 +53,7 @@ public:
     Q_INVOKABLE void save();
 
     void initDatas();
+    void updateTime();
 
 private:
     QVector<Notification> m_notifications;
