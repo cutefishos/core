@@ -19,6 +19,7 @@
 
 #include <QCoreApplication>
 #include <QCommandLineParser>
+#include <QProcess>
 #include <QFile>
 #include <QDebug>
 
@@ -57,6 +58,20 @@ int main(int argc, char *argv[])
 
         file.write(modeStr.toUtf8());
         file.close();
+
+        // Set intel gpu.
+        if (QFile("/usr/bin/intel_gpu_frequency").exists()) {
+            QProcess process;
+            process.setProgram("/usr/bin/intel_gpu_frequency");
+
+            if (modeStr == "powersave") {
+                process.setArguments(QStringList() << "-d");
+            } else {
+                process.setArguments(QStringList() << "-m");
+            }
+            process.start();
+            process.waitForFinished();
+        }
     }
 
     return 0;
