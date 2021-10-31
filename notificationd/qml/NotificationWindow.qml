@@ -81,6 +81,16 @@ Item {
         enabled: true
     }
 
+    NumberAnimation {
+        id: scrollToTopAni
+        target: _view
+        from: 0
+        to: 0
+        property: "contentY"
+        duration: 200
+        easing.type: Easing.OutSine
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: FishUI.Units.largeSpacing
@@ -94,6 +104,18 @@ Item {
                 leftPadding: FishUI.Units.smallSpacing
                 color: FishUI.Theme.textColor
                 font.pointSize: 15
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        if (_view.contentY === 0)
+                            return
+
+                        scrollToTopAni.from = _view.contentY
+                        scrollToTopAni.to = 0
+                        scrollToTopAni.restart()
+                    }
+                }
             }
 
             IconButton {
