@@ -20,7 +20,8 @@
 
 #include "brightnesshelper.h"
 
-BrightnessHelper::BrightnessHelper(QObject *parent) : QObject(parent)
+BrightnessHelper::BrightnessHelper(QObject *parent)
+    : QObject(parent)
 {
     init();
     anime.setEasingCurve(QEasingCurve::Linear);
@@ -30,12 +31,13 @@ BrightnessHelper::BrightnessHelper(QObject *parent) : QObject(parent)
             writeBrightness(value.toInt());
         }
     });
-    connect(&anime, &QVariantAnimation::finished, this, [this](){
+    connect(&anime, &QVariantAnimation::finished, this, [this]() {
         qApp->quit();
     });
 }
 
-BrightnessHelper::~BrightnessHelper(){
+BrightnessHelper::~BrightnessHelper()
+{
 }
 
 void BrightnessHelper::init()
@@ -86,9 +88,10 @@ void BrightnessHelper::init()
     maxValue = readFile(QDir(name).filePath(kMaxFile)).toInt();
 }
 
-void BrightnessHelper::setBrightness(int value){
-    if (value <= 0)
-        value  = 1;
+void BrightnessHelper::setBrightness(int value)
+{
+    if (value < 0)
+        value = 0;
     if (value > 100)
         value = 100;
     anime.setDuration(85);
@@ -98,17 +101,20 @@ void BrightnessHelper::setBrightness(int value){
     anime.start();
 }
 
-void BrightnessHelper::increaseBrightness() {
+void BrightnessHelper::increaseBrightness()
+{
     int value = static_cast<int>(actual / (double)maxValue * 100);
     setBrightness(value + 20);
 }
 
-void BrightnessHelper::decreaseBrightness() {
+void BrightnessHelper::decreaseBrightness()
+{
     int value = static_cast<int>(actual / (double)maxValue * 100);
     setBrightness(value - 20);
 }
 
-void BrightnessHelper::writeBrightness(int brightness) {
+void BrightnessHelper::writeBrightness(int brightness)
+{
     if (brightness < 0)
         brightness = 0;
     if (brightness > maxValue)

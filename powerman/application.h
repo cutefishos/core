@@ -21,7 +21,14 @@
 #define APPLICATION_H
 
 #include <QObject>
+#include <QSettings>
+#include <QAction>
+#include <QSet>
+
 #include "lidwatcher.h"
+#include "idlemanager.h"
+#include "dimdisplayaction.h"
+
 #include "cpu/cpumanagement.h"
 
 class Application : public QObject
@@ -31,9 +38,16 @@ class Application : public QObject
 public:
     explicit Application(QObject *parent = nullptr);
 
+    void setDimDisplayTimeout(int timeout);
+
 private:
     LidWatcher *m_lidWatcher;
     CPUManagement *m_cpuManagement;
+    QSettings m_settings;
+
+    int m_closeScreenTimeout;
+
+    DimDisplayAction *m_dimDisplayAction;
 };
 
 #endif // APPLICATION_H

@@ -1,10 +1,15 @@
 project(cutefish-powerman)
 set(TARGET cutefish-powerman)
 
+find_package(KF5IdleTime)
+
 set(SOURCES
     main.cpp
     application.cpp
     lidwatcher.cpp
+    action.cpp
+    idlemanager.cpp
+    dimdisplayaction.cpp
     cpu/cpuitem.cpp
     cpu/cpumanagement.cpp
 )
@@ -12,6 +17,10 @@ set(SOURCES
 qt5_add_dbus_adaptor(DBUS_SOURCES
                      cpu/com.cutefish.CPUManagement.xml
                      cpu/cpumanagement.h CPUManagement)
+qt5_add_dbus_adaptor(DBUS_SOURCES
+                     com.cutefish.PowerManager.xml
+                     application.h Application)
+qt_add_dbus_interface(DBUS_SOURCES org.freedesktop.ScreenSaver.xml screenlocker_interface)
 set_source_files_properties(${DBUS_SOURCES} PROPERTIES SKIP_AUTOGEN ON)
 
 add_executable(${TARGET} ${SOURCES} ${DBUS_SOURCES})
@@ -22,6 +31,8 @@ target_link_libraries(${TARGET}
         Qt5::Quick
         Qt5::DBus
         Qt5::X11Extras
+
+        KF5::IdleTime
 )
 
 install(TARGETS ${TARGET} DESTINATION ${CMAKE_INSTALL_BINDIR})

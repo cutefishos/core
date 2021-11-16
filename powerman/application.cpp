@@ -18,12 +18,29 @@
  */
 
 #include "application.h"
+#include "powermanageradaptor.h"
+
 #include <QDBusConnection>
+#include <QDebug>
 
 Application::Application(QObject *parent)
     : QObject(parent)
     , m_lidWatcher(new LidWatcher)
     , m_cpuManagement(new CPUManagement)
+    , m_settings("cutefishos", "power")
+    , m_dimDisplayAction(new DimDisplayAction)
 {
+    m_closeScreenTimeout = m_settings.value("CloseScreenTimeout", 600).toInt();
+
+    m_dimDisplayAction->setTimeout(m_closeScreenTimeout);
+
     QDBusConnection::sessionBus().registerService(QStringLiteral("com.cutefish.PowerManager"));
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/PowerManager"), this);
+    new PowerManagerAdaptor(this);
+}
+
+void Application::setDimDisplayTimeout(int timeout)
+{
+    m_closeScreenTimeout = timeout;
+    m_dimDisplayAction->setTimeout(timeout);
 }
