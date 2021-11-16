@@ -121,6 +121,7 @@ void ProcessManager::startDesktopProcess()
     list << qMakePair(QString("cutefish-dock"), QStringList());
     list << qMakePair(QString("cutefish-filemanager"), QStringList("--desktop"));
     list << qMakePair(QString("cutefish-launcher"), QStringList());
+    list << qMakePair(QString("cutefish-powerman"), QStringList());
 
     // For CutefishOS.
     if (QFile("/usr/bin/cutefish-welcome").exists() &&
@@ -159,7 +160,6 @@ void ProcessManager::startDaemonProcess()
     list << qMakePair(QString("cutefish-settings-daemon"), QStringList());
     list << qMakePair(QString("cutefish-xembedsniproxy"), QStringList());
     list << qMakePair(QString("cutefish-gmenuproxy"), QStringList());
-    list << qMakePair(QString("cutefish-powerman"), QStringList());
     list << qMakePair(QString("chotkeys"), QStringList());
 
     for (QPair<QString, QStringList> pair : list) {
