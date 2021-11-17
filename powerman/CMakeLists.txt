@@ -3,6 +3,16 @@ set(TARGET cutefish-powerman)
 
 find_package(KF5IdleTime)
 find_package(X11)
+find_package(XCB
+    REQUIRED COMPONENTS
+        XCB
+        DPMS
+)
+
+set(XCB_LIBS
+    XCB::XCB
+    XCB::DPMS
+)
 
 set(SOURCES
     main.cpp
@@ -34,6 +44,7 @@ target_link_libraries(${TARGET}
         Qt5::X11Extras
 
         KF5::IdleTime
+        ${XCB_LIBS}
         ${X11_LIBRARIES}
 )
 
