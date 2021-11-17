@@ -82,6 +82,13 @@ void DimDisplayAction::onIdleTimeout(int msec)
 
 void DimDisplayAction::setTimeout(int timeout)
 {
+    unregisterIdleTimeout();
+
+    if (timeout < 0) {
+        m_dimOnIdleTime = timeout;
+        return;
+    }
+
     m_dimOnIdleTime = timeout;
     registerIdleTimeout(m_dimOnIdleTime * 3 / 4);
     registerIdleTimeout(m_dimOnIdleTime / 2);

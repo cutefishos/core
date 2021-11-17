@@ -63,6 +63,8 @@ protected:
      */
     void registerIdleTimeout(int msec);
 
+    void unregisterIdleTimeout();
+
 public Q_SLOTS:
     /**
      * This slot is triggered whenever an idle timeout registered with registerIdleTimeout is reached.

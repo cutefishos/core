@@ -48,6 +48,12 @@ void Action::registerIdleTimeout(int msec)
     IdleManager::self()->registerActionTimeout(this, msec);
 }
 
+void Action::unregisterIdleTimeout()
+{
+    d->registeredIdleTimeouts.clear();
+    IdleManager::self()->unregisterActionTimeouts(this);
+}
+
 bool Action::isSupported()
 {
     return true;
