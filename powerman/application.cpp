@@ -31,8 +31,12 @@ Application::Application(QObject *parent)
     , m_dimDisplayAction(new DimDisplayAction)
 {
     m_closeScreenTimeout = m_settings.value("CloseScreenTimeout", 600).toInt();
+    m_sleepWhenClosedScreen = m_settings.value("SleepWhenClosedScreen", false).toBool();
+    m_lockWhenClosedScreen = m_settings.value("LockWhenClosedScreen", true).toBool();
 
     m_dimDisplayAction->setTimeout(m_closeScreenTimeout);
+    m_dimDisplayAction->setSleep(m_sleepWhenClosedScreen);
+    m_dimDisplayAction->setLock(m_lockWhenClosedScreen);
 
     QDBusConnection::sessionBus().registerService(QStringLiteral("com.cutefish.PowerManager"));
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/PowerManager"), this);
@@ -43,4 +47,22 @@ void Application::setDimDisplayTimeout(int timeout)
 {
     m_closeScreenTimeout = timeout;
     m_dimDisplayAction->setTimeout(timeout);
+
+    m_settings.setValue("CloseScreenTimeout", timeout);
+}
+
+void Application::setSleepWhenClosedScreen(bool enabled)
+{
+    m_sleepWhenClosedScreen = enabled;
+    m_dimDisplayAction->setSleep(enabled);
+
+    m_settings.setValue("SleepWhenClosedScreen", enabled);
+}
+
+void Application::setLockWhenClosedScreen(bool lock)
+{
+    m_lockWhenClosedScreen = lock;
+    m_dimDisplayAction->setLock(lock);
+
+    m_settings.setValue("LockWhenClosedScreen", lock);
 }

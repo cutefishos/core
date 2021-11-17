@@ -23,6 +23,7 @@
 #include <QTimer>
 #include <QDBusPendingCall>
 #include <QX11Info>
+#include <QProcess>
 #include <QDebug>
 
 #include <X11/Xlib.h>
@@ -66,6 +67,22 @@ void DimDisplayAction::onIdleTimeout(int msec)
 
     if (sec == m_dimOnIdleTime) {
         m_iface.asyncCall("setValue", QVariant::fromValue(0));
+
+        // Sleep
+        if (m_sleep) {
+            QDBusInterface iface("com.cutefish.Session",
+                                 "/Session",
+                                 "com.cutefish.Session", QDBusConnection::sessionBus());
+
+            if (iface.isValid()) {
+                iface.call("suspend");
+            }
+        }
+
+        if (m_lock) {
+            QProcess::startDetached("cutefish-screenlocker", QStringList());
+        }
+
     } else if (sec == (m_dimOnIdleTime * 3 / 4)) {
         const int newBrightness = qRound(m_oldScreenBrightness / 8.0);
         m_iface.asyncCall("setValue", QVariant::fromValue(newBrightness));
@@ -93,4 +110,14 @@ void DimDisplayAction::setTimeout(int timeout)
     registerIdleTimeout(m_dimOnIdleTime * 3 / 4);
     registerIdleTimeout(m_dimOnIdleTime / 2);
     registerIdleTimeout(m_dimOnIdleTime);
+}
+
+void DimDisplayAction::setSleep(bool sleep)
+{
+    m_sleep = sleep;
+}
+
+void DimDisplayAction::setLock(bool lock)
+{
+    m_lock = lock;
 }

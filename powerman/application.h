@@ -39,6 +39,8 @@ public:
     explicit Application(QObject *parent = nullptr);
 
     void setDimDisplayTimeout(int timeout);
+    void setSleepWhenClosedScreen(bool enabled);
+    void setLockWhenClosedScreen(bool lock);
 
 private:
     LidWatcher *m_lidWatcher;
@@ -46,6 +48,8 @@ private:
     QSettings m_settings;
 
     int m_closeScreenTimeout;
+    bool m_sleepWhenClosedScreen;
+    bool m_lockWhenClosedScreen;
 
     DimDisplayAction *m_dimDisplayAction;
 };

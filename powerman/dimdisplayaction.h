@@ -34,12 +34,16 @@ public:
     void onWakeupFromIdle() override;
     void onIdleTimeout(int msec) override;
     void setTimeout(int timeout) override;
+    void setSleep(bool sleep);
+    void setLock(bool lock);
 
 private:
     QDBusInterface m_iface;
     int m_dimOnIdleTime = 0;
     int m_oldScreenBrightness = 0;
     bool m_dimmed = false;
+    bool m_sleep = false;
+    bool m_lock = false;
 };
 
 #endif // DIMDISPLAYACTION_H
