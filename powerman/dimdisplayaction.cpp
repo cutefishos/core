@@ -22,7 +22,10 @@
 #include <QSettings>
 #include <QTimer>
 #include <QDBusPendingCall>
+#include <QX11Info>
 #include <QDebug>
+
+#include <X11/Xlib.h>
 
 DimDisplayAction::DimDisplayAction(QObject *parent)
     : Action(parent)
@@ -30,6 +33,9 @@ DimDisplayAction::DimDisplayAction(QObject *parent)
               "/Brightness",
               "com.cutefish.Brightness", QDBusConnection::sessionBus())
 {
+    if (QX11Info::isPlatformX11()) {
+        XSetScreenSaver(QX11Info::display(), 0, 0, 0, 0);
+    }
 }
 
 void DimDisplayAction::onWakeupFromIdle()

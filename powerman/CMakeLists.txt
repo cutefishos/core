@@ -2,6 +2,7 @@ project(cutefish-powerman)
 set(TARGET cutefish-powerman)
 
 find_package(KF5IdleTime)
+find_package(X11)
 
 set(SOURCES
     main.cpp
@@ -33,6 +34,7 @@ target_link_libraries(${TARGET}
         Qt5::X11Extras
 
         KF5::IdleTime
+        ${X11_LIBRARIES}
 )
 
 install(TARGETS ${TARGET} DESTINATION ${CMAKE_INSTALL_BINDIR})
