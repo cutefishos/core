@@ -23,6 +23,7 @@
 #include <QApplication>
 
 #include "processmanager.h"
+#include "networkproxymanager.h"
 #include "powermanager/power.h"
 
 class Application : public QApplication
@@ -35,31 +36,30 @@ public:
     bool wayland() const;
 
 public slots:
-    void logout()
-    {
+    void logout() {
         m_processManager->logout();
     }
 
-    void reboot()
-    {
+    void reboot() {
         m_power.reboot();
         QCoreApplication::exit(0);
     }
 
-    void powerOff()
-    {
+    void powerOff() {
         m_power.shutdown();
         QCoreApplication::exit(0);
     }
 
-    void suspend()
-    {
+    void suspend() {
         m_power.suspend();
     }
 
-    void startDesktopProcess()
-    {
+    void startDesktopProcess() {
         m_processManager->startDesktopProcess();
+    }
+
+    void updateNetworkProxy() {
+        m_networkProxyManager->update();
     }
 
 private:
@@ -75,6 +75,7 @@ private:
 
 private:
     ProcessManager *m_processManager;
+    NetworkProxyManager *m_networkProxyManager;
     Power m_power;
 
     bool m_wayland;

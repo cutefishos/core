@@ -16,5 +16,8 @@
     <method name="startDesktopProcess">
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
+    <method name="updateNetworkProxy">
+      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+    </method>
   </interface>
 </node>

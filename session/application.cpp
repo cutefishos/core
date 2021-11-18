@@ -84,6 +84,7 @@ void setEnvironmentVariable(const QByteArray &name, const QByteArray &value)
 Application::Application(int &argc, char **argv)
     : QApplication(argc, argv)
     , m_processManager(new ProcessManager(this))
+    , m_networkProxyManager(new NetworkProxyManager)
     , m_wayland(false)
 {
     new SessionAdaptor(this);

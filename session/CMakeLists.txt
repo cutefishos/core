@@ -6,6 +6,7 @@ set(SOURCES
     main.cpp
     process.cpp
     processmanager.cpp
+    networkproxymanager.cpp
 
     powermanager/power.cpp
     powermanager/powerproviders.cpp
