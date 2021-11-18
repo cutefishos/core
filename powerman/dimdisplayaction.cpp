@@ -49,6 +49,9 @@ void DimDisplayAction::onWakeupFromIdle()
         return;
     }
 
+    if (m_oldScreenBrightness < 0)
+        m_oldScreenBrightness = 1;
+
     // An active inhibition may not let us restore the brightness.
     // We should wait a bit screen to wake-up from sleep
     QTimer::singleShot(0, this, [this]() {

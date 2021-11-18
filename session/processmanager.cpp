@@ -63,8 +63,6 @@ void ProcessManager::start()
 {
     startWindowManager();
     startDaemonProcess();
-
-    QTimer::singleShot(100, this, &ProcessManager::loadAutoStartProcess);
 }
 
 void ProcessManager::logout()
@@ -152,6 +150,9 @@ void ProcessManager::startDesktopProcess()
             process->deleteLater();
         }
     }
+
+    // Auto start
+    QTimer::singleShot(100, this, &ProcessManager::loadAutoStartProcess);
 }
 
 void ProcessManager::startDaemonProcess()
