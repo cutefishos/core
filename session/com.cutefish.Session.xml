@@ -19,5 +19,9 @@
     <method name="updateNetworkProxy">
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
+    <method name="launch">
+      <arg name="exec" type="s" direction="in"/>
+      <arg name="args" type="as" direction="in"/>
+    </method>
   </interface>
 </node>

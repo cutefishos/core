@@ -62,6 +62,8 @@ public slots:
         m_networkProxyManager->update();
     }
 
+    void launch(const QString &exec, const QStringList &args);
+
 private:
     void initEnvironments();
     void initLanguage();

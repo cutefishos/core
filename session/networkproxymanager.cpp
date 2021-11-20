@@ -17,22 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 #include "networkproxymanager.h"
 #include <QDBusPendingCall>
 #include <QDBusMessage>
+#include <QProcess>
 #include <QDBusConnection>
 
 NetworkProxyManager::NetworkProxyManager(QObject *parent)
     : QObject(parent)
-    , m_settings("cutefishos", "network")
+    , m_settings(QSettings::UserScope, "cutefishos", "network")
 {
-    update();
 }
 
 void NetworkProxyManager::update()
 {
     qunsetenv("HTTP_PROXY");
+    qunsetenv("HTTPS_PROXY");
     qunsetenv("FTP_PROXY");
+    qunsetenv("ALL_PROXY");
+    qunsetenv("NO_PROXY");
 
     m_settings.sync();
 
@@ -47,6 +51,7 @@ void NetworkProxyManager::update()
     m_socksProxyPort = m_settings.value("SocksProxyPort", "").toString();
 
     QMap<QString, QString> dbusActivationEnv;
+    QStringList systemdUpdates;
 
     if (m_flag == 0) {
         // No proxy
@@ -56,34 +61,25 @@ void NetworkProxyManager::update()
         // Use manually specified proxy configuration
 
         QString httpProxy = QString("http://%1:%2/").arg(m_httpProxy).arg(m_httpProxyPort);
+        QString ftpProxy = QString("http://%1:%2/").arg(m_ftpProxy).arg(m_ftpProxyPort);
+
+        if (m_useSameProxy) {
+            ftpProxy = httpProxy;
+        }
 
         if (!m_httpProxy.isEmpty() && !m_httpProxyPort.isEmpty()) {
             qputenv("HTTP_PROXY", httpProxy.toLatin1());
-            dbusActivationEnv.insert("HTTP_PROXY", httpProxy);
+            qputenv("HTTPS_PROXY", httpProxy.toLatin1());
         }
 
-        if (m_useSameProxy) {
-            if (!m_ftpProxy.isEmpty() && !m_ftpProxyPort.isEmpty()) {
-                qputenv("FTP_PROXY", httpProxy.toLatin1());
-                dbusActivationEnv.insert("FTP_PROXY", httpProxy);
-            }
-        } else {
-            if (!m_ftpProxy.isEmpty() && !m_ftpProxyPort.isEmpty()) {
-                qputenv("FTP_PROXY", QString("http://%1:%2/").arg(m_ftpProxy).arg(m_ftpProxyPort).toLatin1());
-                dbusActivationEnv.insert("FTP_PROXY", QString("http://%1:%2/").arg(m_ftpProxy).arg(m_ftpProxyPort).toLatin1());
-            }
+        if (!m_ftpProxy.isEmpty() && !m_ftpProxyPort.isEmpty()) {
+            qputenv("FTP_PROXY", ftpProxy.toLatin1());
         }
 
-        // if (!m_socksProxy.isEmpty() && !m_socksProxyPort.isEmpty()) {
-        //     qputenv("ALL_PROXY", QString("socks://%1:%2/").arg(m_socksProxy).arg(m_socksProxyPort).toLatin1());
-        // }
+        qputenv("NO_PROXY", "localhost,127.0.0.0/8,::1");
+
+         if (!m_socksProxy.isEmpty() && !m_socksProxyPort.isEmpty()) {
+             qputenv("ALL_PROXY", QString("socks://%1:%2/").arg(m_socksProxy).arg(m_socksProxyPort).toLatin1());
+         }
     }
-
-    QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.freedesktop.DBus"),
-                                                      QStringLiteral("/org/freedesktop/DBus"),
-                                                      QStringLiteral("org.freedesktop.DBus"),
-                                                      QStringLiteral("UpdateActivationEnvironment"));
-    msg.setArguments({QVariant::fromValue(dbusActivationEnv)});
-    QDBusPendingCall reply = QDBusConnection::sessionBus().asyncCall(msg);
-    reply.waitForFinished();
 }

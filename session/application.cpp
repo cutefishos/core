@@ -125,6 +125,9 @@ Application::Application(int &argc, char **argv)
 
     qunsetenv("XCURSOR_THEME");
     qunsetenv("XCURSOR_SIZE");
+    qunsetenv("SESSION_MANAGER");
+
+    m_networkProxyManager->update();
 
     QTimer::singleShot(100, m_processManager, &ProcessManager::start);
 }
@@ -132,6 +135,15 @@ Application::Application(int &argc, char **argv)
 bool Application::wayland() const
 {
     return m_wayland;
+}
+
+void Application::launch(const QString &exec, const QStringList &args)
+{
+    QProcess process;
+    process.setProgram(exec);
+    process.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
+    process.setArguments(args);
+    process.startDetached();
 }
 
 void Application::initEnvironments()
