@@ -146,6 +146,16 @@ void Application::launch(const QString &exec, const QStringList &args)
     process.startDetached();
 }
 
+void Application::launch(const QString &exec, const QString &workingDir, const QStringList &args)
+{
+    QProcess process;
+    process.setProgram(exec);
+    process.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
+    process.setWorkingDirectory(workingDir);
+    process.setArguments(args);
+    process.startDetached();
+}
+
 void Application::initEnvironments()
 {
     // Set defaults

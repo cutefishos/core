@@ -23,5 +23,10 @@
       <arg name="exec" type="s" direction="in"/>
       <arg name="args" type="as" direction="in"/>
     </method>
+    <method name="launch">
+      <arg name="exec" type="s" direction="in"/>
+      <arg name="workingDirectory" type="s" direction="in"/>
+      <arg name="args" type="as" direction="in"/>
+    </method>
   </interface>
 </node>

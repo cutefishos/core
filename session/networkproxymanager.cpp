@@ -38,6 +38,12 @@ void NetworkProxyManager::update()
     qunsetenv("ALL_PROXY");
     qunsetenv("NO_PROXY");
 
+    qunsetenv("http_proxy");
+    qunsetenv("https_proxy");
+    qunsetenv("ftp_proxy");
+    qunsetenv("all_proxy");
+    qunsetenv("no_proxy");
+
     m_settings.sync();
 
     m_flag = m_settings.value("ProxyFlag", 0).toInt();
@@ -70,16 +76,22 @@ void NetworkProxyManager::update()
         if (!m_httpProxy.isEmpty() && !m_httpProxyPort.isEmpty()) {
             qputenv("HTTP_PROXY", httpProxy.toLatin1());
             qputenv("HTTPS_PROXY", httpProxy.toLatin1());
+
+            qputenv("http_proxy", httpProxy.toLatin1());
+            qputenv("https_proxy", httpProxy.toLatin1());
         }
 
         if (!m_ftpProxy.isEmpty() && !m_ftpProxyPort.isEmpty()) {
             qputenv("FTP_PROXY", ftpProxy.toLatin1());
+            qputenv("ftp_proxy", ftpProxy.toLatin1());
         }
 
         qputenv("NO_PROXY", "localhost,127.0.0.0/8,::1");
+        qputenv("no_proxy", "localhost,127.0.0.0/8,::1");
 
          if (!m_socksProxy.isEmpty() && !m_socksProxyPort.isEmpty()) {
-             qputenv("ALL_PROXY", QString("socks://%1:%2/").arg(m_socksProxy).arg(m_socksProxyPort).toLatin1());
+             // qputenv("ALL_PROXY", QString("socks://%1:%2/").arg(m_socksProxy).arg(m_socksProxyPort).toLatin1());
+             // qputenv("all_proxy", QString("socks://%1:%2/").arg(m_socksProxy).arg(m_socksProxyPort).toLatin1());
          }
     }
 }

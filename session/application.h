@@ -63,6 +63,7 @@ public slots:
     }
 
     void launch(const QString &exec, const QStringList &args);
+    void launch(const QString &exec, const QString &workingDir, const QStringList &args);
 
 private:
     void initEnvironments();
