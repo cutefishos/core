@@ -21,7 +21,6 @@
 #define APPLICATION_H
 
 #include <QApplication>
-#include "audio/audiomanager.h"
 #include "theme/thememanager.h"
 #include "brightness/brightnessmanager.h"
 #include "battery/upowermanager.h"
@@ -38,13 +37,10 @@ class Application : public QApplication
 public:
     explicit Application(int &argc, char **argv);
 
-    AudioManager *audioManager() { return m_audioManager; }
-
     void invokeDesktopProcess();
 //    void initKWin();
 
 private:
-    AudioManager *m_audioManager;
     ThemeManager *m_themeManager;
     BrightnessManager *m_brightnessManager;
     UPowerManager *m_upowerManager;

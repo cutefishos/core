@@ -6,21 +6,17 @@ System backend and start session and more.
 
 ```shell
 sudo pacman -S extra-cmake-modules pkgconf qt5-base qt5-quickcontrols2 qt5-x11extras qt5-tools\
-    kwindowsystem polkit polkit-qt5 pulseaudio xorg-server-devel xf86-input-libinput xf86-input-synaptics
+    kwindowsystem polkit polkit-qt5 xorg-server-devel xf86-input-libinput xf86-input-synaptics
 ```
 
 For Ubuntu:
 ```shell
-sudo apt install libpolkit-agent-1-dev libpolkit-qt5-1-dev libpulse-dev libsm-dev libxtst-dev\
+sudo apt install libpolkit-agent-1-dev libpolkit-qt5-1-dev libsm-dev libxtst-dev\
     libxcb-randr0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxcb-composite0-dev libxcb-damage0-dev libxcb-image0-dev libxcb-util0-dev libkf5idletime-dev
 ```
 (Yes it's annoying that so many xcb's packages here is needed to install. Isn't there a way to install one package and these `libxcb`s all get ready?)
 
 ## Runtime
-
-```shell
-pulseaudio
-```
 
 ## Build
 

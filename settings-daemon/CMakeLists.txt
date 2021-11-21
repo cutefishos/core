@@ -1,7 +1,6 @@
 project(cutefish-settings-daemon)
 set(TARGET cutefish-settings-daemon)
 
-find_package(PulseAudio)
 find_package(X11 REQUIRED)
 find_package(X11_XCB REQUIRED)
 find_package(XCB REQUIRED)
@@ -13,8 +12,6 @@ pkg_check_modules(SYNAPTICS xorg-synaptics IMPORTED_TARGET GLOBAL)
 file (GLOB_RECURSE SRCS
   "*.cpp"
   "*.h"
-  "audio/*.cpp"
-  "audio/*.h"
   "theme/*.h"
   "theme/*.cpp"
   "brightness/*.h"
@@ -39,9 +36,6 @@ set(HEADERS "")
 set(FORMS "")
 set(RESOURCES "")
 
-qt5_add_dbus_adaptor(DBUS_SOURCES
-                     audio/com.cutefish.Audio.xml
-                     audio/audiomanager.h AudioManager)
 qt5_add_dbus_adaptor(DBUS_SOURCES
                      brightness/com.cutefish.Brightness.xml
                      brightness/brightnessmanager.h BrightnessManager)
@@ -72,7 +66,6 @@ target_link_libraries(${TARGET}
         Qt5::Widgets
         Qt5::DBus
         Qt5::X11Extras
-        ${PULSEAUDIO_LIBRARY}
         ${X11_LIBRARIES}
         X11::X11
         X11::Xi
