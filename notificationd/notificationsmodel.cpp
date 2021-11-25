@@ -7,6 +7,7 @@
 #include "notificationsmodel.h"
 #include "historymodel.h"
 #include "notification.h"
+#include "settings.h"
 
 #include <QMetaEnum>
 #include <QDebug>
@@ -207,6 +208,13 @@ void NotificationsModel::removeRows(const QVector<int> &rows)
 
 void NotificationsModel::onNotificationAdded(const Notification &notification)
 {
+    // Do Not Disturb Mode:
+    // Add directly to the historical model.
+    if (Settings::self()->doNotDisturb()) {
+        HistoryModel::self()->add(notification);
+        return;
+    }
+
     if (m_notifications.size() >= s_notificationsLimit) {
         const int cleanupCount = s_notificationsLimit / 2;
         beginRemoveRows(QModelIndex(), 0, cleanupCount - 1);

@@ -43,6 +43,7 @@ Application::Application(int& argc, char** argv)
     , m_notificationServer(NotificationServer::self())
     , m_model(NotificationsModel::self())
     , m_window(nullptr)
+    , m_settings(Settings::self())
     , m_instance(false)
 {
     if (QDBusConnection::sessionBus().registerService("com.cutefish.Notification")) {
@@ -77,6 +78,11 @@ void Application::showWindow()
         m_window->open();
 }
 
+void Application::setDoNotDisturb(bool enabled)
+{
+    m_settings->setDoNotDisturb(enabled);
+}
+
 int Application::run()
 {
     if (!parseCommandLineArgs())
@@ -84,6 +90,7 @@ int Application::run()
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("notificationsModel", m_model);
+    engine.rootContext()->setContextProperty("Settings", m_settings);
     engine.load(QUrl("qrc:/qml/main.qml"));
 
     m_window = new NotificationWindow;

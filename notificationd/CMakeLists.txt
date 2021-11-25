@@ -7,6 +7,7 @@ set(SRCS main.cpp
          notification.cpp
          notificationwindow.cpp
          historymodel.cpp
+         settings.cpp
          utils.cpp
          dbus/notificationsadaptor.cpp
          resources.qrc

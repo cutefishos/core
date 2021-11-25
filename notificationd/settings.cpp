@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2021 CutefishOS Team.
  *
- * Author:     Reion Wong <reion@cutefishos.com>
+ * Author:     Kate Leet <kateleet@cutefishos.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,34 +17,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef APPLICATION_H
-#define APPLICATION_H
-
-#include <QApplication>
-#include "notificationwindow.h"
 #include "settings.h"
 
-class NotificationServer;
-class NotificationsModel;
-class Application : public QApplication
+Settings *Settings::self()
 {
-    Q_OBJECT
+    static Settings s;
+    return &s;
+}
 
-public:
-    explicit Application(int& argc, char** argv);
+Settings::Settings(QObject *parent)
+    : QObject(parent)
+    , m_settings(QSettings::UserScope, "cutefishos", "notification")
+{
+    m_doNotDisturb = m_settings.value("DoNotDisturb", false).toBool();
+}
 
-    void showWindow();
-    void setDoNotDisturb(bool enabled);
+bool Settings::doNotDisturb() const
+{
+    return m_doNotDisturb;
+}
 
-    int run();
-    bool parseCommandLineArgs();
+void Settings::setDoNotDisturb(bool doNotDisturb)
+{
+    if (m_doNotDisturb != doNotDisturb) {
+        m_doNotDisturb = doNotDisturb;
 
-private:
-    NotificationServer *m_notificationServer;
-    NotificationsModel *m_model;
-    NotificationWindow *m_window;
-    Settings *m_settings;
-    bool m_instance;
-};
+        m_settings.setValue("DoNotDisturb", m_doNotDisturb);
 
-#endif // APPLICATION_H
+        emit doNotDisturbChanged();
+    }
+}

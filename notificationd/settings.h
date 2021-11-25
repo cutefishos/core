@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2021 CutefishOS Team.
  *
- * Author:     Reion Wong <reion@cutefishos.com>
+ * Author:     Kate Leet <kateleet@cutefishos.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,34 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef APPLICATION_H
-#define APPLICATION_H
+#ifndef SETTINGS_H
+#define SETTINGS_H
 
-#include <QApplication>
-#include "notificationwindow.h"
-#include "settings.h"
+#include <QObject>
+#include <QSettings>
 
-class NotificationServer;
-class NotificationsModel;
-class Application : public QApplication
+class Settings : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool doNotDisturb READ doNotDisturb WRITE setDoNotDisturb NOTIFY doNotDisturbChanged)
 
 public:
-    explicit Application(int& argc, char** argv);
+    static Settings *self();
 
-    void showWindow();
-    void setDoNotDisturb(bool enabled);
+    explicit Settings(QObject *parent = nullptr);
 
-    int run();
-    bool parseCommandLineArgs();
+    bool doNotDisturb() const;
+    void setDoNotDisturb(bool doNotDisturb);
+
+signals:
+    void doNotDisturbChanged();
 
 private:
-    NotificationServer *m_notificationServer;
-    NotificationsModel *m_model;
-    NotificationWindow *m_window;
-    Settings *m_settings;
-    bool m_instance;
+    QSettings m_settings;
+    bool m_doNotDisturb;
 };
 
-#endif // APPLICATION_H
+#endif // SETTINGS_H

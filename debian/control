@@ -56,7 +56,6 @@ Depends: accountsservice,
          qml-module-qtquick-shapes,
          appmenu-gtk2-module,
          appmenu-gtk3-module,
-         appmenu-gtk-module-common,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: CutefishOS System Components
