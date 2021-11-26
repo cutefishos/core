@@ -42,6 +42,7 @@
     </method>
 
     <method name="applyXResources"></method>
+    <method name="updateFontConfig"></method>
 
     <property name="isDarkMode" type="b" access="read"/>
     <property name="darkModeDimsWallpaer" type="b" access="read"/>

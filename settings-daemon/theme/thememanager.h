@@ -88,6 +88,8 @@ public:
     QString iconTheme() const;
     void setIconTheme(const QString &iconTheme);
 
+    void updateFontConfig();
+
 signals:
     void darkModeChanged(bool darkMode);
     void wallpaperChanged(QString path);
@@ -105,7 +107,6 @@ private:
     void updateGtkFont();
     void updateGtkDarkTheme();
     void updateGtkIconTheme();
-    void updateFontConfig();
 
     QSettings *m_settings;
 
