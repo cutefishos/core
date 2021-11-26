@@ -49,11 +49,18 @@ void Language::setLanguage(const QString &code)
     }
 
     QSettings settings(QStringLiteral("cutefishos"), QStringLiteral("theme"));
-    // 中文语言下更换字体
+
+    // Change fonts
     if (code == "zh_CN") {
         settings.setValue("Font", "Noto Sans CJK SC");
     } else if (code.contains("en_")) {
         settings.setValue("Font", "Noto Sans");
+    } else if (code == "zh_TW") {
+        settings.setValue("Font", "Noto Sans CJK TC");
+    } else if (code == "zh_HK") {
+        settings.setValue("Font", "Noto Serif CJK HK");
+    } else if (code == "ja_JP") {
+        settings.setValue("Font", "Noto Serif CJK JP");
     }
 
     m_settings->setValue("language", code);

@@ -370,6 +370,10 @@ void ThemeManager::updateFontConfig()
     const QString &fimilyFont = systemFont();
     const QString &fixedFont = systemFixedFont();
 
+    QSettings settings(QSettings::UserScope, "cutefishos", "theme");
+    bool hinting = settings.value("XftAntialias", 1).toBool();
+    QString hintStyle = settings.value("XftHintStyle", "hintslight").toString();
+
     QString content = QString("<?xml version=\"1.0\"?>"
                         "<!DOCTYPE fontconfig SYSTEM \"fonts.dtd\">"
                         "<fontconfig>"
@@ -404,11 +408,22 @@ void ThemeManager::updateFontConfig()
                         "<match target=\"font\">"
                         "<edit name=\"rgba\"><const>rgb</const></edit>"
                         "</match>"
+                        "<match target=\"font\">"
+                        "<edit name=\"hinting\" mode=\"assign\">"
+                        "<bool>%8</bool>"
+                        "</edit>"
+                        "</match>"
+                        "<match target=\"font\">"
+                        "<edit name=\"hintstyle\" mode=\"assign\">"
+                        "<const>%9</const>"
+                        "</edit>"
+                        "</match>"
                         "</fontconfig>"
     ).arg(fimilyFont).arg(fimilyFont)
      .arg(fimilyFont).arg(fimilyFont)
      .arg(fixedFont).arg(fixedFont)
-     .arg(fimilyFont);
+     .arg(fimilyFont).arg(hinting ? "true" : "false")
+     .arg(hintStyle);
 
     QString targetPath(QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QLatin1Char('/') + QLatin1String("fontconfig"));
 
