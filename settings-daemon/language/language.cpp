@@ -19,8 +19,10 @@
 
 #include "language.h"
 #include "languageadaptor.h"
+#include "theme/thememanager.h"
 
 #include <QDBusInterface>
+#include <QSettings>
 
 Language::Language(QObject *parent)
     : QObject(parent)
@@ -44,6 +46,14 @@ void Language::setLanguage(const QString &code)
 {
     if (m_settings->value("language").toString() == code) {
         return;
+    }
+
+    QSettings settings(QStringLiteral("cutefishos"), QStringLiteral("theme"));
+    // 中文语言下更换字体
+    if (code == "zh_CN") {
+        settings.setValue("Font", "Noto Sans CJK SC");
+    } else if (code.contains("en_")) {
+        settings.setValue("Font", "Noto Sans");
     }
 
     m_settings->setValue("language", code);

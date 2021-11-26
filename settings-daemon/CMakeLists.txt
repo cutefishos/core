@@ -66,6 +66,7 @@ target_link_libraries(${TARGET}
         Qt5::Widgets
         Qt5::DBus
         Qt5::X11Extras
+        Qt5::Xml
         ${X11_LIBRARIES}
         X11::X11
         X11::Xi

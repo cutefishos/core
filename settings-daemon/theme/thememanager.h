@@ -41,6 +41,8 @@ class ThemeManager : public QObject
     Q_PROPERTY(QString iconTheme READ iconTheme WRITE setIconTheme NOTIFY iconThemeChanged)
 
 public:
+    static ThemeManager *self();
+
     ThemeManager(QObject *parent = nullptr);
 
     bool isDarkMode();
@@ -103,6 +105,7 @@ private:
     void updateGtkFont();
     void updateGtkDarkTheme();
     void updateGtkIconTheme();
+    void updateFontConfig();
 
     QSettings *m_settings;
 

@@ -20,6 +20,8 @@
 #include "thememanager.h"
 #include "themeadaptor.h"
 
+#include <QDomDocument>
+#include <QTextStream>
 #include <QDBusInterface>
 #include <QProcess>
 #include <QFile>
@@ -38,6 +40,12 @@ static QString gtkRc2Path()
 static QString gtk3SettingsIniPath()
 {
     return QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QLatin1String("/gtk-3.0/settings.ini");
+}
+
+ThemeManager *ThemeManager::self()
+{
+    static ThemeManager t;
+    return &t;
 }
 
 ThemeManager::ThemeManager(QObject *parent)
@@ -70,6 +78,9 @@ ThemeManager::ThemeManager(QObject *parent)
 
     // Start the DE and need to update the settings again.
     initGtkConfig();
+
+    // 登陆后更新 fontconfig
+    updateFontConfig();
 }
 
 bool ThemeManager::isDarkMode()
@@ -163,6 +174,7 @@ void ThemeManager::setSystemFont(const QString &fontFamily)
 {
     m_settings->setValue(s_systemFontName, fontFamily);
     updateGtkFont();
+    updateFontConfig();
 
     emit systemFontChanged();
 }
@@ -175,6 +187,8 @@ QString ThemeManager::systemFixedFont()
 void ThemeManager::setSystemFixedFont(const QString &fontFamily)
 {
     m_settings->setValue(s_systemFixedFontName, fontFamily);
+
+    updateFontConfig();
 }
 
 qreal ThemeManager::systemFontPointSize()
@@ -349,6 +363,83 @@ void ThemeManager::updateGtkIconTheme()
     settings.beginGroup("Settings");
     settings.setValue("gtk-application-prefer-dark-theme", isDarkMode());
     settings.sync();
+}
+
+void ThemeManager::updateFontConfig()
+{
+    const QString &fimilyFont = systemFont();
+    const QString &fixedFont = systemFixedFont();
+
+    QString content = QString("<?xml version=\"1.0\"?>"
+                        "<!DOCTYPE fontconfig SYSTEM \"fonts.dtd\">"
+                        "<fontconfig>"
+                        "<match target=\"pattern\">"
+                        "<test qual=\"any\" name=\"family\">"
+                        "<string>serif</string>"
+                        "</test>"
+                        "<edit name=\"family\" mode=\"assign\" binding=\"strong\">"
+                        "<string>%1</string>"
+                        "<string>%2</string>"
+                        "</edit>"
+                        "</match>"
+                        "<match target=\"pattern\">"
+                        "<test qual=\"any\" name=\"family\">"
+                        "<string>sans-serif</string>"
+                        "</test>"
+                        "<edit name=\"family\" mode=\"assign\" binding=\"strong\">"
+                        "<string>%3</string>"
+                        "<string>%4</string>"
+                        "</edit>"
+                        "</match>"
+                        "<match target=\"pattern\">"
+                        "<test qual=\"any\" name=\"family\">"
+                        "<string>monospace</string>"
+                        "</test>"
+                        "<edit name=\"family\" mode=\"assign\" binding=\"strong\">"
+                        "<string>%5</string>"
+                        "<string>%6</string>"
+                        "<string>%7</string>"
+                        "</edit>"
+                        "</match>"
+                        "<match target=\"font\">"
+                        "<edit name=\"rgba\"><const>rgb</const></edit>"
+                        "</match>"
+                        "</fontconfig>"
+    ).arg(fimilyFont).arg(fimilyFont)
+     .arg(fimilyFont).arg(fimilyFont)
+     .arg(fixedFont).arg(fixedFont)
+     .arg(fimilyFont);
+
+    QString targetPath(QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QLatin1Char('/') + QLatin1String("fontconfig"));
+
+    if (!QDir(targetPath).exists()) {
+        QDir(targetPath).mkpath(targetPath);
+    }
+
+    targetPath += "/conf.d";
+
+    if (!QDir(targetPath).exists()) {
+        QDir(targetPath).mkpath(targetPath);
+    }
+
+    QString xmlOut;
+    QXmlStreamReader reader(content);
+    QXmlStreamWriter writer(&xmlOut);
+    writer.setAutoFormatting(true);
+
+    while (!reader.atEnd()) {
+        reader.readNext();
+        if (!reader.isWhitespace()) {
+            writer.writeCurrentToken(reader);
+        }
+    }
+
+    QFile file(targetPath + "/99-cutefish.conf");
+    if (file.open(QIODevice::WriteOnly)) {
+        QTextStream s(&file);
+        s << xmlOut.toLatin1();
+        file.close();
+    }
 }
 
 QString ThemeManager::iconTheme() const

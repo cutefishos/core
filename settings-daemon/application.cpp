@@ -31,7 +31,7 @@
 
 Application::Application(int &argc, char **argv)
     : QApplication(argc, argv)
-    , m_themeManager(new ThemeManager(this))
+    , m_themeManager(ThemeManager::self())
     , m_brightnessManager(new BrightnessManager(this))
     , m_upowerManager(new UPowerManager(this))
     , m_language(new Language(this))
