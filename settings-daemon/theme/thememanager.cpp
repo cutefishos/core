@@ -367,8 +367,10 @@ void ThemeManager::updateGtkIconTheme()
 
 void ThemeManager::updateFontConfig()
 {
-    const QString &fimilyFont = systemFont();
+    const QString &familyFont = systemFont();
     const QString &fixedFont = systemFixedFont();
+
+    const QString &familyFallback = "Noto Sans";
 
     QSettings settings(QSettings::UserScope, "cutefishos", "theme");
     bool hinting = settings.value("XftAntialias", 1).toBool();
@@ -406,7 +408,7 @@ void ThemeManager::updateFontConfig()
                         "</edit>"
                         "</match>"
                         "<match target=\"font\">"
-                        "<edit name=\"rgba\"><const>rgb</const></edit>"
+                        "<edit name=\"rgba\" mode=\"assign\"><const>rgb</const></edit>"
                         "</match>"
                         "<match target=\"font\">"
                         "<edit name=\"hinting\" mode=\"assign\">"
@@ -419,10 +421,10 @@ void ThemeManager::updateFontConfig()
                         "</edit>"
                         "</match>"
                         "</fontconfig>"
-    ).arg(fimilyFont).arg(fimilyFont)
-     .arg(fimilyFont).arg(fimilyFont)
+    ).arg(familyFont).arg(familyFallback)
+     .arg(familyFont).arg(familyFallback)
      .arg(fixedFont).arg(fixedFont)
-     .arg(fimilyFont).arg(hinting ? "true" : "false")
+     .arg(familyFont).arg(hinting ? "true" : "false")
      .arg(hintStyle);
 
     QString targetPath(QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QLatin1Char('/') + QLatin1String("fontconfig"));
