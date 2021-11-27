@@ -1,32 +1,17 @@
 /*
- * SNI DBus Serialisers
- * Copyright 2015  David Edmundson <davidedmundson@kde.org>
- * Copyright 2009 by Marco Martin <notmart@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License or (at your option) version 3 or any later version
- * accepted by the membership of KDE e.V. (or its successor approved
- * by the membership of KDE e.V.), which shall act as a proxy
- * defined in Section 14 of version 3 of the license.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
+    SNI DBus Serialisers
+    SPDX-FileCopyrightText: 2015 David Edmundson <davidedmundson@kde.org>
+    SPDX-FileCopyrightText: 2009 Marco Martin <notmart@gmail.com>
+
+    SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+*/
 
 #include "snidbus.h"
 
 #include <QSysInfo>
 #include <QtEndian>
 
-//mostly copied from KStatusNotiferItemDbus.cpps from knotification
+// mostly copied from KStatusNotiferItemDbus.cpps from knotification
 
 KDbusImageStruct::KDbusImageStruct()
 {
@@ -37,15 +22,15 @@ KDbusImageStruct::KDbusImageStruct(const QImage &image)
     width = image.size().width();
     height = image.size().height();
     if (image.format() == QImage::Format_ARGB32) {
-        data = QByteArray((char *)image.bits(), image.byteCount());
+        data = QByteArray((char *)image.bits(), image.sizeInBytes());
     } else {
         QImage image32 = image.convertToFormat(QImage::Format_ARGB32);
-        data = QByteArray((char *)image32.bits(), image32.byteCount());
+        data = QByteArray((char *)image32.bits(), image32.sizeInBytes());
     }
 
-    //swap to network byte order if we are little endian
+    // swap to network byte order if we are little endian
     if (QSysInfo::ByteOrder == QSysInfo::LittleEndian) {
-        quint32 *uintBuf = (quint32 *) data.data();
+        quint32 *uintBuf = (quint32 *)data.data();
         for (uint i = 0; i < data.size() / sizeof(quint32); ++i) {
             *uintBuf = qToBigEndian(*uintBuf);
             ++uintBuf;

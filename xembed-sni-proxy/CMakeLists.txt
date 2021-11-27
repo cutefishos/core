@@ -55,6 +55,7 @@ set(XEMBED_SNI_PROXY_SOURCES
     fdoselectionmanager.cpp
     snidbus.cpp
     sniproxy.cpp
+    debug.cpp
     xtestsender.cpp
 )
 

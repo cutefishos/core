@@ -1,35 +1,19 @@
 /*
- * SNI Dbus serialisers
- * Copyright 2015  <davidedmundson@kde.org> David Edmundson
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License or (at your option) version 3 or any later version
- * accepted by the membership of KDE e.V. (or its successor approved
- * by the membership of KDE e.V.), which shall act as a proxy
- * defined in Section 14 of version 3 of the license.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
+    SNI Dbus serialisers
+    Copyright 2015  <davidedmundson@kde.org> David Edmundson
 
-#ifndef SNIDBUS_H
-#define SNIDBUS_H
+    SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+*/
 
-#include <QString>
+#pragma once
+
 #include <QByteArray>
 #include <QDBusArgument>
-#include <QVector>
 #include <QImage>
+#include <QString>
+#include <QVector>
 
-//Custom message type for DBus
+// Custom message type for DBus
 struct KDbusImageStruct {
     KDbusImageStruct();
     KDbusImageStruct(const QImage &image);
@@ -61,5 +45,3 @@ const QDBusArgument &operator<<(QDBusArgument &argument, const KDbusToolTipStruc
 const QDBusArgument &operator>>(const QDBusArgument &argument, KDbusToolTipStruct &toolTip);
 
 Q_DECLARE_METATYPE(KDbusToolTipStruct)
-
-#endif // SNIDBUS_H

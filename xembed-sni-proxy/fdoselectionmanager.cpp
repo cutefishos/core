@@ -1,76 +1,60 @@
 /*
- * Registers as a embed container
- * Copyright (C) 2015 <davidedmundson@kde.org> David Edmundson
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- *
- */
+    Registers as a embed container
+    SPDX-FileCopyrightText: 2015 David Edmundson <davidedmundson@kde.org>
+    SPDX-FileCopyrightText: 2019 Konrad Materka <materka@gmail.com>
+
+    SPDX-License-Identifier: LGPL-2.1-or-later
+*/
 #include "fdoselectionmanager.h"
 
-#include <QCoreApplication>
-#include <QHash>
-#include <QTimer>
-#include <QDebug>
+#include "debug.h"
 
-#include <QTextDocument>
+#include <QCoreApplication>
+#include <QTimer>
 #include <QX11Info>
 
-#include <KWindowSystem>
 #include <KSelectionOwner>
 
-#include <xcb/xcb.h>
-#include <xcb/xcb_atom.h>
-#include <xcb/xcb_event.h>
 #include <xcb/composite.h>
 #include <xcb/damage.h>
+#include <xcb/xcb_atom.h>
+#include <xcb/xcb_event.h>
 
-#include "xcbutils.h"
 #include "sniproxy.h"
+#include "xcbutils.h"
 
-#define SYSTEM_TRAY_REQUEST_DOCK    0
-#define SYSTEM_TRAY_BEGIN_MESSAGE   1
-#define SYSTEM_TRAY_CANCEL_MESSAGE  2
+#define SYSTEM_TRAY_REQUEST_DOCK 0
+#define SYSTEM_TRAY_BEGIN_MESSAGE 1
+#define SYSTEM_TRAY_CANCEL_MESSAGE 2
 
-FdoSelectionManager::FdoSelectionManager():
-    QObject(),
-    m_selectionOwner(new KSelectionOwner(Xcb::atoms->selectionAtom, -1, this))
+FdoSelectionManager::FdoSelectionManager()
+    : QObject()
+    , m_selectionOwner(new KSelectionOwner(Xcb::atoms->selectionAtom, -1, this))
 {
-    qDebug() << "starting";
+    qCDebug(SNIPROXY) << "starting";
 
-    //we may end up calling QCoreApplication::quit() in this method, at which point we need the event loop running
+    // we may end up calling QCoreApplication::quit() in this method, at which point we need the event loop running
     QTimer::singleShot(0, this, &FdoSelectionManager::init);
 }
 
 FdoSelectionManager::~FdoSelectionManager()
 {
-    qDebug() << "closing";
+    qCDebug(SNIPROXY) << "closing";
     m_selectionOwner->release();
 }
 
 void FdoSelectionManager::init()
 {
-    //load damage extension
+    // load damage extension
     xcb_connection_t *c = QX11Info::connection();
     xcb_prefetch_extension_data(c, &xcb_damage_id);
     const auto *reply = xcb_get_extension_data(c, &xcb_damage_id);
-    if (reply->present) {
+    if (reply && reply->present) {
         m_damageEventBase = reply->first_event;
         xcb_damage_query_version_unchecked(c, XCB_DAMAGE_MAJOR_VERSION, XCB_DAMAGE_MINOR_VERSION);
     } else {
-        //no XDamage means
-        qCritical() << "could not load damage extension. Quitting";
+        // no XDamage means
+        qCCritical(SNIPROXY) << "could not load damage extension. Quitting";
         qApp->exit(-1);
     }
 
@@ -84,7 +68,7 @@ void FdoSelectionManager::init()
 
 bool FdoSelectionManager::addDamageWatch(xcb_window_t client)
 {
-    qDebug() << "adding damage watch for " << client;
+    qCDebug(SNIPROXY) << "adding damage watch for " << client;
 
     xcb_connection_t *c = QX11Info::connection();
     const auto attribsCookie = xcb_get_window_attributes_unchecked(c, client);
@@ -116,24 +100,24 @@ bool FdoSelectionManager::addDamageWatch(xcb_window_t client)
     return true;
 }
 
-bool FdoSelectionManager::nativeEventFilter(const QByteArray& eventType, void* message, long int* result)
+bool FdoSelectionManager::nativeEventFilter(const QByteArray &eventType, void *message, long int *result)
 {
-    Q_UNUSED(result);
+    Q_UNUSED(result)
 
     if (eventType != "xcb_generic_event_t") {
         return false;
     }
 
-    xcb_generic_event_t* ev = static_cast<xcb_generic_event_t *>(message);
+    xcb_generic_event_t *ev = static_cast<xcb_generic_event_t *>(message);
 
     const auto responseType = XCB_EVENT_RESPONSE_TYPE(ev);
     if (responseType == XCB_CLIENT_MESSAGE) {
         const auto ce = reinterpret_cast<xcb_client_message_event_t *>(ev);
         if (ce->type == Xcb::atoms->opcodeAtom) {
             switch (ce->data.data32[1]) {
-                case SYSTEM_TRAY_REQUEST_DOCK:
-                    dock(ce->data.data32[2]);
-                    return true;
+            case SYSTEM_TRAY_REQUEST_DOCK:
+                dock(ce->data.data32[2]);
+                return true;
             }
         }
     } else if (responseType == XCB_UNMAP_NOTIFY) {
@@ -148,10 +132,28 @@ bool FdoSelectionManager::nativeEventFilter(const QByteArray& eventType, void* m
         }
     } else if (responseType == m_damageEventBase + XCB_DAMAGE_NOTIFY) {
         const auto damagedWId = reinterpret_cast<xcb_damage_notify_event_t *>(ev)->drawable;
-        const auto sniProx = m_proxies.value(damagedWId);
-        if(sniProx) {
-            sniProx->update();
+        const auto sniProxy = m_proxies.value(damagedWId);
+        if (sniProxy) {
+            sniProxy->update();
             xcb_damage_subtract(QX11Info::connection(), m_damageWatches[damagedWId], XCB_NONE, XCB_NONE);
+        }
+    } else if (responseType == XCB_CONFIGURE_REQUEST) {
+        const auto event = reinterpret_cast<xcb_configure_request_event_t *>(ev);
+        const auto sniProxy = m_proxies.value(event->window);
+        if (sniProxy) {
+            // The embedded window tries to move or resize. Ignore move, handle resize only.
+            if ((event->value_mask & XCB_CONFIG_WINDOW_WIDTH) || (event->value_mask & XCB_CONFIG_WINDOW_HEIGHT)) {
+                sniProxy->resizeWindow(event->width, event->height);
+            }
+        }
+    } else if (responseType == XCB_VISIBILITY_NOTIFY) {
+        const auto event = reinterpret_cast<xcb_visibility_notify_event_t *>(ev);
+        // it's possible that something showed our container window, we have to hide it
+        // workaround for BUG 357443: when KWin is restarted, container window is shown on top
+        if (event->state == XCB_VISIBILITY_UNOBSCURED) {
+            for (auto sniProxy : m_proxies.values()) {
+                sniProxy->hideContainerWindow(event->window);
+            }
         }
     }
 
@@ -160,7 +162,7 @@ bool FdoSelectionManager::nativeEventFilter(const QByteArray& eventType, void* m
 
 void FdoSelectionManager::dock(xcb_window_t winId)
 {
-    qDebug() << "trying to dock window " << winId;
+    qCDebug(SNIPROXY) << "trying to dock window " << winId;
 
     if (m_proxies.contains(winId)) {
         return;
@@ -173,7 +175,7 @@ void FdoSelectionManager::dock(xcb_window_t winId)
 
 void FdoSelectionManager::undock(xcb_window_t winId)
 {
-    qDebug() << "trying to undock window " << winId;
+    qCDebug(SNIPROXY) << "trying to undock window " << winId;
 
     if (!m_proxies.contains(winId)) {
         return;
@@ -184,61 +186,50 @@ void FdoSelectionManager::undock(xcb_window_t winId)
 
 void FdoSelectionManager::onClaimedOwnership()
 {
-    qDebug() << "Manager selection claimed";
+    qCDebug(SNIPROXY) << "Manager selection claimed";
 
-    connect(KWindowSystem::self(), &KWindowSystem::compositingChanged, this, &FdoSelectionManager::compositingChanged);
-    compositingChanged();
+    setSystemTrayVisual();
 }
 
 void FdoSelectionManager::onFailedToClaimOwnership()
 {
-    qWarning() << "failed to claim ownership of Systray Manager";
+    qCWarning(SNIPROXY) << "failed to claim ownership of Systray Manager";
     qApp->exit(-1);
 }
 
 void FdoSelectionManager::onLostOwnership()
 {
-    qWarning() << "lost ownership of Systray Manager";
-    disconnect(KWindowSystem::self(), &KWindowSystem::compositingChanged, this, &FdoSelectionManager::compositingChanged);
+    qCWarning(SNIPROXY) << "lost ownership of Systray Manager";
     qApp->exit(-1);
 }
 
-void FdoSelectionManager::compositingChanged()
+void FdoSelectionManager::setSystemTrayVisual()
 {
     xcb_connection_t *c = QX11Info::connection();
-    auto screen = xcb_setup_roots_iterator (xcb_get_setup (c)).data;
+    auto screen = xcb_setup_roots_iterator(xcb_get_setup(c)).data;
     auto trayVisual = screen->root_visual;
-    if (KWindowSystem::compositingActive()) {
-        xcb_depth_iterator_t depth_iterator = xcb_screen_allowed_depths_iterator(screen);
-        xcb_depth_t *depth = nullptr;
+    xcb_depth_iterator_t depth_iterator = xcb_screen_allowed_depths_iterator(screen);
+    xcb_depth_t *depth = nullptr;
 
-        while (depth_iterator.rem) {
-            if (depth_iterator.data->depth == 32) {
-                depth = depth_iterator.data;
+    while (depth_iterator.rem) {
+        if (depth_iterator.data->depth == 32) {
+            depth = depth_iterator.data;
+            break;
+        }
+        xcb_depth_next(&depth_iterator);
+    }
+
+    if (depth) {
+        xcb_visualtype_iterator_t visualtype_iterator = xcb_depth_visuals_iterator(depth);
+        while (visualtype_iterator.rem) {
+            xcb_visualtype_t *visualtype = visualtype_iterator.data;
+            if (visualtype->_class == XCB_VISUAL_CLASS_TRUE_COLOR) {
+                trayVisual = visualtype->visual_id;
                 break;
             }
-            xcb_depth_next(&depth_iterator);
-        }
-
-        if (depth) {
-            xcb_visualtype_iterator_t visualtype_iterator = xcb_depth_visuals_iterator(depth);
-            while (visualtype_iterator.rem) {
-                xcb_visualtype_t *visualtype = visualtype_iterator.data;
-                if (visualtype->_class == XCB_VISUAL_CLASS_TRUE_COLOR) {
-                    trayVisual = visualtype->visual_id;
-                    break;
-                }
-                xcb_visualtype_next(&visualtype_iterator);
-            }
+            xcb_visualtype_next(&visualtype_iterator);
         }
     }
 
-    xcb_change_property(c,
-                        XCB_PROP_MODE_REPLACE,
-                        m_selectionOwner->ownerWindow(),
-                        Xcb::atoms->visualAtom,
-                        XCB_ATOM_VISUALID,
-                        32,
-                        1,
-                        &trayVisual);
+    xcb_change_property(c, XCB_PROP_MODE_REPLACE, m_selectionOwner->ownerWindow(), Xcb::atoms->visualAtom, XCB_ATOM_VISUALID, 32, 1, &trayVisual);
 }

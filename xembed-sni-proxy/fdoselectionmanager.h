@@ -1,29 +1,15 @@
 /*
- * Registers as a embed container
- * Copyright (C) 2015 <davidedmundson@kde.org> David Edmundson
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- *
- */
+    Registers as a embed container
+    SPDX-FileCopyrightText: 2015 David Edmundson <davidedmundson@kde.org>
 
-#ifndef FDOSELECTIONMANAGER_H
-#define FDOSELECTIONMANAGER_H
+    SPDX-License-Identifier: LGPL-2.1-or-later
+*/
 
-#include <QObject>
-#include <QHash>
+#pragma once
+
 #include <QAbstractNativeEventFilter>
+#include <QHash>
+#include <QObject>
 
 #include <xcb/xcb.h>
 
@@ -39,7 +25,7 @@ public:
     ~FdoSelectionManager() override;
 
 protected:
-    bool nativeEventFilter(const QByteArray & eventType, void * message, long * result) override;
+    bool nativeEventFilter(const QByteArray &eventType, void *message, long *result) override;
 
 private Q_SLOTS:
     void onClaimedOwnership();
@@ -51,14 +37,11 @@ private:
     bool addDamageWatch(xcb_window_t client);
     void dock(xcb_window_t embed_win);
     void undock(xcb_window_t client);
-    void compositingChanged();
+    void setSystemTrayVisual();
 
     uint8_t m_damageEventBase;
 
     QHash<xcb_window_t, u_int32_t> m_damageWatches;
-    QHash<xcb_window_t, SNIProxy*> m_proxies;
+    QHash<xcb_window_t, SNIProxy *> m_proxies;
     KSelectionOwner *m_selectionOwner;
 };
-
-
-#endif

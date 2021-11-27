@@ -1,31 +1,19 @@
 /*
- * Holds one embedded window, registers as DBus entry
- * Copyright (C) 2015 <davidedmundson@kde.org> David Edmundson
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- *
- */
+    Holds one embedded window, registers as DBus entry
+    SPDX-FileCopyrightText: 2015 David Edmundson <davidedmundson@kde.org>
+    SPDX-FileCopyrightText: 2019 Konrad Materka <materka@gmail.com>
 
-#ifndef SNI_PROXY_H
-#define SNI_PROXY_H
+    SPDX-License-Identifier: LGPL-2.1-or-later
+*/
 
-#include <QObject>
+#pragma once
+
 #include <QDBusArgument>
 #include <QDBusConnection>
 #include <QDBusObjectPath>
+#include <QObject>
 #include <QPixmap>
+#include <QPoint>
 
 #include <xcb/xcb.h>
 #include <xcb/xcb_image.h>
@@ -48,6 +36,8 @@ public:
     ~SNIProxy() override;
 
     void update();
+    void resizeWindow(const uint16_t width, const uint16_t height) const;
+    void hideContainerWindow(xcb_window_t windowId) const;
 
     /**
      * @return the category of the application associated to this item
@@ -87,7 +77,7 @@ public:
     KDbusImageVector IconPixmap() const;
 
 public Q_SLOTS:
-    //interaction
+    // interaction
     /**
      * Shows the context menu associated to this item
      * at the desired screen position
@@ -142,21 +132,22 @@ Q_SIGNALS:
 private:
     enum InjectMode {
         Direct,
-        XTest
+        XTest,
     };
 
+    QSize calculateClientWindowSize() const;
     void sendClick(uint8_t mouseButton, int x, int y);
     QImage getImageNonComposite() const;
     bool isTransparentImage(const QImage &image) const;
     QImage convertFromNative(xcb_image_t *xcbImage) const;
+    QPoint calculateClickPoint() const;
+    void stackContainerWindow(const uint32_t stackMode) const;
 
     QDBusConnection m_dbus;
     xcb_window_t m_windowId;
     xcb_window_t m_containerWid;
     static int s_serviceCount;
     QPixmap m_pixmap;
-
+    bool sendingClickEvent;
     InjectMode m_injectMode;
 };
-
-#endif // SNIPROXY_H
