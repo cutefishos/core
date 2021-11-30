@@ -283,6 +283,9 @@ void Application::initXResource()
     p.closeWriteChannel();
     p.waitForFinished(-1);
 
+    // For cutefish-wine
+    qputenv("CUTEFISH_FONT_DPI", QByteArray::number(fontDpi));
+
     // Init cursor
     runSync("cupdatecursor", {cursorTheme, QString::number(cursorSize)});
     // qputenv("XCURSOR_THEME", cursorTheme.toLatin1());
