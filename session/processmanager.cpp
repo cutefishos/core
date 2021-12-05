@@ -163,6 +163,10 @@ void ProcessManager::startDaemonProcess()
     list << qMakePair(QString("cutefish-gmenuproxy"), QStringList());
     list << qMakePair(QString("chotkeys"), QStringList());
 
+    if (QFile("/usr/bin/cutefish-daemon").exists()) {
+        list << qMakePair(QString("cutefish-daemon"), QStringList());
+    }
+
     for (QPair<QString, QStringList> pair : list) {
         QProcess *process = new QProcess;
         process->setProcessChannelMode(QProcess::ForwardedChannels);

@@ -74,6 +74,7 @@ private:
     bool syncDBusEnvironment();
     void importSystemdEnvrionment();
     void createConfigDirectory();
+    void updateUserDirs();
     int runSync(const QString &program, const QStringList &args, const QStringList &env = {});
 
 private:

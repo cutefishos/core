@@ -129,6 +129,7 @@ Application::Application(int &argc, char **argv)
 
     m_networkProxyManager->update();
 
+    QTimer::singleShot(50, this, &Application::updateUserDirs);
     QTimer::singleShot(100, m_processManager, &ProcessManager::start);
 }
 
@@ -361,6 +362,13 @@ void Application::createConfigDirectory()
 
     if (!QDir().mkpath(configDir))
         qDebug() << "Could not create config directory XDG_CONFIG_HOME: " << configDir;
+}
+
+void Application::updateUserDirs()
+{
+    QProcess p;
+    p.start("xdg-user-dirs-update", QStringList());
+    p.waitForFinished(-1);
 }
 
 int Application::runSync(const QString &program, const QStringList &args, const QStringList &env)
