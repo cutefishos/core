@@ -164,7 +164,7 @@ void ProcessManager::startDaemonProcess()
     list << qMakePair(QString("chotkeys"), QStringList());
 
     if (QFile("/usr/bin/cutefish-daemon").exists()) {
-        list << qMakePair(QString("cutefish-daemon"), QStringList());
+        list << qMakePair(QString("/usr/bin/cutefish-daemon"), QStringList());
     }
 
     for (QPair<QString, QStringList> pair : list) {

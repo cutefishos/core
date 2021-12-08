@@ -63,13 +63,6 @@ ApplicationWindow {
         visible: wallpaper.type === 0
     }
 
-    ColorOverlay {
-        anchors.fill: parent
-        source: parent
-        color: "#000000"
-        opacity: 0.4
-    }
-
     FastBlur {
         id: wallpaperBlur
         anchors.fill: parent
@@ -77,6 +70,13 @@ ApplicationWindow {
         source: wallpaperImage
         cached: true
         visible: wallpaperImage.visible
+    }
+
+    ColorOverlay {
+        anchors.fill: parent
+        source: parent
+        color: "#000000"
+        opacity: 0.2
     }
 
     Accounts.UserAccount {

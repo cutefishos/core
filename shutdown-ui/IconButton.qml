@@ -20,6 +20,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
+import QtGraphicalEffects 1.0
 import FishUI 1.0 as FishUI
 
 Item {
@@ -75,6 +76,7 @@ Item {
         }
 
         Label {
+            id: _label
             Layout.alignment: Qt.AlignCenter
             text: control.text
             color: "white"
