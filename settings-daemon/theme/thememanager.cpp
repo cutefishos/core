@@ -353,6 +353,7 @@ void ThemeManager::updateGtkDarkTheme()
     settings.setIniCodec("UTF-8");
     settings.beginGroup("Settings");
     settings.setValue("gtk-icon-theme-name", m_iconTheme);
+    settings.setValue("gtk-application-prefer-dark-theme", isDarkMode());
     settings.sync();
 }
 
