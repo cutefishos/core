@@ -6,12 +6,12 @@
     <message>
         <location filename="../main.qml" line="74"/>
         <source>Shutdown</source>
-        <translation type="unfinished">シャットダウン</translation>
+        <translation>シャットダウン</translation>
     </message>
     <message>
         <location filename="../main.qml" line="82"/>
         <source>Reboot</source>
-        <translation>再起动</translation>
+        <translation>再起動</translation>
     </message>
     <message>
         <location filename="../main.qml" line="90"/>
@@ -21,12 +21,12 @@
     <message>
         <location filename="../main.qml" line="98"/>
         <source>Lock screen</source>
-        <translation>ロック画面</translation>
+        <translation>画面をロック</translation>
     </message>
     <message>
         <location filename="../main.qml" line="106"/>
         <source>Suspend</source>
-        <translation>停止</translation>
+        <translation>サスペンド</translation>
     </message>
 </context>
 </TS>
