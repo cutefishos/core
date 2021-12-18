@@ -11,7 +11,7 @@
     <message>
         <location filename="../main.qml" line="94"/>
         <source>Done</source>
-        <translation type="unfinished">בוצע</translation>
+        <translation>בוצע</translation>
     </message>
     <message>
         <location filename="../main.qml" line="86"/>

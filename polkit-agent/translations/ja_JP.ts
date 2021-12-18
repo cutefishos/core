@@ -16,7 +16,7 @@
     <message>
         <location filename="../main.qml" line="86"/>
         <source>Cancel</source>
-        <translation type="unfinished">取り消し</translation>
+        <translation>キャンセル</translation>
     </message>
 </context>
 </TS>
