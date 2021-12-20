@@ -29,6 +29,13 @@
 #include <QLocale>
 #include <QTimer>
 
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <dirent.h>
+#include <stdlib.h>
+
 Application::Application(int &argc, char **argv)
     : QApplication(argc, argv)
     , m_themeManager(ThemeManager::self())
@@ -39,6 +46,8 @@ Application::Application(int &argc, char **argv)
     , m_touchpad(new TouchpadManager)
 //    , m_kwinTimer(new QTimer(this))
 {
+    initTrash();
+
     new DBusAdaptor(this);
     // connect to D-Bus and register as an object:
     QDBusConnection::sessionBus().registerService(QStringLiteral("com.cutefish.Settings"));
@@ -71,6 +80,35 @@ void Application::invokeDesktopProcess()
 
     if (sessionInterface.isValid()) {
         sessionInterface.call("startDesktopProcess");
+    }
+}
+
+void Application::initTrash()
+{
+    const QByteArray trashDir = QString(QDir::homePath() + "/.local/share/Trash").toLatin1();
+
+    if (::mkdir(trashDir, 0700) != 0)
+        return;
+
+    struct stat buff;
+    uid_t uid = getuid();
+
+    if (::lstat(trashDir, &buff) != 0)
+        return;
+
+    if ((buff.st_uid == uid) && // must be owned by user
+            ((buff.st_mode & 0777) == 0700)) {
+        // check subdirs
+        QString infoDir = trashDir + QString::fromLatin1("/info");
+        QString filesDir = trashDir + QString::fromLatin1("/files");
+
+        if (!QDir(infoDir).exists())
+            QDir().mkdir(infoDir);
+
+        if (!QDir(filesDir).exists())
+            QDir().mkdir(filesDir);
+    } else {
+        ::rmdir(trashDir);
     }
 }
 

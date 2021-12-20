@@ -38,6 +38,8 @@ public:
     explicit Application(int &argc, char **argv);
 
     void invokeDesktopProcess();
+    void initTrash();
+
 //    void initKWin();
 
 private:
