@@ -32,5 +32,6 @@ add_subdirectory(chotkeys)
 add_subdirectory(cupdatecursor)
 add_subdirectory(gmenuproxy)
 add_subdirectory(notificationd)
+add_subdirectory(sddm-helper)
 
 install(FILES cutefish DESTINATION /etc/ COMPONENT Runtime)

@@ -216,6 +216,14 @@ void ThemeManager::setDevicePixelRatio(qreal ratio)
     m_settings->sync();
     applyXResources();
 
+    // SDDM
+    QProcess p;
+    p.setProgram("pkexec");
+    p.setArguments(QStringList() << "cutefish-sddm-helper"
+                                 << "--dpi" << QString::number(fontDpi));
+    p.start();
+    p.waitForFinished(-1);
+
     QDBusInterface iface("org.freedesktop.Notifications",
                          "/org/freedesktop/Notifications",
                          "org.freedesktop.Notifications",
