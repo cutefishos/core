@@ -79,6 +79,33 @@ ThemeManager::ThemeManager(QObject *parent)
     // Start the DE and need to update the settings again.
     initGtkConfig();
 
+    // Init fonts.
+    if (!m_settings->contains(s_systemFixedFontName)) {
+        m_settings->setValue(s_systemFixedFontName, "Monospace");
+    }
+
+    if (!m_settings->contains(s_systemFontName)) {
+        QSettings lanSettings(QStringLiteral("cutefishos"), QStringLiteral("language"));
+        QString languageCode = lanSettings.value("language").toString();
+        QString fontName;
+
+        if (languageCode == "zh_CN") {
+            fontName = "Noto Sans CJK SC";
+        } else if (languageCode.contains("en_")) {
+            fontName = "Noto Sans";
+        } else if (languageCode == "zh_TW") {
+            fontName = "Noto Sans CJK TC";
+        } else if (languageCode == "zh_HK") {
+            fontName = "Noto Serif CJK HK";
+        } else if (languageCode == "ja_JP") {
+            fontName = "Noto Serif CJK JP";
+        } else {
+            fontName = "Noto Sans";
+        }
+
+        m_settings->setValue(s_systemFontName, fontName);
+    }
+
     // 登陆后更新 fontconfig
     updateFontConfig();
 }

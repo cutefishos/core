@@ -29,6 +29,7 @@ class Language : public QObject
     Q_PROPERTY(QString languageCode READ languageCode WRITE setLanguage NOTIFY languageChanged)
 
 public:
+    static Language *self();
     Language(QObject *parent = nullptr);
 
     QString languageCode() const;

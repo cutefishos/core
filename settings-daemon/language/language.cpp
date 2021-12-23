@@ -24,6 +24,12 @@
 #include <QDBusInterface>
 #include <QSettings>
 
+Language *Language::self()
+{
+    static Language s;
+    return &s;
+}
+
 Language::Language(QObject *parent)
     : QObject(parent)
     , m_settings(new QSettings(QStringLiteral("cutefishos"), QStringLiteral("language")))
