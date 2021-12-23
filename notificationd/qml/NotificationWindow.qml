@@ -38,7 +38,8 @@ Item {
         radius: NotificationDialog.width * 0.05 //FishUI.Theme.bigRadius
         opacity: 0.7
 
-        border.width: 1
+        border.width: 1 / FishUI.Units.devicePixelRatio
+        border.pixelAligned: Screen.devicePixelRatio > 1 ? false : true
         border.color: FishUI.Theme.darkMode ? Qt.rgba(255, 255, 255, 0.1)
                                             : Qt.rgba(0, 0, 0, 0.05)
     }
