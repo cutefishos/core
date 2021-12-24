@@ -10,6 +10,7 @@ class TouchpadManager : public QObject
     Q_PROPERTY(bool available READ available CONSTANT)
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled CONSTANT)
     Q_PROPERTY(bool tapToClick READ tapToClick WRITE setTapToClick CONSTANT)
+    Q_PROPERTY(bool naturalScroll READ naturalScroll WRITE setNaturalScroll CONSTANT)
     Q_PROPERTY(qreal pointerAcceleration READ pointerAcceleration WRITE setPointerAcceleration CONSTANT)
 
 public:
@@ -22,6 +23,9 @@ public:
 
     bool tapToClick() const;
     void setTapToClick(bool value);
+
+    bool naturalScroll() const;
+    void setNaturalScroll(bool naturalScroll);
 
     qreal pointerAcceleration() const;
     void setPointerAcceleration(qreal value);

@@ -73,6 +73,9 @@ public:
     bool tapToClick();
     void setTapToClick(bool enabled);
 
+    bool naturalScroll();
+    void setNaturalScroll(bool value);
+
     qreal pointerAcceleration();
     void setPointerAcceleration(qreal value);
 

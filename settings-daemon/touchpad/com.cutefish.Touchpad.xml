@@ -4,6 +4,7 @@
     <property name="available" type="b" access="read"/>
     <property name="enabled" type="b" access="read"/>
     <property name="tapToClick" type="b" access="read"/>
+    <property name="naturalScroll" type="b" access="read"/>
     <property name="pointerAcceleration" type="d" access="read"/>
 
     <method name="setEnabled">
@@ -11,6 +12,10 @@
     </method>
 
     <method name="setTapToClick">
+      <arg name="enabled" type="b" direction="in"/>
+    </method>
+
+    <method name="setNaturalScroll">
       <arg name="enabled" type="b" direction="in"/>
     </method>
 

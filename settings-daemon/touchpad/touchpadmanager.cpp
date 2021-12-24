@@ -42,6 +42,17 @@ void TouchpadManager::setTapToClick(bool value)
     m_backend->applyConfig();
 }
 
+bool TouchpadManager::naturalScroll() const
+{
+    return m_backend->naturalScroll();
+}
+
+void TouchpadManager::setNaturalScroll(bool naturalScroll)
+{
+    m_backend->setNaturalScroll(naturalScroll);
+    m_backend->applyConfig();
+}
+
 qreal TouchpadManager::pointerAcceleration() const
 {
     return m_backend->pointerAcceleration();

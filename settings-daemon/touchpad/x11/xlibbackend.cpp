@@ -225,6 +225,26 @@ void XlibBackend::setTapToClick(bool enabled)
     object->setTapToClick(enabled);
 }
 
+bool XlibBackend::naturalScroll()
+{
+    LibinputTouchpad *object = dynamic_cast<LibinputTouchpad *>(m_device.data());
+
+    if (!object)
+        return false;
+
+    return object->isNaturalScroll();
+}
+
+void XlibBackend::setNaturalScroll(bool value)
+{
+    LibinputTouchpad *object = dynamic_cast<LibinputTouchpad *>(m_device.data());
+
+    if (!object)
+        return;
+
+    object->setNaturalScroll(value);
+}
+
 qreal XlibBackend::pointerAcceleration()
 {
     LibinputTouchpad *object = dynamic_cast<LibinputTouchpad *>(m_device.data());
