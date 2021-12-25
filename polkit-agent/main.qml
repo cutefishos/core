@@ -11,6 +11,14 @@ Item {
     width: 450
     height: heightValue
 
+    Connections {
+        target: confirmation
+        function onFailure() {
+            doneButton.enabled = true
+            passwordInput.enabled = true
+        }
+    }
+
     onHeightValueChanged: {
         rootWindow.height = heightValue
         rootWindow.maximumHeight = heightValue
@@ -109,6 +117,7 @@ Item {
                 Layout.fillWidth: true
                 selectByMouse: true
                 focus: true
+
                 onAccepted: {
                     if (passwordInput.text)
                         confirmation.setConfirmationResult(passwordInput.text)
@@ -126,7 +135,7 @@ Item {
                     text: qsTr("Cancel")
                     Layout.fillWidth: true
                     height: 50
-                    onClicked: confirmation.setConfirmationResult("")
+                    onClicked: confirmation.rejected()
                 }
 
                 Button {
@@ -135,7 +144,11 @@ Item {
                     Layout.fillWidth: true
                     flat: true
                     height: 50
-                    onClicked: confirmation.setConfirmationResult(passwordInput.text)
+                    onClicked: {
+                        doneButton.enabled = false
+                        passwordInput.enabled = false
+                        confirmation.setConfirmationResult(passwordInput.text)
+                    }
                 }
             }
         }

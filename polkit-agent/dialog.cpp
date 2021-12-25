@@ -61,7 +61,12 @@ void Dialog::setConfirmationResult(const QString &passwd)
 {
     m_password = passwd;
 
-    emit finished(this);
+    emit accepted();
+}
+
+void Dialog::rejected()
+{
+    emit cancel();
 }
 
 void Dialog::show()
@@ -70,4 +75,9 @@ void Dialog::show()
     m_view->setScreen(qGuiApp->primaryScreen());
     m_view->setX((m_view->screen()->geometry().width() - m_view->geometry().width()) / 2);
     m_view->setY((m_view->screen()->geometry().height() - m_view->geometry().height()) / 2);
+}
+
+void Dialog::authenticationFailure()
+{
+    emit failure();
 }

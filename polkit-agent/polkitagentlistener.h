@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QPointer>
 
 #include <PolkitQt1/Identity>
 #include <PolkitQt1/Details>
@@ -52,8 +53,26 @@ public slots:
     void completed(bool gainedAuthorization);
 
 private:
-    QHash<PolkitQt1::Agent::Session *,PolkitQt1::Identity> m_sessionIdentity;
-    Dialog *m_dialog;
+    void tryAgain();
+    void finishObtainPrivilege();
+
+private slots:
+    void onDialogAccepted();
+    void onDialogCanceled();
+
+private:
+    QPointer<Dialog> m_dialog;
+    QPointer<PolkitQt1::Agent::Session> m_session;
+    PolkitQt1::Identity::List m_identities;
+    PolkitQt1::Agent::AsyncResult *m_result;
+    PolkitQt1::Identity m_selectedUser;
+    QString m_cookie;
+
+    bool m_inProgress;
+    bool m_gainedAuthorization;
+    bool m_wasCancelled;
+
+    int m_numTries;
 };
 
 #endif // POLKITAGENTLISTENER_H

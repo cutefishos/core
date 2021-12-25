@@ -25,6 +25,7 @@
 PolKitAgentListener::PolKitAgentListener(QObject *parent)
     : PolkitQt1::Agent::Listener(parent)
     , m_dialog(nullptr)
+    , m_inProgress(false)
 {
 
 }
@@ -39,61 +40,106 @@ void PolKitAgentListener::initiateAuthentication(const QString &actionId,
 {
     Q_UNUSED(details);
 
-    if (m_dialog) {
-        m_dialog->deleteLater();
-        m_dialog = nullptr;
+    if (m_inProgress) {
+        result->setCompleted();
+        return;
     }
+
+    m_identities = identities;
+    m_cookie = cookie;
+    m_result = result;
+    m_session.clear();
+
+    m_inProgress = true;
 
     m_dialog = new Dialog(actionId, message, cookie, identities.first().toString(), iconName, result);
+    m_session = new PolkitQt1::Agent::Session(identities.first(), cookie, result);
 
-    for (const PolkitQt1::Identity &i : identities) {
-        PolkitQt1::Agent::Session *session;
-        session = new PolkitQt1::Agent::Session(i, cookie, result);
-        Q_ASSERT(session);
-        m_sessionIdentity[session] = i;
-        connect(session, &PolkitQt1::Agent::Session::request, this, &PolKitAgentListener::request);
-        connect(session, &PolkitQt1::Agent::Session::completed, this, &PolKitAgentListener::completed);
-        session->initiate();
+    connect(m_dialog.data(), &Dialog::accepted, this, &PolKitAgentListener::onDialogAccepted);
+    connect(m_dialog.data(), &Dialog::cancel, this, &PolKitAgentListener::onDialogCanceled);
+
+    m_dialog.data()->show();
+    m_session.data()->initiate();
+
+    if (!identities.isEmpty()) {
+        m_selectedUser = identities[0];
     }
+
+    m_numTries = 0;
+
+    tryAgain();
 }
 
 void PolKitAgentListener::request(const QString &request, bool echo)
 {
     Q_UNUSED(request);
     Q_UNUSED(echo);
-
-    PolkitQt1::Agent::Session *session = qobject_cast<PolkitQt1::Agent::Session *>(sender());
-    Q_ASSERT(session);
-    Q_ASSERT(m_dialog);
-
-    PolkitQt1::Identity identity = m_sessionIdentity[session];
-
-    connect(m_dialog, &Dialog::finished, this, [=] {
-        if (m_dialog->identity() == m_sessionIdentity[session].toString()
-                && !m_dialog->password().isEmpty()) {
-            session->setResponse(m_dialog->password());
-        } else {
-            session->cancel();
-        }
-    });
-
-    m_dialog->show();
 }
 
 void PolKitAgentListener::completed(bool gainedAuthorization)
 {
-    Q_UNUSED(gainedAuthorization);
+    m_gainedAuthorization = gainedAuthorization;
 
-    PolkitQt1::Agent::Session *session = qobject_cast<PolkitQt1::Agent::Session *>(sender());
-    Q_ASSERT(session);
-    Q_ASSERT(m_dialog);
+    finishObtainPrivilege();
+}
 
-    if (m_dialog->identity() == m_sessionIdentity[session].toString()) {
-        session->result()->setCompleted();
+void PolKitAgentListener::tryAgain()
+{
+    m_wasCancelled = false;
 
-        m_dialog->deleteLater();
-        m_dialog = nullptr;
+    if (m_selectedUser.isValid()) {
+        m_session = new PolkitQt1::Agent::Session(m_selectedUser, m_cookie, m_result);
+        connect(m_session.data(), SIGNAL(request(QString, bool)), this, SLOT(request(QString, bool)));
+        connect(m_session.data(), SIGNAL(completed(bool)), this, SLOT(completed(bool)));
+
+        m_session.data()->initiate();
+    }
+}
+
+void PolKitAgentListener::finishObtainPrivilege()
+{
+    m_numTries++;
+
+    if (!m_gainedAuthorization && !m_wasCancelled && !m_dialog.isNull()) {
+        m_dialog.data()->authenticationFailure();
+
+        if (m_numTries < 3) {
+            m_session.data()->deleteLater();
+
+            tryAgain();
+            return;
+        }
     }
 
-    session->deleteLater();
+    if (!m_session.isNull()) {
+        m_session.data()->result()->setCompleted();
+    } else {
+        m_result->setCompleted();
+    }
+
+    m_session.data()->deleteLater();
+
+    if (!m_dialog.isNull()) {
+        m_dialog.data()->deleteLater();
+    }
+
+    m_inProgress = false;
+}
+
+void PolKitAgentListener::onDialogAccepted()
+{
+    if (!m_dialog.isNull()) {
+        m_session.data()->setResponse(m_dialog.data()->password());
+    }
+}
+
+void PolKitAgentListener::onDialogCanceled()
+{
+    m_wasCancelled = true;
+
+    if (!m_session.isNull()) {
+        m_session.data()->cancel();
+    }
+
+    finishObtainPrivilege();
 }

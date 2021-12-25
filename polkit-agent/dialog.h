@@ -39,7 +39,10 @@ public:
     ~Dialog();
 
     Q_INVOKABLE void setConfirmationResult(const QString &password = QString());
+    Q_INVOKABLE void rejected();
     Q_INVOKABLE void show();
+
+    Q_INVOKABLE void authenticationFailure();
 
     Q_PROPERTY(QString message READ message NOTIFY changed)
     Q_PROPERTY(QString action READ action NOTIFY changed)
@@ -62,8 +65,10 @@ signals:
     // properties of this window dynamically for now
     void changed();
 
-    // Send approval to the D-Bus helper daemon
-    void finished(Dialog *dialog);
+    void failure();
+
+    void cancel();
+    void accepted();
 
 private:
     QString m_action;
