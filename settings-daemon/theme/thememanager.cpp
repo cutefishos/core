@@ -77,7 +77,7 @@ ThemeManager::ThemeManager(QObject *parent)
     m_iconTheme = m_settings->value("IconTheme", "Crule").toString();
 
     // Start the DE and need to update the settings again.
-    initGtkConfig();
+    updateGtk3Config();
 
     // Init fonts.
     if (!m_settings->contains(s_systemFixedFontName)) {
@@ -123,7 +123,7 @@ void ThemeManager::setDarkMode(bool darkMode)
     m_isDarkMode = darkMode;
     m_settings->setValue("DarkMode", darkMode);
 
-    updateGtkDarkTheme();
+    updateGtk3Config();
 
     emit darkModeChanged(m_isDarkMode);
 }
@@ -192,6 +192,11 @@ void ThemeManager::setCursorSize(int size)
     }
 }
 
+void ThemeManager::updateGtk2Config()
+{
+
+}
+
 QString ThemeManager::systemFont()
 {
     return m_settings->value(s_systemFontName, "Noto Sans").toString();
@@ -200,7 +205,7 @@ QString ThemeManager::systemFont()
 void ThemeManager::setSystemFont(const QString &fontFamily)
 {
     m_settings->setValue(s_systemFontName, fontFamily);
-    updateGtkFont();
+    updateGtk3Config();
     updateFontConfig();
 
     emit systemFontChanged();
@@ -226,7 +231,7 @@ qreal ThemeManager::systemFontPointSize()
 void ThemeManager::setSystemFontPointSize(qreal fontSize)
 {
     m_settings->setValue(s_systemPointFontSize, fontSize);
-    updateGtkFont();
+    updateGtk3Config();
     emit systemFontPointSizeChanged();
 }
 
@@ -311,7 +316,7 @@ void ThemeManager::setBackgroundColor(QString color)
     }
 }
 
-void ThemeManager::initGtkConfig()
+void ThemeManager::updateGtk3Config()
 {
     QSettings settings(gtk3SettingsIniPath(), QSettings::IniFormat);
     settings.clear();
@@ -326,6 +331,8 @@ void ThemeManager::initGtkConfig()
     settings.setValue("gtk-icon-theme-name", m_iconTheme);
     // other
     settings.setValue("gtk-enable-animations", true);
+    // theme
+    settings.setValue("gtk-theme-name", isDarkMode() ? "Cutefish-dark" : "Cutefish-light");
     settings.sync();
 }
 
@@ -371,34 +378,6 @@ void ThemeManager::applyCursor()
     message << 5;
     message << 0;
     QDBusConnection::sessionBus().send(message);
-}
-
-void ThemeManager::updateGtkFont()
-{
-    QSettings settings(gtk3SettingsIniPath(), QSettings::IniFormat);
-    settings.setIniCodec("UTF-8");
-    settings.beginGroup("Settings");
-    settings.setValue("gtk-font-name", QString("%1 %2").arg(systemFont()).arg(systemFontPointSize()));
-    settings.sync();
-}
-
-void ThemeManager::updateGtkDarkTheme()
-{
-    QSettings settings(gtk3SettingsIniPath(), QSettings::IniFormat);
-    settings.setIniCodec("UTF-8");
-    settings.beginGroup("Settings");
-    settings.setValue("gtk-icon-theme-name", m_iconTheme);
-    settings.setValue("gtk-application-prefer-dark-theme", isDarkMode());
-    settings.sync();
-}
-
-void ThemeManager::updateGtkIconTheme()
-{
-    QSettings settings(gtk3SettingsIniPath(), QSettings::IniFormat);
-    settings.setIniCodec("UTF-8");
-    settings.beginGroup("Settings");
-    settings.setValue("gtk-application-prefer-dark-theme", isDarkMode());
-    settings.sync();
 }
 
 void ThemeManager::updateFontConfig()
@@ -507,6 +486,6 @@ void ThemeManager::setIconTheme(const QString &iconTheme)
 
     m_iconTheme = iconTheme;
     m_settings->setValue("IconTheme", m_iconTheme);
-    updateGtkDarkTheme();
+    updateGtk3Config();
     emit iconThemeChanged();
 }

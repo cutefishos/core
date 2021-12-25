@@ -81,7 +81,8 @@ public:
     int cursorSize() const;
     void setCursorSize(int size);
 
-    void initGtkConfig();
+    void updateGtk2Config();
+    void updateGtk3Config();
     void applyXResources();
     void applyCursor();
 
@@ -104,10 +105,6 @@ signals:
     void systemFontChanged();
 
 private:
-    void updateGtkFont();
-    void updateGtkDarkTheme();
-    void updateGtkIconTheme();
-
     QSettings *m_settings;
 
     bool m_isDarkMode;
