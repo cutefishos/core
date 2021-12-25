@@ -34,6 +34,7 @@ class Dialog : public QObject
 public:
     explicit Dialog(const QString &action, const QString &message,
                     const QString &cookie, const QString &identity,
+                    const QString &iconName,
                     PolkitQt1::Agent::AsyncResult *result);
     ~Dialog();
 
@@ -45,12 +46,14 @@ public:
     Q_PROPERTY(QString cookie READ cookie NOTIFY changed)
     Q_PROPERTY(QString identity READ identity NOTIFY changed)
     Q_PROPERTY(QString password READ password NOTIFY changed)
+    Q_PROPERTY(QString iconName READ iconName NOTIFY changed)
 
     QString message() { return m_message; }
     QString action() { return m_action; }
     QString cookie() { return m_cookie; }
     QString identity() { return m_identity; }
     QString password() { return m_password; }
+    QString iconName() { return m_iconName; }
 
     PolkitQt1::Agent::AsyncResult *result() { return m_result; }
 
@@ -69,6 +72,7 @@ private:
     QString m_cookie;
     QString m_identity;
     QString m_password;
+    QString m_iconName;
     PolkitQt1::Agent::AsyncResult *m_result;
 
     QQuickView *m_view;

@@ -64,6 +64,16 @@ Item {
             sourceSize.height: 64
             smooth: true
             Layout.alignment: Qt.AlignTop
+            visible: !iconImage
+        }
+
+        Image {
+            id: iconImage
+            source: "image://icontheme/" + confirmation.iconName
+            sourceSize.width: 64
+            sourceSize.height: 64
+            Layout.alignment: Qt.AlignTop
+            visible: state !== Image.Ready
         }
 
         Item {

@@ -37,7 +37,6 @@ void PolKitAgentListener::initiateAuthentication(const QString &actionId,
                                                  const PolkitQt1::Identity::List &identities,
                                                  PolkitQt1::Agent::AsyncResult *result)
 {
-    Q_UNUSED(iconName);
     Q_UNUSED(details);
 
     if (m_dialog) {
@@ -45,7 +44,7 @@ void PolKitAgentListener::initiateAuthentication(const QString &actionId,
         m_dialog = nullptr;
     }
 
-    m_dialog = new Dialog(actionId, message, cookie, identities.first().toString(), result);
+    m_dialog = new Dialog(actionId, message, cookie, identities.first().toString(), iconName, result);
 
     for (const PolkitQt1::Identity &i : identities) {
         PolkitQt1::Agent::Session *session;
