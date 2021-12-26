@@ -26,27 +26,27 @@
     <message>
         <location filename="../battery/battery.cpp" line="268"/>
         <source>%1d</source>
-        <translation>%1d</translation>
+        <translation>1 ימים</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="274"/>
         <source>%1h</source>
-        <translation type="unfinished">%1h</translation>
+        <translation>1 שעות</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="281"/>
         <source>%1m</source>
-        <translation type="unfinished">%1m</translation>
+        <translation>1 דקות</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="290"/>
         <source>%1 until fully charged</source>
-        <translation>%1 עד לסוללה מלאה</translation>
+        <translation>עד לסוללה מלאה</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="292"/>
         <source>%1 remaining</source>
-        <translation>נשאר %1</translation>
+        <translation>נשאר</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="294"/>
@@ -61,7 +61,7 @@
     <message>
         <location filename="../battery/battery.cpp" line="319"/>
         <source>%1 ago</source>
-        <translation>לפני %1</translation>
+        <translation>לפני</translation>
     </message>
     <message>
         <source>ago</source>
@@ -74,7 +74,7 @@
         <location filename="../battery/upowerdevice.cpp" line="71"/>
         <source>%1 Battery</source>
         <comment>%1 is battery technology</comment>
-        <translation type="unfinished">%1 סוללה</translation>
+        <translation>סוללה</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="87"/>
@@ -92,7 +92,7 @@
         <location filename="../battery/upowerdevice.cpp" line="91"/>
         <source>Lithium Iron Phosphate</source>
         <comment>battery technology</comment>
-        <translation type="unfinished">Lithium Iron Phosphate</translation>
+        <translation>Lithium Iron Phosphate</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="93"/>
@@ -104,19 +104,19 @@
         <location filename="../battery/upowerdevice.cpp" line="95"/>
         <source>Nickel Cadmium</source>
         <comment>battery technology</comment>
-        <translation type="unfinished">Nickel Cadmium</translation>
+        <translation>Nickel Cadmium</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="97"/>
         <source>Nickel Metal Hydride</source>
         <comment>battery technology</comment>
-        <translation type="unfinished">Nickel Metal Hydride</translation>
+        <translation>Nickel Metal Hydride</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="99"/>
         <source>Unknown</source>
         <comment>battery technology</comment>
-        <translation type="unfinished">לא ידוע</translation>
+        <translation>לא ידוע</translation>
     </message>
 </context>
 </TS>

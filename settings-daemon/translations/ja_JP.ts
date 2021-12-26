@@ -41,17 +41,17 @@
     <message>
         <location filename="../battery/battery.cpp" line="290"/>
         <source>%1 until fully charged</source>
-        <translation type="unfinished"></translation>
+        <translation>充電完了まであと%1</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="292"/>
         <source>%1 remaining</source>
-        <translation type="unfinished">%1 残り</translation>
+        <translation>残り%1</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="294"/>
         <source>Fully charged.</source>
-        <translation type="unfinished"></translation>
+        <translation>充電完了。</translation>
     </message>
     <message>
         <location filename="../battery/battery.cpp" line="317"/>
@@ -80,37 +80,37 @@
         <location filename="../battery/upowerdevice.cpp" line="87"/>
         <source>Lithium-ion</source>
         <comment>battery technology</comment>
-        <translation type="unfinished">リチウムイオン</translation>
+        <translation>リチウムイオン</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="89"/>
         <source>Lithium Polymer</source>
         <comment>battery technology</comment>
-        <translation type="unfinished"></translation>
+        <translation>リチウムポリマー</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="91"/>
         <source>Lithium Iron Phosphate</source>
         <comment>battery technology</comment>
-        <translation type="unfinished"></translation>
+        <translation>リン酸鉄リチウム</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="93"/>
         <source>Lead Acid</source>
         <comment>battery technology</comment>
-        <translation type="unfinished"></translation>
+        <translation>酸性鉛</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="95"/>
         <source>Nickel Cadmium</source>
         <comment>battery technology</comment>
-        <translation type="unfinished"></translation>
+        <translation>ニッケル カドミウム</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="97"/>
         <source>Nickel Metal Hydride</source>
         <comment>battery technology</comment>
-        <translation type="unfinished"></translation>
+        <translation>ニッケル金属水素化物</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="99"/>
