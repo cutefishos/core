@@ -366,9 +366,15 @@ void Application::createConfigDirectory()
 
 void Application::updateUserDirs()
 {
-    QProcess p;
-    p.start("xdg-user-dirs-update", QStringList());
-    p.waitForFinished(-1);
+    // bool isCutefishOS = QFile::exists("/etc/cutefishos");
+
+    // if (!isCutefishOS)
+    //     return;
+
+    // QProcess p;
+    // p.setEnvironment(QStringList() << "LC_ALL=C");
+    // p.start("xdg-user-dirs-update", QStringList() << "--force");
+    // p.waitForFinished(-1);
 }
 
 int Application::runSync(const QString &program, const QStringList &args, const QStringList &env)

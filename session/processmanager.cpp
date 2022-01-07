@@ -120,6 +120,7 @@ void ProcessManager::startDesktopProcess()
     list << qMakePair(QString("cutefish-filemanager"), QStringList("--desktop"));
     list << qMakePair(QString("cutefish-launcher"), QStringList());
     list << qMakePair(QString("cutefish-powerman"), QStringList());
+    list << qMakePair(QString("cutefish-clipboard"), QStringList());
 
     // For CutefishOS.
     if (QFile("/usr/bin/cutefish-welcome").exists() &&
