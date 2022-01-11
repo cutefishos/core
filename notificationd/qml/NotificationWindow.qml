@@ -35,7 +35,7 @@ Item {
         id: _background
         anchors.fill: parent
         color: FishUI.Theme.secondBackgroundColor
-        radius: NotificationDialog.width * 0.05 //FishUI.Theme.bigRadius
+        radius: NotificationDialog.width * 0.05
         opacity: 0.7
 
         border.width: 1 / FishUI.Units.devicePixelRatio
@@ -94,10 +94,14 @@ Item {
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: FishUI.Units.largeSpacing
+        anchors.topMargin: FishUI.Units.largeSpacing
+        anchors.bottomMargin: FishUI.Units.largeSpacing
         spacing: FishUI.Units.largeSpacing
 
         RowLayout {
+            Layout.leftMargin: FishUI.Units.largeSpacing
+            Layout.rightMargin: FishUI.Units.largeSpacing
+
             Label {
                 text: qsTr("Notification Center")
                 Layout.fillWidth: true
@@ -141,6 +145,11 @@ Item {
                 highlightFollowsCurrentItem: true
                 clip: true
 
+                leftMargin: FishUI.Units.largeSpacing
+                rightMargin: FishUI.Units.largeSpacing
+
+                ScrollBar.vertical: ScrollBar {}
+
                 Label {
                     anchors.centerIn: parent
                     text: qsTr("No notifications")
@@ -154,7 +163,7 @@ Item {
                 }
 
                 delegate: Item {
-                    width: ListView.view.width
+                    width: ListView.view.width - ListView.view.leftMargin - ListView.view.rightMargin
                     height: 70
 
                     Rectangle {
@@ -175,7 +184,9 @@ Item {
 
                     RowLayout {
                         anchors.fill: parent
-                        anchors.margins: FishUI.Units.smallSpacing
+                        anchors.margins: FishUI.Units.largeSpacing
+                        anchors.leftMargin: FishUI.Units.smallSpacing * 1.5
+                        anchors.rightMargin: FishUI.Units.smallSpacing * 1.5
                         spacing: FishUI.Units.smallSpacing
 
                         Image {

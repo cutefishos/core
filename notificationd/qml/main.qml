@@ -22,7 +22,7 @@ Item {
 
     property int popupEdgeDistance: FishUI.Units.largeSpacing
     property int popupSpacing: FishUI.Units.largeSpacing
-    readonly property real popupMaximumScreenFill: 0.8
+    readonly property real popupMaximumScreenFill: 0.4
 
     readonly property rect screenRect: {
         let rect = Qt.rect(screen.screenGeometry.x + screen.availableScreenRect.x,
@@ -77,7 +77,7 @@ Item {
             y += popup.height + (popup.height > 0 ? popupSpacing : 0)
 
             // Horizontal
-            popup.x = screenRect.x + (screenRect.width - popup.width) / 2
+            // popup.x = screenRect.x + (screenRect.width - popup.width) / 2
 
             // don't let notifications take more than popupMaximumScreenFill of the screen
             var visible = true
