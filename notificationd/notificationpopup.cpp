@@ -17,21 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef NOTIFICATIONWINDOW_H
-#define NOTIFICATIONWINDOW_H
+#include "notificationpopup.h"
 
-#include <QQuickView>
+#include <QQmlContext>
 
-class NotificationWindow : public QQuickView
+#include <KWindowSystem>
+#include <KWindowEffects>
+
+NotificationPopup::NotificationPopup(QQuickView *parent)
+    : QQuickView(parent)
 {
-    Q_OBJECT
+    installEventFilter(this);
 
-public:
-    explicit NotificationWindow(QQuickView *parent = nullptr);
+    setResizeMode(QQuickView::SizeRootObjectToView);
+    setColor(Qt::transparent);
+}
 
-    void open();
+bool NotificationPopup::eventFilter(QObject *object, QEvent *event)
+{
+    if (event->type() == QEvent::Show) {
+        KWindowSystem::setState(winId(), NET::SkipTaskbar | NET::SkipPager | NET::SkipSwitcher);
+    }
 
-    bool eventFilter(QObject *object, QEvent *event) override;
-};
-
-#endif // NOTIFICATIONWINDOW_H
+    return QObject::eventFilter(object, event);
+}

@@ -22,6 +22,7 @@
 #include "screenhelper.h"
 #include "notificationadaptor.h"
 #include "historymodel.h"
+#include "notificationpopup.h"
 
 #include <QCommandLineParser>
 #include <QQmlApplicationEngine>
@@ -67,6 +68,7 @@ Application::Application(int& argc, char** argv)
         qmlRegisterType<NotificationsModel>("Cutefish.Notification", 1, 0, "NotificationsModel");
         qmlRegisterType<HistoryModel>("Cutefish.Notification", 1, 0, "HistoryModel");
         qmlRegisterType<ScreenHelper>("Cutefish.Notification", 1, 0, "ScreenHelper");
+        qmlRegisterType<NotificationPopup>("Cutefish.Notification", 1, 0, "NotificationPopup");
 
         m_instance = true;
     }

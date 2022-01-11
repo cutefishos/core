@@ -17,21 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef NOTIFICATIONWINDOW_H
-#define NOTIFICATIONWINDOW_H
+#ifndef NOTIFICATIONPOPUP_H
+#define NOTIFICATIONPOPUP_H
 
 #include <QQuickView>
 
-class NotificationWindow : public QQuickView
+class NotificationPopup : public QQuickView
 {
     Q_OBJECT
 
 public:
-    explicit NotificationWindow(QQuickView *parent = nullptr);
-
-    void open();
+    explicit NotificationPopup(QQuickView *parent = nullptr);
 
     bool eventFilter(QObject *object, QEvent *event) override;
 };
 
-#endif // NOTIFICATIONWINDOW_H
+#endif // NOTIFICATIONPOPUP_H

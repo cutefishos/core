@@ -25,9 +25,9 @@ import QtGraphicalEffects 1.0
 import FishUI 1.0 as FishUI
 import Cutefish.Notification 1.0
 
-Window {
+NotificationPopup {
     id: control
-    flags: Qt.WindowDoesNotAcceptFocus | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Popup
+    flags: Qt.WindowDoesNotAcceptFocus | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
     width: 400
     height: 70
     color: "transparent"

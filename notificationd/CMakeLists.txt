@@ -5,6 +5,7 @@ set(SRCS main.cpp
          notificationsmodel.cpp
          notificationserver.cpp
          notification.cpp
+         notificationpopup.cpp
          notificationwindow.cpp
          historymodel.cpp
          settings.cpp

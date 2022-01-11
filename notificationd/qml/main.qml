@@ -36,7 +36,7 @@ Item {
 
     property Instantiator popupInstantiator: Instantiator {
         model: notificationsModel
-        delegate: NotificationPopup {}
+        delegate: QmlNotificationPopup {}
 
         onObjectAdded: {
             positionPopups()
