@@ -34,6 +34,11 @@ Application::Application(QObject *parent)
     m_sleepWhenClosedScreen = m_settings.value("SleepWhenClosedScreen", false).toBool();
     m_lockWhenClosedScreen = m_settings.value("LockWhenClosedScreen", true).toBool();
 
+    // Live
+    if (QFile("/run/live/medium/live/filesystem.squashfs").exists()) {
+        m_closeScreenTimeout = -1;
+    }
+
     m_dimDisplayAction->setTimeout(m_closeScreenTimeout);
     m_dimDisplayAction->setSleep(m_sleepWhenClosedScreen);
     m_dimDisplayAction->setLock(m_lockWhenClosedScreen);
