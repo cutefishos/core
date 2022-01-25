@@ -75,7 +75,7 @@ NotificationPopup {
 
     RowLayout {
         anchors.fill: parent
-        anchors.leftMargin: FishUI.Units.largeSpacing
+        anchors.leftMargin: FishUI.Units.smallSpacing * 1.5
         anchors.rightMargin: FishUI.Units.smallSpacing
         anchors.topMargin: FishUI.Units.smallSpacing
         anchors.bottomMargin: FishUI.Units.smallSpacing
