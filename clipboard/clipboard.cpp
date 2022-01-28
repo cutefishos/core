@@ -58,10 +58,13 @@ void Clipboard::onDataChanged()
 
         newMimeData->setImageData(srcPix);
         newMimeData->setData("TIMESTAMP", timeStamp);
-    } else {
-        for (const QString &key : mimeData->formats()) {
-            newMimeData->setData(key, mimeData->data(key));
-        }
+    }
+
+    for (const QString &key : mimeData->formats()) {
+        if (key == "image/png" || key == "application/x-qt-image")
+            continue;
+
+        newMimeData->setData(key, mimeData->data(key));
     }
 
     // cutefish flag.
