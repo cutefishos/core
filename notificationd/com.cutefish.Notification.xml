@@ -5,5 +5,7 @@
     <method name="setDoNotDisturb">
       <arg name="enabled" type="b" direction="in"/>
     </method>
+    <signal name="doNotDisturbChanged">
+    </signal>
   </interface>
 </node>

@@ -44,6 +44,7 @@ Application::Application(int &argc, char **argv)
     , m_language(Language::self())
     , m_mouse(new Mouse)
     , m_touchpad(new TouchpadManager)
+    , m_defaultApps(new DefaultApplications)
 //    , m_kwinTimer(new QTimer(this))
 {
     initTrash();

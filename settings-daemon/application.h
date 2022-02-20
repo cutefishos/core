@@ -27,6 +27,7 @@
 #include "language/language.h"
 #include "mouse/mousemanager.h"
 #include "touchpad/touchpadmanager.h"
+#include "defaultapplications.h"
 
 #include <QTimer>
 
@@ -49,6 +50,7 @@ private:
     Language *m_language;
     Mouse *m_mouse;
     TouchpadManager *m_touchpad;
+    DefaultApplications *m_defaultApps;
 
 //    QTimer *m_kwinTimer;
 };
