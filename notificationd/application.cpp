@@ -85,6 +85,11 @@ void Application::setDoNotDisturb(bool enabled)
     m_settings->setDoNotDisturb(enabled);
 }
 
+bool Application::doNotDisturb() const
+{
+    return m_settings->doNotDisturb();
+}
+
 int Application::run()
 {
     if (!parseCommandLineArgs())
@@ -96,6 +101,8 @@ int Application::run()
     engine.load(QUrl("qrc:/qml/main.qml"));
 
     m_window = new NotificationWindow;
+
+    connect(m_settings, &Settings::doNotDisturbChanged, this, &Application::doNotDisturbChanged);
 
     return QApplication::exec();
 }

@@ -29,15 +29,20 @@ class NotificationsModel;
 class Application : public QApplication
 {
     Q_OBJECT
+    Q_PROPERTY(bool doNotDisturb READ doNotDisturb WRITE setDoNotDisturb NOTIFY doNotDisturbChanged)
 
 public:
     explicit Application(int& argc, char** argv);
 
     void showWindow();
     void setDoNotDisturb(bool enabled);
+    bool doNotDisturb() const;
 
     int run();
     bool parseCommandLineArgs();
+
+signals:
+    void doNotDisturbChanged();
 
 private:
     NotificationServer *m_notificationServer;
