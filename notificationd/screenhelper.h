@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QRect>
+#include <QScreen>
 
 class ScreenHelper : public QObject
 {

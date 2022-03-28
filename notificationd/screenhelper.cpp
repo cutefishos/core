@@ -24,6 +24,9 @@
 ScreenHelper::ScreenHelper(QObject *parent)
     : QObject(parent)
 {
+    connect(qGuiApp, &QGuiApplication::primaryScreenChanged, this, &ScreenHelper::screenGeometryChanged);
+    connect(qGuiApp, &QGuiApplication::primaryScreenChanged, this, &ScreenHelper::availableScreenRectChanged);
+
     connect(qApp->primaryScreen(), &QScreen::geometryChanged, this, &ScreenHelper::screenGeometryChanged);
     connect(qApp->primaryScreen(), &QScreen::availableGeometryChanged, this, &ScreenHelper::availableScreenRectChanged);
 }
