@@ -92,7 +92,7 @@
         <location filename="../battery/upowerdevice.cpp" line="91"/>
         <source>Lithium Iron Phosphate</source>
         <comment>battery technology</comment>
-        <translation>Lithium Iron Phosphate</translation>
+        <translation>Lithium Besi Fosfat</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="93"/>

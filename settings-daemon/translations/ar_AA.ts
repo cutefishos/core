@@ -74,7 +74,7 @@
         <location filename="../battery/upowerdevice.cpp" line="71"/>
         <source>%1 Battery</source>
         <comment>%1 is battery technology</comment>
-        <translation>%1 بطارية</translation>
+        <translation>%1 البطارية</translation>
     </message>
     <message>
         <location filename="../battery/upowerdevice.cpp" line="87"/>
