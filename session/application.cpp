@@ -183,7 +183,7 @@ void Application::initEnvironments()
     qputenv("QT_PLATFORM_PLUGIN", "cutefish");
     
     // ref: https://stackoverflow.com/questions/34399993/qml-performance-issue-when-updating-an-item-in-presence-of-many-non-overlapping
-    qputenv("QT_QPA_UPDATE_IDLE_TIME", 10);
+    qputenv("QT_QPA_UPDATE_IDLE_TIME", "10");
 
     qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "0");
 
