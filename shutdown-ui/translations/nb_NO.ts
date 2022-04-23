@@ -24,4 +24,7 @@
         <translation>Hvilemodus</translation>
     </message>
 </context>
+<context>
+    <name></name>
+</context>
 </TS>
