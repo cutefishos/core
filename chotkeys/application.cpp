@@ -21,6 +21,7 @@
 #include "hotkeys.h"
 
 #include <QProcess>
+#include <QDebug>
 
 Application::Application(QObject *parent)
     : QObject(parent)
@@ -37,11 +38,13 @@ void Application::setupShortcuts()
     m_hotKeys->registerKey(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_Delete));
     m_hotKeys->registerKey(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_A));
     m_hotKeys->registerKey(QKeySequence(Qt::META + Qt::Key_L));
-    // m_hotKeys->registerKey(QKeySequence(Qt::Key_Super_L));
+    //m_hotKeys->registerKey(QKeySequence(Qt::META + Qt::Key_6));
+    m_hotKeys->registerKey(647);
 }
 
 void Application::onPressed(QKeySequence keySeq)
 {
+
     if (keySeq.toString() == "Ctrl+Alt+Del") {
         QProcess::startDetached("cutefish-shutdown", QStringList());
     }
@@ -53,11 +56,8 @@ void Application::onPressed(QKeySequence keySeq)
     if (keySeq.toString() == "Ctrl+Alt+A") {
         QProcess::startDetached("cutefish-screenshot", QStringList());
     }
-}
 
-void Application::onReleased(QKeySequence keySeq)
-{
-    if (keySeq == QKeySequence(Qt::Key_Super_L)) {
+    if (keySeq.toString() == "Ʇ") {
         QProcess::startDetached("cutefish-launcher", QStringList());
     }
 }
