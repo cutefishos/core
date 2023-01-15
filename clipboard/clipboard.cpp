@@ -71,4 +71,5 @@ void Clipboard::onDataChanged()
     newMimeData->setData("application/x-cutefish-clipboard", QByteArray("1"));
 
     m_qtClipboard->setMimeData(newMimeData);
+    newMimeData->deleteLater();
 }
