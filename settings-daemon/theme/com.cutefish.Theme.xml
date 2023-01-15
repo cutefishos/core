@@ -7,6 +7,9 @@
     <method name="setDarkModeDimsWallpaer">
         <arg name="darkModeDimsWallpaer" type="b" direction="in"/>
     </method>
+    <method name="setBackgroundVisible">
+        <arg name="BackgroundVisible" type="b" direction="in"/>
+    </method>
     <method name="setSystemFont">
         <arg name="fontFamily" type="s" direction="in"/>
     </method>
@@ -46,6 +49,7 @@
 
     <property name="isDarkMode" type="b" access="read"/>
     <property name="darkModeDimsWallpaer" type="b" access="read"/>
+    <property name="backgroundVisible" type="b" access="read"/>
     <property name="systemFont" type="s" access="read"/>
     <property name="systemFixedFont" type="s" access="read"/>
     <property name="systemFontPointSize" type="d" access="read"/>
@@ -65,6 +69,8 @@
         <arg type="s"/>
     </signal>
     <signal name="darkModeDimsWallpaerChanged">
+    </signal>
+    <signal name="backgroundVisibleChanged">
     </signal>
     <signal name="accentColorChanged">
         <arg type="i"/>

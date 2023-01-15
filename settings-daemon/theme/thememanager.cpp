@@ -68,6 +68,7 @@ ThemeManager::ThemeManager(QObject *parent)
     // init value
     m_isDarkMode = m_settings->value("DarkMode", false).toBool();
     m_darkModeDimsWallpaer = m_settings->value("DarkModeDimsWallpaer", false).toBool();
+    m_backgroundVisible = true;
     m_wallpaperPath = m_settings->value("Wallpaper", "/usr/share/backgrounds/cutefishos/default.jpg").toString();
     m_accentColor = m_settings->value("AccentColor", 0).toInt();
     m_backgroundType = m_settings->value("BackgroundType", 0).toInt();
@@ -142,6 +143,20 @@ void ThemeManager::setDarkModeDimsWallpaer(bool value)
     m_settings->setValue("DarkModeDimsWallpaer", m_darkModeDimsWallpaer);
 
     emit darkModeDimsWallpaerChanged();
+}
+
+bool ThemeManager::backgroundVisible() const
+{
+    return m_backgroundVisible;
+}
+
+void ThemeManager::setBackgroundVisible(bool value)
+{
+    if (m_backgroundVisible == value)
+        return;
+
+    m_backgroundVisible = value;
+    emit backgroundVisibleChanged();
 }
 
 int ThemeManager::accentColor()
