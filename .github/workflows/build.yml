@@ -13,7 +13,7 @@ jobs:
     container: docker.io/library/debian:sid
     steps:
     - name: Checkout Source
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Update repository
       run: apt-get update -y
     - name: Install the basic dev packages
