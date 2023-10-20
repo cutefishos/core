@@ -142,6 +142,11 @@ void ProcessManager::startDesktopProcess()
         process->start();
         process->waitForStarted();
 
+		QObject::connect(process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+                         [process] (int exitCode, QProcess::ExitStatus exitStatus) {
+            process->start();
+        });
+		
         qDebug() << "Load DE components: " << pair.first << pair.second;
 
         // Add to map
