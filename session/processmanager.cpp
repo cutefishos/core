@@ -120,7 +120,7 @@ void ProcessManager::startDesktopProcess()
     list << qMakePair(QString("cutefish-filemanager"), QStringList("--desktop"));
     list << qMakePair(QString("cutefish-launcher"), QStringList());
     list << qMakePair(QString("cutefish-powerman"), QStringList());
-    list << qMakePair(QString("cutefish-clipboard"), QStringList());
+//    list << qMakePair(QString("cutefish-clipboard"), QStringList());
 
     // For CutefishOS.
     if (QFile("/usr/bin/cutefish-welcome").exists() &&
@@ -147,6 +147,10 @@ void ProcessManager::startDesktopProcess()
         // Add to map
         if (process->exitCode() == 0) {
             m_autoStartProcess.insert(pair.first, process);
+			QObject::connect(process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+                         [process] (int exitCode, QProcess::ExitStatus exitStatus) {
+            process->start();
+			});
         } else {
             process->deleteLater();
         }
