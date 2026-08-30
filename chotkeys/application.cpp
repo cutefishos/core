@@ -21,6 +21,8 @@
 #include "hotkeys.h"
 
 #include <QProcess>
+#include <QDBusConnection>
+#include <QDBusInterface>
 #include <QDebug>
 
 Application::Application(QObject *parent)
@@ -58,7 +60,10 @@ void Application::onPressed(QKeySequence keySeq)
     }
 
     if (keySeq.toString() == "Ʇ") {
-        QProcess::startDetached("cutefish-launcher", QStringList());
+        // The launcher is a window of cutefish-shell, not a program to run.
+        QDBusInterface("com.cutefish.Launcher", "/Launcher",
+                       "com.cutefish.Launcher",
+                       QDBusConnection::sessionBus()).asyncCall("toggle");
     }
 }
 
