@@ -25,6 +25,7 @@
 
 #include <KX11Extras>
 #include <KWindowEffects>
+#include <KWindowSystem>
 #include <netwm.h>
 
 NotificationWindow::NotificationWindow(QQuickView *parent)
@@ -66,7 +67,8 @@ bool NotificationWindow::eventFilter(QObject *object, QEvent *event)
             QQuickView::setVisible(false);
         }
     } else if (event->type() == QEvent::Show) {
-        KX11Extras::setState(winId(), NET::SkipTaskbar | NET::SkipPager | NET::SkipSwitcher);
+        if (KWindowSystem::isPlatformX11())
+            KX11Extras::setState(winId(), NET::SkipTaskbar | NET::SkipPager | NET::SkipSwitcher);
         HistoryModel::self()->updateTime();
     } else if (event->type() == QEvent::Hide) {
         setMouseGrabEnabled(false);

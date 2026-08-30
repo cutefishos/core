@@ -32,3 +32,6 @@ target_link_libraries(${TARGET}
 
 install(TARGETS ${TARGET} DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(FILES cutefish-xsession.desktop DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/xsessions/)
+install(PROGRAMS cutefish-kwin-wayland-session cutefish-wayland-session DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(FILES cutefish-applications.menu DESTINATION /etc/xdg/menus/)
+install(FILES cutefish-wayland.desktop DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/wayland-sessions/)

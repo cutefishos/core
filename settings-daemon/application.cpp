@@ -42,11 +42,20 @@ Application::Application(int &argc, char **argv)
     , m_brightnessManager(new BrightnessManager(this))
     , m_upowerManager(new UPowerManager(this))
     , m_language(Language::self())
-    , m_mouse(new Mouse)
-    , m_touchpad(new TouchpadManager)
+    , m_mouse(nullptr)
+    , m_touchpad(nullptr)
     , m_defaultApps(new DefaultApplications)
 //    , m_kwinTimer(new QTimer(this))
 {
+    // Mouse and touchpad managers use the X11/XInput backend. Constructing
+    // them on a Wayland Qt platform dereferences a missing QX11 interface
+    // and makes the settings daemon exit before it can register its D-Bus
+    // service.
+    if (QGuiApplication::platformName() == QStringLiteral("xcb")) {
+        m_mouse = new Mouse(this);
+        m_touchpad = new TouchpadManager(this);
+    }
+
     initTrash();
 
     new DBusAdaptor(this);

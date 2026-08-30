@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+# Outer entry point of the Cutefish Wayland session: it sets up the
+# environment KWin itself needs and then becomes the compositor.
+#
+# XDG_MENU_PREFIX has to be exported before KWin starts. KService only builds
+# its application database (ksycoca) when it finds <prefix>applications.menu,
+# and KWin reads that database to decide which client may bind the restricted
+# Wayland interfaces, org_kde_plasma_window_management among them. Without it
+# the database stays empty, no desktop file is ever found, and the shell gets
+# no window list.
+export XDG_MENU_PREFIX=cutefish-
+export XDG_CURRENT_DESKTOP=Cutefish
+export XDG_SESSION_DESKTOP=Cutefish
+export DESKTOP_SESSION=Cutefish
+
+exec /usr/bin/kwin_wayland --xwayland --exit-with-session /usr/bin/cutefish-kwin-wayland-session "$@"

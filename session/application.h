@@ -34,6 +34,7 @@ public:
     explicit Application(int &argc, char **argv);
 
     bool wayland() const;
+    bool startWindowManager() const;
 
 public slots:
     void logout() {
@@ -83,6 +84,7 @@ private:
     Power m_power;
 
     bool m_wayland;
+    bool m_startWindowManager;
 };
 
 #endif // APPLICATION_H

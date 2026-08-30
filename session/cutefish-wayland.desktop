@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Cutefish (KWin Wayland)
+Comment=Cutefish desktop session on KWin Wayland
+Exec=/usr/bin/cutefish-wayland-session
+TryExec=/usr/bin/kwin_wayland
+Type=Application
+DesktopNames=Cutefish;KDE;
+X-GDM-SessionRegisters=true

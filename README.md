@@ -27,6 +27,12 @@ sudo apt install extra-cmake-modules pkg-config xserver-xorg-input-libinput-dev 
 
 ## Runtime
 
+For the Wayland session, install KWin Wayland and select `Cutefish (KWin
+Wayland)` from the display manager. The session entry launches KWin with
+XWayland enabled and starts `cutefish-session --wayland --no-wm` inside the
+compositor. The Settings application and its X11-only settings daemon are not
+started by this session yet.
+
 ## Build
 
 ```shell

@@ -32,6 +32,8 @@
 #include <QDBusConnectionInterface>
 #include <QDBusServiceWatcher>
 
+#include <KWindowSystem>
+
 // STL
 #include <optional>
 
@@ -86,6 +88,7 @@ Application::Application(int &argc, char **argv)
     , m_processManager(new ProcessManager(this))
     , m_networkProxyManager(new NetworkProxyManager)
     , m_wayland(false)
+    , m_startWindowManager(true)
 {
     new SessionAdaptor(this);
 
@@ -99,15 +102,20 @@ Application::Application(int &argc, char **argv)
 
     QCommandLineOption waylandOption(QStringList() << "w" << "wayland" << "Wayland Mode");
     parser.addOption(waylandOption);
+    QCommandLineOption noWindowManagerOption(QStringList() << "no-wm" << "Do not start a window manager");
+    parser.addOption(noWindowManagerOption);
     parser.process(*this);
 
-    m_wayland = parser.isSet(waylandOption);
+    m_wayland = parser.isSet(waylandOption) || QGuiApplication::platformName().contains(QStringLiteral("wayland"));
+    m_startWindowManager = !parser.isSet(noWindowManagerOption);
 
     createConfigDirectory();
-    initKWinConfig();
+    if (!m_wayland)
+        initKWinConfig();
     initLanguage();
     initScreenScaleFactors();
-    initXResource();
+    if (!m_wayland)
+        initXResource();
 
     initEnvironments();
 
@@ -138,6 +146,11 @@ bool Application::wayland() const
     return m_wayland;
 }
 
+bool Application::startWindowManager() const
+{
+    return m_startWindowManager;
+}
+
 void Application::launch(const QString &exec, const QStringList &args)
 {
     QProcess process;
@@ -163,7 +176,7 @@ void Application::initEnvironments()
     if (qEnvironmentVariableIsEmpty("XDG_DATA_HOME"))
         qputenv("XDG_DATA_HOME", QDir::home().absoluteFilePath(QStringLiteral(".local/share")).toLocal8Bit());
     if (qEnvironmentVariableIsEmpty("XDG_DESKTOP_DIR"))
-        qputenv("XDG_DESKTOP_DIR", QDir::home().absoluteFilePath(QStringLiteral("/Desktop")).toLocal8Bit());
+        qputenv("XDG_DESKTOP_DIR", QDir::home().absoluteFilePath(QStringLiteral("Desktop")).toLocal8Bit());
     if (qEnvironmentVariableIsEmpty("XDG_CONFIG_HOME"))
         qputenv("XDG_CONFIG_HOME", QDir::home().absoluteFilePath(QStringLiteral(".config")).toLocal8Bit());
     if (qEnvironmentVariableIsEmpty("XDG_CACHE_HOME"))
@@ -172,6 +185,12 @@ void Application::initEnvironments()
         qputenv("XDG_DATA_DIRS", "/usr/local/share/:/usr/share/");
     if (qEnvironmentVariableIsEmpty("XDG_CONFIG_DIRS"))
         qputenv("XDG_CONFIG_DIRS", "/etc/xdg");
+
+    // KService only indexes the installed desktop files when it finds
+    // <prefix>applications.menu; with an empty database KWin denies every
+    // restricted Wayland interface and the shell never sees a window list.
+    if (qEnvironmentVariableIsEmpty("XDG_MENU_PREFIX"))
+        qputenv("XDG_MENU_PREFIX", "cutefish-");
 
     // Environment
     qputenv("DESKTOP_SESSION", "Cutefish");
