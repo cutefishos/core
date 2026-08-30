@@ -20,9 +20,11 @@
 #include "mousemanager.h"
 #include "mouseadaptor.h"
 
+#include <QtGui/qguiapplication_platform.h>
+
 Mouse::Mouse(QObject *parent)
     : QObject(parent)
-    , m_inputDummydevice(new X11LibinputDummyDevice(this, QX11Info::display()))
+    , m_inputDummydevice(new X11LibinputDummyDevice(this, qGuiApp->nativeInterface<QNativeInterface::QX11Application>()->display()))
 {
     // init dbus
     new MouseAdaptor(this);

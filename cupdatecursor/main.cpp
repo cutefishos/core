@@ -1,16 +1,17 @@
 #include <QGuiApplication>
-#include <QX11Info>
 #include <QFile>
 #include <QDebug>
 #include <QSettings>
 #include <QStandardPaths>
+
+#include <QtGui/qguiapplication_platform.h>
 
 #include <X11/X.h>
 #include <X11/Xcursor/Xcursor.h>
 
 inline void applyTheme(const QString &theme, int size)
 {
-    Display *display = QX11Info::display();
+    Display *display = qGuiApp->nativeInterface<QNativeInterface::QX11Application>()->display();
 
     if (!theme.isEmpty())
         XcursorSetTheme(display, QFile::encodeName(theme));
@@ -41,7 +42,7 @@ int main(int argc, char *argv[])
     if (argc != 3)
         return 1;
 
-    if (!QX11Info::isPlatformX11())
+    if (!qGuiApp->nativeInterface<QNativeInterface::QX11Application>())
         return 2;
 
     QString theme = QFile::decodeName(argv[1]);

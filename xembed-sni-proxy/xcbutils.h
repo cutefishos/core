@@ -17,7 +17,8 @@
 
 #include <QScopedPointer>
 #include <QVector>
-#include <QX11Info>
+
+#include "x11utils.h"
 
 /** XEMBED messages */
 #define XEMBED_EMBEDDED_NOTIFY 0
@@ -39,7 +40,7 @@ using ScopedCPointer = QScopedPointer<T, QScopedPointerPodDeleter>;
 class Atom
 {
 public:
-    explicit Atom(const QByteArray &name, bool onlyIfExists = false, xcb_connection_t *c = QX11Info::connection())
+    explicit Atom(const QByteArray &name, bool onlyIfExists = false, xcb_connection_t *c = qGuiApp->nativeInterface<QNativeInterface::QX11Application>()->connection())
         : m_connection(c)
         , m_retrieved(false)
         , m_cookie(xcb_intern_atom_unchecked(m_connection, onlyIfExists, name.length(), name.constData()))
@@ -102,7 +103,7 @@ class Atoms
 public:
     Atoms()
         : xembedAtom("_XEMBED")
-        , selectionAtom(xcb_atom_name_by_screen("_NET_SYSTEM_TRAY", QX11Info::appScreen()))
+        , selectionAtom(xcb_atom_name_by_screen("_NET_SYSTEM_TRAY", Cutefish::X11::screenNumber()))
         , opcodeAtom("_NET_SYSTEM_TRAY_OPCODE")
         , messageData("_NET_SYSTEM_TRAY_MESSAGE_DATA")
         , visualAtom("_NET_SYSTEM_TRAY_VISUAL")

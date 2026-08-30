@@ -8,7 +8,6 @@
 #define XLIBNOTIFICATIONS_H
 
 #include <QSocketNotifier>
-#include <QX11Info>
 
 #include <X11/Xlib.h>
 #include <xcb/xcb.h>

@@ -22,9 +22,9 @@
 #include <QSettings>
 #include <QTimer>
 #include <QDBusPendingCall>
-#include <QX11Info>
 #include <QProcess>
 #include <QDebug>
+#include <QtGui/qguiapplication_platform.h>
 
 #include <X11/Xlib.h>
 #include <xcb/dpms.h>
@@ -35,11 +35,11 @@ DimDisplayAction::DimDisplayAction(QObject *parent)
               "/Brightness",
               "com.cutefish.Brightness", QDBusConnection::sessionBus())
 {
-    if (QX11Info::isPlatformX11()) {
+    if (qGuiApp->nativeInterface<QNativeInterface::QX11Application>()) {
         // Disable a default timeout, if any
-        xcb_dpms_set_timeouts(QX11Info::connection(), 0, 0, 0);
+        xcb_dpms_set_timeouts(qGuiApp->nativeInterface<QNativeInterface::QX11Application>()->connection(), 0, 0, 0);
 
-        XSetScreenSaver(QX11Info::display(), 0, 0, 0, 0);
+        XSetScreenSaver(qGuiApp->nativeInterface<QNativeInterface::QX11Application>()->display(), 0, 0, 0, 0);
     }
 }
 

@@ -9,9 +9,9 @@
 
 #include <QObject>
 #include <QString>
-#include <QX11Info>
 
 #include <X11/Xdefs.h>
+#include <QtGui/qguiapplication_platform.h>
 
 struct LibinputSettings;
 

@@ -18,10 +18,10 @@
  */
 
 #include "hotkeys.h"
+#include "x11utils.h"
 
 #include <QApplication>
 #include <QKeySequence>
-#include <QX11Info>
 #include <QTimer>
 #include <QDebug>
 
@@ -80,7 +80,6 @@ bool Hotkeys::nativeEventFilter(const QByteArray &eventType, void *message, qint
 
 //        // Keyboard needs to be ungrabed after XGrabKey() activates the grab,
 //        // otherwise it becomes frozen.
-//        xcb_connection_t *c = QX11Info::connection();
 //        xcb_void_cookie_t cookie = xcb_ungrab_keyboard_checked(c, XCB_TIME_CURRENT_TIME);
 //        xcb_flush(c);
 
@@ -96,10 +95,6 @@ bool Hotkeys::nativeEventFilter(const QByteArray &eventType, void *message, qint
 //        }
 
 //        // All that work for this hey... argh...
-//        if (NET::timestampCompare(keyEvent->time, QX11Info::appTime()) > 0) {
-//            QX11Info::setAppTime(keyEvent->time);
-//        }
-
 //        bool found = false;
 //        for (QKeySequence &seq : m_shortcuts.values()) {
 //            if (seq == QKeySequence(keyQt)) {
@@ -167,17 +162,17 @@ void Hotkeys::registerKey(quint32 keycode)
 
 void Hotkeys::registerKey(quint32 key, quint32 mods)
 {
-    xcb_grab_key(QX11Info::connection(),
+    xcb_grab_key(qGuiApp->nativeInterface<QNativeInterface::QX11Application>()->connection(),
                  1,
-                 QX11Info::appRootWindow(),
+                 Cutefish::X11::rootWindow(),
                  mods,
                  key,
                  XCB_GRAB_MODE_ASYNC,
                  XCB_GRAB_MODE_ASYNC);
 
-    xcb_grab_key(QX11Info::connection(),
+    xcb_grab_key(qGuiApp->nativeInterface<QNativeInterface::QX11Application>()->connection(),
                  1,
-                 QX11Info::appRootWindow(),
+                 Cutefish::X11::rootWindow(),
                  mods | XCB_MOD_MASK_2,
                  key,
                  XCB_GRAB_MODE_ASYNC,
@@ -186,7 +181,7 @@ void Hotkeys::registerKey(quint32 key, quint32 mods)
 
 void Hotkeys::unregisterKey(quint32 key, quint32 mods)
 {
-    xcb_ungrab_key(QX11Info::connection(), key, QX11Info::appRootWindow(), mods);
+    xcb_ungrab_key(qGuiApp->nativeInterface<QNativeInterface::QX11Application>()->connection(), key, Cutefish::X11::rootWindow(), mods);
 }
 
 quint32 Hotkeys::nativeKeycode(Qt::Key k)
@@ -263,7 +258,7 @@ quint32 Hotkeys::nativeKeycode(Qt::Key k)
             key = 0;
         }
     }
-    return XKeysymToKeycode(QX11Info::display(), key);
+    return XKeysymToKeycode(qGuiApp->nativeInterface<QNativeInterface::QX11Application>()->display(), key);
 }
 
 quint32 Hotkeys::nativeModifiers(Qt::KeyboardModifiers m)

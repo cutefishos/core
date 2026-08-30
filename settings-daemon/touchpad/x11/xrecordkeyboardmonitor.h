@@ -9,7 +9,8 @@
 
 #include <QSocketNotifier>
 #include <QVector>
-#include <QX11Info>
+
+#include <QtGui/qguiapplication_platform.h>
 
 #include <xcb/record.h>
 #include <xcb/xcb.h>

@@ -16,6 +16,7 @@
 #include <QTimer>
 #include <QSettings>
 #include <QDebug>
+#include <QtGui/qguiapplication_platform.h>
 
 // #include <KConfigGroup>
 #include <KDirWatch>
@@ -24,7 +25,6 @@
 #include <KWindowInfo>
 #include <netwm.h>
 
-#include <QX11Info>
 #include <xcb/xcb.h>
 
 #include "window.h"
@@ -50,7 +50,7 @@ static const QString s_appMenuGtkModule = QStringLiteral("appmenu-gtk-module");
 
 MenuProxy::MenuProxy()
     : QObject()
-    , m_xConnection(QX11Info::connection())
+    , m_xConnection(qGuiApp->nativeInterface<QNativeInterface::QX11Application>()->connection())
     , m_serviceWatcher(new QDBusServiceWatcher(this))
     , m_gtk2RcWatch(new KDirWatch(this))
     , m_writeGtk2SettingsTimer(new QTimer(this))
