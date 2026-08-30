@@ -26,6 +26,7 @@
 #include <QProcess>
 #include <QFile>
 #include <QDebug>
+#include <QFontDatabase>
 
 static const QByteArray s_systemFontName = QByteArrayLiteral("Font");
 static const QByteArray s_systemFixedFontName = QByteArrayLiteral("FixedFont");
@@ -396,10 +397,19 @@ void ThemeManager::applyCursor()
 
 void ThemeManager::updateFontConfig()
 {
-    const QString &familyFont = systemFont();
-    const QString &fixedFont = systemFixedFont();
-
-    const QString &familyFallback = "Noto Sans";
+    QFontDatabase database;
+    const QStringList families = database.families();
+    const QString familyFont = families.contains(systemFont())
+            ? systemFont()
+            : families.contains(QStringLiteral("Noto Sans"))
+                ? QStringLiteral("Noto Sans")
+                : QStringLiteral("DejaVu Sans");
+    const QString fixedFont = families.contains(systemFixedFont())
+            ? systemFixedFont()
+            : families.contains(QStringLiteral("Noto Sans Mono"))
+                ? QStringLiteral("Noto Sans Mono")
+                : QStringLiteral("DejaVu Sans Mono");
+    const QString familyFallback = familyFont;
 
     QSettings settings(QSettings::UserScope, "cutefishos", "theme");
     bool hinting = settings.value("XftAntialias", 1).toBool();
