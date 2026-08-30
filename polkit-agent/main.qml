@@ -41,7 +41,7 @@ Item {
 
     DragHandler {
         target: null
-        acceptedDevices: PointerDevice.GenericPointer
+        acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
         grabPermissions: TapHandler.CanTakeOverFromAnything
         onActiveChanged: if (active) { windowHelper.startSystemMove(rootWindow) }
     }
