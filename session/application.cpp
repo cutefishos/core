@@ -317,7 +317,13 @@ void Application::initKWinConfig()
     settings.setValue("BorderSize", "Normal");
     settings.setValue("ButtonsOnLeft", "");
     settings.setValue("ButtonsOnRight", "HIAX");
-    settings.setValue("library", "org.cutefish.decoration");
+    // The Cutefish decoration was written for the old KDecoration2 API and
+    // is not available on current KWin installations.  Keeping this stale
+    // value makes KWin try to load a plugin that may no longer exist and can
+    // leave the session without a usable window manager.  Let KWin select
+    // the system default decoration instead (normally Breeze).
+    if (settings.value("library").toString() == "org.cutefish.decoration")
+        settings.remove("library");
     settings.setValue("theme", "");
     settings.endGroup();
 }
