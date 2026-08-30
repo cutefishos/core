@@ -74,26 +74,43 @@ void ProcessManager::logout()
 
     if (kwinIface.isValid()) {
         kwinIface.call("aboutToSaveSession", "cutefish");
-        kwinIface.call("setState", uint(2)); // Quit
+        kwinIface.call("setState", uint(1)); // Quitting
     }
 
-    QProcess s;
-    s.start("killall", QStringList() << "kglobalaccel5");
-    s.waitForFinished(-1);
+    // Close what we started ourselves, the window manager last since
+    // everything else is drawn on top of it.
+    stopProcesses(m_autoStartProcess);
+    stopProcesses(m_systemProcess);
 
-    QDBusInterface iface("org.freedesktop.login1",
-                        "/org/freedesktop/login1/session/self",
-                        "org.freedesktop.login1.Session",
-                        QDBusConnection::systemBus());
-    if (iface.isValid())
-        iface.call("Terminate");
-
+    // Ending the session is up to whoever started us: the display manager
+    // closes the login session and returns to the greeter once we exit.
+    // Calling Terminate on the logind session here would kill the display
+    // manager helper along with us, before it can do any of that, and leave
+    // the user staring at a black screen instead of the greeter.
     QCoreApplication::exit(0);
+}
+
+void ProcessManager::stopProcesses(QMap<QString, QProcess *> &processes)
+{
+    QMapIterator<QString, QProcess *> i(processes);
+    while (i.hasNext()) {
+        i.next();
+        QProcess *p = i.value();
+
+        if (!p || p->state() == QProcess::NotRunning)
+            continue;
+
+        p->terminate();
+
+        if (!p->waitForFinished(2000))
+            p->kill();
+    }
 }
 
 void ProcessManager::startWindowManager()
 {
     QProcess *wmProcess = new QProcess;
+    m_systemProcess.insert("kwin", wmProcess);
 
     wmProcess->start(m_app->wayland() ? "kwin_wayland" : "kwin_x11", QStringList());
 

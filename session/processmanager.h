@@ -46,6 +46,9 @@ public:
     bool nativeEventFilter(const QByteArray & eventType, void * message, qintptr * result) override;
 
 private:
+    void stopProcesses(QMap<QString, QProcess *> &processes);
+
+private:
     Application *m_app;
     QMap<QString, QProcess *> m_systemProcess;
     QMap<QString, QProcess *> m_autoStartProcess;
