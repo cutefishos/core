@@ -23,6 +23,7 @@
 #include <QBitmap>
 
 #include <KWindowSystem>
+#include <KWindowInfo>
 #include <netwm.h>
 
 #include "statusnotifieritemadaptor.h"

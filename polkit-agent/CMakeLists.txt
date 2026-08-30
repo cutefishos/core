@@ -2,7 +2,7 @@ find_package(PkgConfig)
 pkg_check_modules(POLKIT_AGENT REQUIRED polkit-agent-1)
 message(STATUS "polkit agent: ${POLKIT_AGENT_INCLUDE_DIRS} ${POLKIT_AGENT_LIBRARIES}")
 
-find_package(PolkitQt5-1 REQUIRED)
+find_package(PolkitQt6-1 REQUIRED)
 
 include_directories(
     ${POLKIT_AGENT_INCLUDE_DIRS}
@@ -17,10 +17,10 @@ add_executable(cutefish-polkit-agent
 )
 
 target_link_libraries(cutefish-polkit-agent
-        Qt5::Core
-        Qt5::Widgets
-        Qt5::Quick
-        Qt5::QuickControls2
+        Qt6::Core
+        Qt6::Widgets
+        Qt6::Quick
+        Qt6::QuickControls2
 
         # FishUI
 
@@ -30,7 +30,7 @@ target_link_libraries(cutefish-polkit-agent
 )
 
 file(GLOB TS_FILES translations/*.ts)
-qt5_add_translation(QM_FILES ${TS_FILES})
+qt6_add_translation(QM_FILES ${TS_FILES})
 add_custom_target(polkit-agent-translations DEPENDS ${QM_FILES} SOURCES ${TS_FILES})
 add_dependencies(cutefish-polkit-agent polkit-agent-translations)
 

@@ -1,4 +1,4 @@
-find_package(Qt5 COMPONENTS Core Widgets DBus X11Extras REQUIRED)
+find_package(Qt6 COMPONENTS Core Widgets DBus Gui REQUIRED)
 find_package(XCB MODULE REQUIRED COMPONENTS XCB KEYSYMS)
 find_package(X11)
 
@@ -14,10 +14,10 @@ add_executable(chotkeys
 
 target_link_libraries(chotkeys
     PRIVATE
-    Qt5::Core
-    Qt5::Widgets
-    Qt5::DBus
-    Qt5::X11Extras
+    Qt6::Core
+    Qt6::Widgets
+    Qt6::DBus
+    Qt6::Gui
     ${XCB_LIBS}
     ${X11_LIBRARIES}
     XCB::KEYSYMS

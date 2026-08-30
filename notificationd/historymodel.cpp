@@ -18,6 +18,8 @@
  */
 
 #include "historymodel.h"
+
+#include <QIODevice>
 #include "datehelper.h"
 
 #include <QSettings>

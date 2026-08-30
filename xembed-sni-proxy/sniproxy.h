@@ -18,6 +18,13 @@
 #include <xcb/xcb.h>
 #include <xcb/xcb_image.h>
 
+#ifdef Status
+#undef Status
+#endif
+#ifdef None
+#undef None
+#endif
+
 #include "snidbus.h"
 
 class SNIProxy : public QObject

@@ -37,7 +37,7 @@ public:
     explicit Hotkeys(QObject *parent = nullptr);
     ~Hotkeys();
 
-    bool nativeEventFilter(const QByteArray &eventType, void *message, long *result) override;
+    bool nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result) override;
 
     void registerKey(QKeySequence keySequence);
     void registerKey(quint32 keycode);

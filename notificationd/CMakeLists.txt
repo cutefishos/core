@@ -17,19 +17,19 @@ set(SRCS main.cpp
 # for Ubuntu
 # qt_add_dbus_adaptor(SRCS org.freedesktop.Notifications.xml notificationserver.h NotificationServer)
 
-qt5_add_dbus_adaptor(DBUS_SOURCES com.cutefish.Notification.xml application.h Application)
+qt6_add_dbus_adaptor(DBUS_SOURCES com.cutefish.Notification.xml application.h Application)
 set_source_files_properties(${DBUS_SOURCES} PROPERTIES SKIP_AUTOGEN ON)
 
-find_package(KF5WindowSystem)
+find_package(KF6WindowSystem)
 
 add_executable(cutefish-notificationd ${SRCS} ${DBUS_SOURCES})
 
 target_link_libraries(cutefish-notificationd
-    Qt5::Core
-    Qt5::DBus
-    Qt5::Quick
-    Qt5::Widgets
-    KF5::WindowSystem
+    Qt6::Core
+    Qt6::DBus
+    Qt6::Quick
+    Qt6::Widgets
+    KF6::WindowSystem
 )
 
 install(TARGETS cutefish-notificationd
@@ -38,7 +38,7 @@ install(TARGETS cutefish-notificationd
 )
 
 file(GLOB TS_FILES translations/*.ts)
-qt5_add_translation(QM_FILES ${TS_FILES})
+qt6_add_translation(QM_FILES ${TS_FILES})
 add_custom_target(notificationd_translations DEPENDS ${QM_FILES} SOURCES ${TS_FILES})
 add_dependencies(cutefish-notificationd notificationd_translations)
 

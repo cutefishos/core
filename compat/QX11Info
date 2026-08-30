@@ -1,0 +1,71 @@
+/*
+ * Small Qt 6 compatibility layer for the Qt 5 QX11Info calls used by the
+ * original Cutefish X11 helpers.  Qt 6 exposes the same handles through the
+ * public QNativeInterface API instead of QtX11Extras.
+ */
+
+#ifndef CUTEFISH_QX11INFO_COMPAT
+#define CUTEFISH_QX11INFO_COMPAT
+
+#include <QGuiApplication>
+#include <QScreen>
+#include <QtGui/qguiapplication_platform.h>
+
+#include <xcb/xcb.h>
+
+class QX11Info
+{
+public:
+    static bool isPlatformX11()
+    {
+        return nativeInterface() != nullptr;
+    }
+
+    static xcb_connection_t *connection()
+    {
+        const auto native = nativeInterface();
+        return native ? native->connection() : nullptr;
+    }
+
+    static Display *display()
+    {
+        const auto native = nativeInterface();
+        return native ? native->display() : nullptr;
+    }
+
+    static xcb_window_t appRootWindow()
+    {
+        xcb_connection_t *c = connection();
+        if (!c)
+            return XCB_WINDOW_NONE;
+
+        const xcb_setup_t *setup = xcb_get_setup(c);
+        const xcb_screen_iterator_t iterator = xcb_setup_roots_iterator(setup);
+        return iterator.data ? iterator.data->root : XCB_WINDOW_NONE;
+    }
+
+    static int appScreen()
+    {
+        return 0;
+    }
+
+    static int appDpiY()
+    {
+        QScreen *screen = qGuiApp ? qGuiApp->primaryScreen() : nullptr;
+        return screen ? qRound(screen->logicalDotsPerInchY()) : 96;
+    }
+
+    // This is only used as the timestamp in synthetic tray input events.
+    static unsigned long getTimestamp()
+    {
+        return 0;
+    }
+
+private:
+    static QNativeInterface::QX11Application *nativeInterface()
+    {
+        return qGuiApp ? qGuiApp->nativeInterface<QNativeInterface::QX11Application>() : nullptr;
+    }
+};
+
+#endif

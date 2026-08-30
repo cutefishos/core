@@ -43,7 +43,6 @@ Dialog::Dialog(const QString &action, const QString &message,
     m_view->rootContext()->setContextProperty("confirmation", this);
     m_view->rootContext()->setContextProperty("rootWindow", m_view);
     m_view->setResizeMode(QQuickView::SizeViewToRootObject);
-    m_view->setClearBeforeRendering(true);
     m_view->setDefaultAlphaBuffer(true);
     m_view->setColor(Qt::transparent);
     m_view->setSource(QUrl(QStringLiteral("qrc:/main.qml")));

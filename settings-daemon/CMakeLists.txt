@@ -36,37 +36,36 @@ set(HEADERS "")
 set(FORMS "")
 set(RESOURCES "")
 
-qt5_add_dbus_adaptor(DBUS_SOURCES
+qt6_add_dbus_adaptor(DBUS_SOURCES
                      brightness/com.cutefish.Brightness.xml
                      brightness/brightnessmanager.h BrightnessManager)
-qt5_add_dbus_adaptor(DBUS_SOURCES
+qt6_add_dbus_adaptor(DBUS_SOURCES
                      theme/com.cutefish.Theme.xml
                      theme/thememanager.h ThemeManager)
-qt5_add_dbus_adaptor(DBUS_SOURCES
+qt6_add_dbus_adaptor(DBUS_SOURCES
                      battery/com.cutefish.PrimaryBattery.xml
                      battery/battery.h Battery)
-qt5_add_dbus_adaptor(DBUS_SOURCES
+qt6_add_dbus_adaptor(DBUS_SOURCES
                      language/com.cutefish.Language.xml
                      language/language.h Language)
-qt5_add_dbus_adaptor(DBUS_SOURCES
+qt6_add_dbus_adaptor(DBUS_SOURCES
                      dock/com.cutefish.Dock.xml
                      dock/dock.h Dock)
-qt5_add_dbus_adaptor(DBUS_SOURCES
+qt6_add_dbus_adaptor(DBUS_SOURCES
                      mouse/com.cutefish.Mouse.xml
                      mouse/mousemanager.h Mouse)
-qt5_add_dbus_adaptor(DBUS_SOURCES
+qt6_add_dbus_adaptor(DBUS_SOURCES
                      touchpad/com.cutefish.Touchpad.xml
                      touchpad/touchpadmanager.h TouchpadManager)
 set_source_files_properties(${DBUS_SOURCES} PROPERTIES SKIP_AUTOGEN ON)
 
 add_executable(${TARGET} ${SOURCES} ${DBUS_SOURCES} ${HEADERS} ${FORMS} ${RESOURCES})
 target_link_libraries(${TARGET}
-        Qt5::Core
-        Qt5::Gui
-        Qt5::Widgets
-        Qt5::DBus
-        Qt5::X11Extras
-        Qt5::Xml
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Widgets
+        Qt6::DBus
+        Qt6::Xml
         ${X11_LIBRARIES}
         X11::X11
         X11::Xi
@@ -79,7 +78,7 @@ target_link_libraries(${TARGET}
 )
 
 file(GLOB TS_FILES translations/*.ts)
-qt5_add_translation(QM_FILES ${TS_FILES})
+qt6_add_translation(QM_FILES ${TS_FILES})
 add_custom_target(translations DEPENDS ${QM_FILES} SOURCES ${TS_FILES})
 add_dependencies(${TARGET} translations)
 

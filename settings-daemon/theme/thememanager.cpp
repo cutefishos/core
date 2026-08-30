@@ -335,7 +335,6 @@ void ThemeManager::updateGtk3Config()
 {
     QSettings settings(gtk3SettingsIniPath(), QSettings::IniFormat);
     settings.clear();
-    settings.setIniCodec("UTF-8");
     settings.beginGroup("Settings");
 
     // font

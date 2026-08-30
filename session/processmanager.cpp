@@ -35,7 +35,7 @@
 
 #include <QX11Info>
 #include <KWindowSystem>
-#include <KWindowSystem/NETWM>
+#include <netwm.h>
 
 ProcessManager::ProcessManager(Application *app, QObject *parent)
     : QObject(parent)
@@ -192,7 +192,6 @@ void ProcessManager::loadAutoStartProcess()
         const QStringList fileNames = d.entryList(QStringList() << QStringLiteral("*.desktop"));
         for (const QString &file : fileNames) {
             QSettings desktop(d.absoluteFilePath(file), QSettings::IniFormat);
-            desktop.setIniCodec("UTF-8");
             desktop.beginGroup("Desktop Entry");
 
             if (desktop.contains("OnlyShowIn"))
@@ -224,7 +223,7 @@ void ProcessManager::loadAutoStartProcess()
     }
 }
 
-bool ProcessManager::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
+bool ProcessManager::nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result)
 {
     if (eventType != "xcb_generic_event_t") // We only want to handle XCB events
         return false;
