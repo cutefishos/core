@@ -3,7 +3,7 @@ set(TARGET cutefish-settings-daemon)
 
 find_package(X11 REQUIRED)
 find_package(X11_XCB REQUIRED)
-find_package(XCB REQUIRED)
+find_package(XCB REQUIRED COMPONENTS XCB RECORD)
 
 pkg_check_modules(XORGLIBINPUT xorg-libinput IMPORTED_TARGET)
 pkg_check_modules(XORGSERVER xorg-server IMPORTED_TARGET)
@@ -71,14 +71,15 @@ target_link_libraries(${TARGET}
         X11::X11
         X11::Xi
         X11::XCB
-        ${XCB_LIBRARIES}
+        XCB::XCB
+        XCB::RECORD
         PkgConfig::XORGLIBINPUT
         PkgConfig::XORGSERVER
         PkgConfig::SYNAPTICS
 )
 
 file(GLOB TS_FILES translations/*.ts)
-qt5_create_translation(QM_FILES ${TS_FILES})
+qt5_add_translation(QM_FILES ${TS_FILES})
 add_custom_target(translations DEPENDS ${QM_FILES} SOURCES ${TS_FILES})
 add_dependencies(${TARGET} translations)
 
