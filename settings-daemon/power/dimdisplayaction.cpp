@@ -154,6 +154,12 @@ void DimDisplayAction::onWakeupFromIdle()
 
 void DimDisplayAction::onIdleTimeout(int msec)
 {
+    // KIdleTime may already have queued a timeout notification when the
+    // policy is changed. Never must disable the whole idle action, including
+    // the lock request below, even if that stale notification is delivered.
+    if (m_dimOnIdleTime < 0)
+        return;
+
     int sec = msec / 1000;
 
     if (sec == m_dimOnIdleTime) {
