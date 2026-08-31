@@ -158,7 +158,6 @@ void BrightnessManager::initUsingWhitelist()
 
 void BrightnessManager::initUsingBacklightType()
 {
-    QString m_dirname;
     QDir dir(PREFIX);
     dir.setFilter(QDir::AllDirs | QDir::NoDot | QDir::NoDotDot | QDir::NoDotAndDotDot | QDir::Readable);
     dir.setSorting(QDir::Name | QDir::Reversed);// Reverse is needed to priorize acpi_video1 over 0

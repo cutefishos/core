@@ -22,7 +22,21 @@
 #define DIMDISPLAYACTION_H
 
 #include "action.h"
+#include <QList>
 #include <QDBusInterface>
+#include <QPointer>
+
+namespace KWayland
+{
+namespace Client
+{
+class ConnectionThread;
+class Dpms;
+class DpmsManager;
+class Output;
+class Registry;
+}
+}
 
 class DimDisplayAction : public Action
 {
@@ -38,12 +52,26 @@ public:
     void setLock(bool lock);
 
 private:
+    void setupWaylandDpms();
+    void setupWaylandOutput(quint32 name, quint32 version);
+    void setupWaylandDpmsManager(quint32 name, quint32 version);
+    void addWaylandDpms(KWayland::Client::Output *output);
+    bool hasSupportedWaylandDpms() const;
+    bool setDisplayPower(bool on);
+
     QDBusInterface m_iface;
     int m_dimOnIdleTime = 0;
-    int m_oldScreenBrightness = 0;
+    int m_oldScreenBrightness = -1;
     bool m_dimmed = false;
     bool m_sleep = false;
     bool m_lock = false;
+    bool m_displayPoweredOff = false;
+
+    KWayland::Client::ConnectionThread *m_waylandConnection = nullptr;
+    KWayland::Client::Registry *m_waylandRegistry = nullptr;
+    KWayland::Client::DpmsManager *m_waylandDpmsManager = nullptr;
+    QList<QPointer<KWayland::Client::Output>> m_waylandOutputs;
+    QList<QPointer<KWayland::Client::Dpms>> m_waylandDpmsOutputs;
 };
 
 #endif // DIMDISPLAYACTION_H

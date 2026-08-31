@@ -2,6 +2,7 @@ project(cutefish-powerman)
 set(TARGET cutefish-powerman)
 
 find_package(KF6IdleTime)
+find_package(KWayland REQUIRED)
 set(SOURCES
     main.cpp
     application.cpp
@@ -31,6 +32,7 @@ target_link_libraries(${TARGET}
         Qt6::DBus
 
         KF6::IdleTime
+        Plasma::KWaylandClient
 )
 
 install(TARGETS ${TARGET} DESTINATION ${CMAKE_INSTALL_BINDIR})
