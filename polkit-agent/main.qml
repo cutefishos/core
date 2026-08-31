@@ -52,7 +52,6 @@ Item {
 
     FishUI.WindowShadow {
         view: rootWindow
-        geometry: Qt.rect(root.x, root.y, root.width, root.height)
         radius: _background.radius
     }
 
