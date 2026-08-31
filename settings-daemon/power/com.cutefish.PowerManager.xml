@@ -1,0 +1,21 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+    "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="com.cutefish.PowerManager">
+    <method name="setBatteryScreenOff">
+      <arg name="value" type="i" direction="in"/>
+    </method>
+    <method name="setACScreenOff">
+      <arg name="value" type="i" direction="in"/>
+    </method>
+    <method name="setDimDisplayTimeout">
+      <arg name="value" type="i" direction="in"/>
+    </method>
+    <method name="setSleepWhenClosedScreen">
+      <arg name="value" type="b" direction="in"/>
+    </method>
+    <method name="setLockWhenClosedScreen">
+      <arg name="value" type="b" direction="in"/>
+    </method>
+  </interface>
+</node>

@@ -28,6 +28,8 @@
 #include "mouse/mousemanager.h"
 #include "touchpad/touchpadmanager.h"
 #include "defaultapplications.h"
+#include "power/powermanager.h"
+#include "power/cpumanagement.h"
 
 #include <QTimer>
 
@@ -49,6 +51,8 @@ private:
     Mouse *m_mouse;
     TouchpadManager *m_touchpad;
     DefaultApplications *m_defaultApps;
+    CPUManagement *m_cpuManagement;
+    PowerManager *m_powerManager;
 };
 
 #endif // APPLICATION_H

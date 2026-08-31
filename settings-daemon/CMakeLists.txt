@@ -1,6 +1,9 @@
 project(cutefish-settings-daemon)
 set(TARGET cutefish-settings-daemon)
 
+find_package(KF6IdleTime REQUIRED)
+find_package(KWayland REQUIRED)
+
 file (GLOB_RECURSE SRCS
   "*.cpp"
   "*.h"
@@ -47,6 +50,13 @@ qt6_add_dbus_adaptor(DBUS_SOURCES
 qt6_add_dbus_adaptor(DBUS_SOURCES
                      touchpad/com.cutefish.Touchpad.xml
                      touchpad/touchpadmanager.h TouchpadManager)
+qt6_add_dbus_adaptor(DBUS_SOURCES
+                     power/com.cutefish.PowerManager.xml
+                     power/powermanager.h PowerManager)
+qt6_add_dbus_adaptor(DBUS_SOURCES
+                     power/com.cutefish.CPUManagement.xml
+                     power/cpumanagement.h CPUManagement)
+qt_add_dbus_interface(DBUS_SOURCES power/org.freedesktop.ScreenSaver.xml screenlocker_interface)
 set_source_files_properties(${DBUS_SOURCES} PROPERTIES SKIP_AUTOGEN ON)
 
 add_executable(${TARGET} ${SOURCES} ${DBUS_SOURCES} ${HEADERS} ${FORMS} ${RESOURCES})
@@ -57,6 +67,8 @@ target_link_libraries(${TARGET}
         Qt6::DBus
         Qt6::Xml
         KF6::Screen
+        KF6::IdleTime
+        Plasma::KWaylandClient
 )
 
 file(GLOB TS_FILES translations/*.ts)
