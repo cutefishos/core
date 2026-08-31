@@ -30,18 +30,17 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
 
-    QCommandLineOption dpiOption(QStringLiteral("dpi"), QStringLiteral("Set DPI"));
-    parser.addOption(dpiOption);
-    parser.addPositionalArgument("value", "Value");
+    QCommandLineOption scaleOption(QStringLiteral("scale"), QStringLiteral("Set greeter scale factor"),
+                                   QStringLiteral("factor"));
+    parser.addOption(scaleOption);
 
     parser.process(app);
 
-    if (parser.isSet(dpiOption)) {
-        int value = parser.positionalArguments().value(0).toInt();
-        int minValue = 96;
-
-        if (value < minValue)
-            value = minValue;
+    if (parser.isSet(scaleOption)) {
+        bool ok = false;
+        const qreal value = parser.value(scaleOption).toDouble(&ok);
+        if (!ok || value < 1.0 || value > 4.0)
+            return 1;
 
         QDir dir("/etc/sddm.conf.d");
 
@@ -49,9 +48,10 @@ int main(int argc, char *argv[])
             dir.mkpath("/etc/sddm.conf.d");
         }
 
-        QSettings settings("/etc/sddm.conf.d/dpi.conf", QSettings::IniFormat);
-        settings.beginGroup("X11");
-        settings.setValue("ServerArguments", QString("-nolisten tcp -dpi %1").arg(value));
+        QSettings settings("/etc/sddm.conf.d/scale.conf", QSettings::IniFormat);
+        settings.beginGroup("General");
+        settings.setValue("GreeterEnvironment",
+                          QStringLiteral("QT_SCALE_FACTOR=%1").arg(value, 0, 'g', 3));
     }
 
     return 0;

@@ -2,18 +2,6 @@ project(cutefish-powerman)
 set(TARGET cutefish-powerman)
 
 find_package(KF6IdleTime)
-find_package(X11)
-find_package(XCB
-    REQUIRED COMPONENTS
-        XCB
-        DPMS
-)
-
-set(XCB_LIBS
-    XCB::XCB
-    XCB::DPMS
-)
-
 set(SOURCES
     main.cpp
     application.cpp
@@ -43,8 +31,6 @@ target_link_libraries(${TARGET}
         Qt6::DBus
 
         KF6::IdleTime
-        ${XCB_LIBS}
-        ${X11_LIBRARIES}
 )
 
 install(TARGETS ${TARGET} DESTINATION ${CMAKE_INSTALL_BINDIR})

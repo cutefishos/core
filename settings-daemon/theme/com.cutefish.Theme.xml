@@ -44,7 +44,7 @@
         <arg name="type" type="s" direction="in"/>
     </method>
 
-    <method name="applyXResources"></method>
+    <method name="applyFontSettings"></method>
     <method name="updateFontConfig"></method>
 
     <property name="isDarkMode" type="b" access="read"/>

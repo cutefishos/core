@@ -21,11 +21,13 @@
 #define MOUSE_H
 
 #include <QObject>
-#include "x11libinputdummydevice.h"
+
+class KWinInputBackend;
 
 class Mouse : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool available READ available NOTIFY availableChanged)
     Q_PROPERTY(bool leftHanded READ leftHanded WRITE setLeftHanded NOTIFY leftHandedChanged)
     Q_PROPERTY(bool acceleration READ acceleration WRITE setAcceleration NOTIFY accelerationChanged)
     Q_PROPERTY(bool naturalScroll READ naturalScroll WRITE setNaturalScroll NOTIFY naturalScrollChanged)
@@ -33,8 +35,9 @@ class Mouse : public QObject
 
 public:
     explicit Mouse(QObject *parent = nullptr);
-    ~Mouse();
+    ~Mouse() override;
 
+    bool available() const;
     bool leftHanded() const;
     void setLeftHanded(bool enabled);
 
@@ -48,13 +51,14 @@ public:
     void setPointerAcceleration(qreal value);
 
 signals:
+    void availableChanged();
     void leftHandedChanged();
     void accelerationChanged();
     void naturalScrollChanged();
     void pointerAccelerationChanged();
 
 private:
-    X11LibinputDummyDevice *m_inputDummydevice;
+    KWinInputBackend *m_backend;
 };
 
 #endif // MOUSE_H

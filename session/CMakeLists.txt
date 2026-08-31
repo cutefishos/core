@@ -18,8 +18,6 @@ qt6_add_dbus_adaptor(DBUS_SOURCES
                      sessionadaptor SessionAdaptor)
 set_source_files_properties(${DBUS_SOURCES} PROPERTIES SKIP_AUTOGEN ON)
 
-find_package(KF6WindowSystem)
-
 add_executable(${TARGET} ${SOURCES} ${DBUS_SOURCES})
 target_link_libraries(${TARGET}
         Qt6::Core
@@ -27,11 +25,9 @@ target_link_libraries(${TARGET}
         Qt6::Widgets
         Qt6::Quick
         Qt6::DBus
-        KF6::WindowSystem
 )
 
 install(TARGETS ${TARGET} DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(FILES cutefish-xsession.desktop DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/xsessions/)
 install(PROGRAMS cutefish-kwin-wayland-session cutefish-wayland-session DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(FILES cutefish-applications.menu DESTINATION /etc/xdg/menus/)
 install(FILES cutefish-wayland.desktop DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/wayland-sessions/)

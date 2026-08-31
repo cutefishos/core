@@ -23,10 +23,6 @@
 
 #include <QQmlContext>
 
-#include <KX11Extras>
-#include <KWindowEffects>
-#include <KWindowSystem>
-#include <netwm.h>
 
 NotificationWindow::NotificationWindow(QQuickView *parent)
     : QQuickView(parent)
@@ -41,7 +37,6 @@ NotificationWindow::NotificationWindow(QQuickView *parent)
     rootContext()->setContextProperty("notificationsModel", NotificationsModel::self());
     rootContext()->setContextProperty("historyModel", HistoryModel::self());
 
-    // KWindowEffects::slideWindow(winId(), KWindowEffects::RightEdge);
     setSource(QUrl("qrc:/qml/NotificationWindow.qml"));
     setVisible(false);
 }
@@ -67,8 +62,6 @@ bool NotificationWindow::eventFilter(QObject *object, QEvent *event)
             QQuickView::setVisible(false);
         }
     } else if (event->type() == QEvent::Show) {
-        if (KWindowSystem::isPlatformX11())
-            KX11Extras::setState(winId(), NET::SkipTaskbar | NET::SkipPager | NET::SkipSwitcher);
         HistoryModel::self()->updateTime();
     } else if (event->type() == QEvent::Hide) {
         setMouseGrabEnabled(false);

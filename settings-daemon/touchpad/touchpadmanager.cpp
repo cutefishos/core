@@ -1,66 +1,80 @@
 #include "touchpadmanager.h"
 #include "touchpadadaptor.h"
 
-#include <QDebug>
+#include "input/kwininputbackend.h"
+
+#include <QDBusConnection>
 
 TouchpadManager::TouchpadManager(QObject *parent)
     : QObject(parent)
-    , m_backend(XlibBackend::initialize())
+    , m_backend(new KWinInputBackend(KWinInputBackend::DeviceType::Touchpad, this))
 {
-    // init dbus
     new TouchpadAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Touchpad"), this);
 
-    m_backend->getConfig();
-    m_backend->applyConfig();
+    connect(m_backend, &KWinInputBackend::devicesChanged, this, [this] {
+        emit availableChanged();
+        emit enabledChanged();
+        emit tapToClickChanged();
+        emit naturalScrollChanged();
+        emit pointerAccelerationChanged();
+    });
 }
 
 bool TouchpadManager::available() const
 {
-    return m_backend->isTouchpadAvailable();
+    return m_backend->available();
 }
 
 bool TouchpadManager::enabled() const
 {
-    return m_backend->isTouchpadEnabled();
+    return m_backend->booleanProperty(QStringLiteral("enabled"), true);
 }
 
 void TouchpadManager::setEnabled(bool enabled)
 {
-    m_backend->setTouchpadEnabled(enabled);
-    m_backend->applyConfig();
+    if (this->enabled() == enabled)
+        return;
+    m_backend->setBooleanProperty(QStringLiteral("enabled"), enabled);
+    emit enabledChanged();
 }
 
 bool TouchpadManager::tapToClick() const
 {
-    return m_backend->tapToClick();
+    return m_backend->booleanProperty(QStringLiteral("tapToClick"));
 }
 
 void TouchpadManager::setTapToClick(bool value)
 {
-    m_backend->setTapToClick(value);
-    m_backend->applyConfig();
+    if (tapToClick() == value)
+        return;
+    m_backend->setBooleanProperty(QStringLiteral("tapToClick"), value);
+    emit tapToClickChanged();
 }
 
 bool TouchpadManager::naturalScroll() const
 {
-    return m_backend->naturalScroll();
+    return m_backend->booleanProperty(QStringLiteral("naturalScroll"));
 }
 
 void TouchpadManager::setNaturalScroll(bool naturalScroll)
 {
-    m_backend->setNaturalScroll(naturalScroll);
-    m_backend->applyConfig();
+    if (this->naturalScroll() == naturalScroll)
+        return;
+    m_backend->setBooleanProperty(QStringLiteral("naturalScroll"), naturalScroll);
+    emit naturalScrollChanged();
 }
 
 qreal TouchpadManager::pointerAcceleration() const
 {
-    return m_backend->pointerAcceleration();
+    return m_backend->realProperty(QStringLiteral("pointerAcceleration"));
 }
 
 void TouchpadManager::setPointerAcceleration(qreal value)
 {
-    qDebug() << value;
-    m_backend->setPointerAcceleration(value);
-    m_backend->applyConfig();
+    value = qBound<qreal>(-1.0, value, 1.0);
+    if (qFuzzyCompare(1.0 + pointerAcceleration(), 1.0 + value))
+        return;
+    m_backend->setRealProperty(QStringLiteral("pointerAcceleration"), value);
+    emit pointerAccelerationChanged();
 }

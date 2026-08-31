@@ -32,8 +32,6 @@
 #include <QDBusConnectionInterface>
 #include <QDBusServiceWatcher>
 
-#include <KWindowSystem>
-
 // STL
 #include <optional>
 
@@ -71,8 +69,7 @@ bool isShellVariable(const QByteArray &name)
 bool isSessionVariable(const QByteArray &name)
 {
     // Check is variable is specific to session.
-    return name == "DISPLAY" || name == "XAUTHORITY" || //
-        name == "WAYLAND_DISPLAY" || name == "WAYLAND_SOCKET" || //
+    return name == "WAYLAND_DISPLAY" || name == "WAYLAND_SOCKET" || //
         name.startsWith("XDG_");
 }
 
@@ -87,8 +84,6 @@ Application::Application(int &argc, char **argv)
     : QApplication(argc, argv)
     , m_processManager(new ProcessManager(this))
     , m_networkProxyManager(new NetworkProxyManager)
-    , m_wayland(false)
-    , m_startWindowManager(true)
 {
     new SessionAdaptor(this);
 
@@ -100,22 +95,11 @@ Application::Application(int &argc, char **argv)
     parser.setApplicationDescription(QStringLiteral("Cutefish Session"));
     parser.addHelpOption();
 
-    QCommandLineOption waylandOption(QStringList() << "w" << "wayland" << "Wayland Mode");
-    parser.addOption(waylandOption);
-    QCommandLineOption noWindowManagerOption(QStringList() << "no-wm" << "Do not start a window manager");
-    parser.addOption(noWindowManagerOption);
     parser.process(*this);
 
-    m_wayland = parser.isSet(waylandOption) || QGuiApplication::platformName().contains(QStringLiteral("wayland"));
-    m_startWindowManager = !parser.isSet(noWindowManagerOption);
-
     createConfigDirectory();
-    if (!m_wayland)
-        initKWinConfig();
     initLanguage();
     initScreenScaleFactors();
-    if (!m_wayland)
-        initXResource();
 
     initEnvironments();
 
@@ -131,24 +115,10 @@ Application::Application(int &argc, char **argv)
     // ref plasma
     importSystemdEnvrionment();
 
-    qunsetenv("XCURSOR_THEME");
-    qunsetenv("XCURSOR_SIZE");
-    qunsetenv("SESSION_MANAGER");
-
     m_networkProxyManager->update();
 
     QTimer::singleShot(50, this, &Application::updateUserDirs);
     QTimer::singleShot(100, m_processManager, &ProcessManager::start);
-}
-
-bool Application::wayland() const
-{
-    return m_wayland;
-}
-
-bool Application::startWindowManager() const
-{
-    return m_startWindowManager;
 }
 
 void Application::launch(const QString &exec, const QStringList &args)
@@ -198,6 +168,7 @@ void Application::initEnvironments()
     qputenv("XDG_SESSION_DESKTOP", "Cutefish");
 
     // Qt
+    qputenv("QT_QPA_PLATFORM", "wayland");
     qputenv("QT_QPA_PLATFORMTHEME", "cutefish");
     qputenv("QT_PLATFORM_PLUGIN", "cutefish");
     
@@ -275,76 +246,6 @@ void Application::initScreenScaleFactors()
         qputenv("GDK_SCALE", QByteArray::number(qFloor(scaleFactor), 'g', 0));
         qputenv("GDK_DPI_SCALE", QByteArray::number(qFloor(scaleFactor), 'g', 0));
     }
-}
-
-void Application::initXResource()
-{
-    QSettings settings(QSettings::UserScope, "cutefishos", "theme");
-    qreal scaleFactor = settings.value("PixelRatio", 1.0).toReal();
-    int fontDpi = 96 * scaleFactor;
-    QString cursorTheme = settings.value("CursorTheme", "default").toString();
-    int cursorSize = settings.value("CursorSize", 24).toInt() * scaleFactor;
-    int xftAntialias = settings.value("XftAntialias", 1).toBool();
-    QString xftHintStyle = settings.value("XftHintStyle", "hintslight").toString();
-
-    const QString datas = QString("Xft.dpi: %1\n"
-                                  "Xcursor.theme: %2\n"
-                                  "Xcursor.size: %3\n"
-                                  "Xft.antialias: %4\n"
-                                  "Xft.hintstyle: %5\n"
-                                  "Xft.rgba: rgb")
-                          .arg(fontDpi)
-                          .arg(cursorTheme)
-                          .arg(cursorSize)
-                          .arg(xftAntialias)
-                          .arg(xftHintStyle);
-
-    QProcess p;
-    p.start(QStringLiteral("xrdb"), {QStringLiteral("-quiet"), QStringLiteral("-merge"), QStringLiteral("-nocpp")});
-    p.setProcessChannelMode(QProcess::ForwardedChannels);
-    p.write(datas.toLatin1());
-    p.closeWriteChannel();
-    p.waitForFinished(-1);
-
-    // For cutefish-wine
-    qputenv("CUTEFISH_FONT_DPI", QByteArray::number(fontDpi));
-
-    // Init cursor
-    runSync("cupdatecursor", {cursorTheme, QString::number(cursorSize)});
-    // qputenv("XCURSOR_THEME", cursorTheme.toLatin1());
-    // qputenv("XCURSOR_SIZE", QByteArray::number(cursorSize * scaleFactor));
-}
-
-void Application::initKWinConfig()
-{
-    QSettings settings(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/kwinrc",
-                       QSettings::IniFormat);
-
-    settings.beginGroup("Effect-Blur");
-    settings.setValue("BlurStrength", 10);
-    settings.setValue("NoiseStrength", 0);
-    settings.endGroup();
-
-    settings.beginGroup("Windows");
-    settings.setValue("FocusStealingPreventionLevel", 0);
-    settings.setValue("HideUtilityWindowsForInactive", false);
-    settings.setValue("BorderlessMaximizedWindows", false);
-    settings.setValue("Placement", "Centered");
-    settings.endGroup();
-
-    settings.beginGroup("org.kde.kdecoration2");
-    settings.setValue("BorderSize", "Normal");
-    settings.setValue("ButtonsOnLeft", "");
-    settings.setValue("ButtonsOnRight", "HIAX");
-    // The Cutefish decoration was written for the old KDecoration2 API and
-    // is not available on current KWin installations.  Keeping this stale
-    // value makes KWin try to load a plugin that may no longer exist and can
-    // leave the session without a usable window manager.  Let KWin select
-    // the system default decoration instead (normally Breeze).
-    if (settings.value("library").toString() == "org.cutefish.decoration")
-        settings.remove("library");
-    settings.setValue("theme", "");
-    settings.endGroup();
 }
 
 bool Application::syncDBusEnvironment()

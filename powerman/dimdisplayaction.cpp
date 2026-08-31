@@ -24,10 +24,6 @@
 #include <QDBusPendingCall>
 #include <QProcess>
 #include <QDebug>
-#include <QtGui/qguiapplication_platform.h>
-
-#include <X11/Xlib.h>
-#include <xcb/dpms.h>
 
 DimDisplayAction::DimDisplayAction(QObject *parent)
     : Action(parent)
@@ -35,12 +31,6 @@ DimDisplayAction::DimDisplayAction(QObject *parent)
               "/Brightness",
               "com.cutefish.Brightness", QDBusConnection::sessionBus())
 {
-    if (qGuiApp->nativeInterface<QNativeInterface::QX11Application>()) {
-        // Disable a default timeout, if any
-        xcb_dpms_set_timeouts(qGuiApp->nativeInterface<QNativeInterface::QX11Application>()->connection(), 0, 0, 0);
-
-        XSetScreenSaver(qGuiApp->nativeInterface<QNativeInterface::QX11Application>()->display(), 0, 0, 0, 0);
-    }
 }
 
 void DimDisplayAction::onWakeupFromIdle()

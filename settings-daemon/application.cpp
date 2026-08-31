@@ -42,30 +42,15 @@ Application::Application(int &argc, char **argv)
     , m_brightnessManager(new BrightnessManager(this))
     , m_upowerManager(new UPowerManager(this))
     , m_language(Language::self())
-    , m_mouse(nullptr)
-    , m_touchpad(nullptr)
+    , m_mouse(new Mouse(this))
+    , m_touchpad(new TouchpadManager(this))
     , m_defaultApps(new DefaultApplications)
-//    , m_kwinTimer(new QTimer(this))
 {
-    // Mouse and touchpad managers use the X11/XInput backend. Constructing
-    // them on a Wayland Qt platform dereferences a missing QX11 interface
-    // and makes the settings daemon exit before it can register its D-Bus
-    // service.
-    if (QGuiApplication::platformName() == QStringLiteral("xcb")) {
-        m_mouse = new Mouse(this);
-        m_touchpad = new TouchpadManager(this);
-    }
-
     initTrash();
 
     new DBusAdaptor(this);
     // connect to D-Bus and register as an object:
     QDBusConnection::sessionBus().registerService(QStringLiteral("com.cutefish.Settings"));
-
-//    m_kwinTimer->setSingleShot(false);
-//    m_kwinTimer->setInterval(50);
-//    connect(m_kwinTimer, &QTimer::timeout, this, &Application::initKWin);
-//    m_kwinTimer->start();
 
     // Translations
     QLocale locale;
@@ -121,28 +106,3 @@ void Application::initTrash()
         ::rmdir(trashDir);
     }
 }
-
-//void Application::initKWin()
-//{
-//    QDBusInterface effect("org.kde.KWin", "/Effects", "org.kde.kwin.Effects",
-//                           QDBusConnection::sessionBus());
-
-//    if (effect.isValid() && !effect.lastError().isValid()) {
-//        // KWin
-//        effect.call("loadEffect", "kwin4_effect_dialogparent");
-
-//        effect.call("unloadEffect", "kwin4_effect_fadingpopups");
-//        effect.call("unloadEffect", "kwin4_effect_fade");
-//        effect.call("unloadEffect", "kwin4_effect_scale");
-//        effect.call("unloadEffect", "kwin4_effect_grayscale");
-//        effect.call("unloadEffect", "kwin4_effect_squash");
-//        effect.call("unloadEffect", "kwin4_effect_translucency");
-//        effect.call("unloadEffect", "magiclamp");
-
-//        effect.call("loadEffect", "cutefish_popups");
-//        effect.call("loadEffect", "cutefish_scale");
-//        effect.call("loadEffect", "cutefish_squash");
-
-//        m_kwinTimer->stop();
-//    }
-//}

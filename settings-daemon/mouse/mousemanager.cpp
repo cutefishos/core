@@ -1,86 +1,83 @@
-/*
- * Copyright (C) 2021 CutefishOS Team.
- *
- * Author:     Reion Wong <reionwong@gmail.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 #include "mousemanager.h"
 #include "mouseadaptor.h"
 
-#include <QtGui/qguiapplication_platform.h>
+#include "input/kwininputbackend.h"
+
+#include <QDBusConnection>
 
 Mouse::Mouse(QObject *parent)
     : QObject(parent)
-    , m_inputDummydevice(new X11LibinputDummyDevice(this, qGuiApp->nativeInterface<QNativeInterface::QX11Application>()->display()))
+    , m_backend(new KWinInputBackend(KWinInputBackend::DeviceType::Pointer, this))
 {
-    // init dbus
     new MouseAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Mouse"), this);
 
-    connect(m_inputDummydevice, &X11LibinputDummyDevice::leftHandedChanged, this, &Mouse::leftHandedChanged);
-    connect(m_inputDummydevice, &X11LibinputDummyDevice::pointerAccelerationProfileChanged, this, &Mouse::accelerationChanged);
-    connect(m_inputDummydevice, &X11LibinputDummyDevice::naturalScrollChanged, this, &Mouse::naturalScrollChanged);
-    connect(m_inputDummydevice, &X11LibinputDummyDevice::pointerAccelerationChanged, this, &Mouse::pointerAccelerationChanged);
+    connect(m_backend, &KWinInputBackend::devicesChanged, this, [this] {
+        emit availableChanged();
+        emit leftHandedChanged();
+        emit accelerationChanged();
+        emit naturalScrollChanged();
+        emit pointerAccelerationChanged();
+    });
 }
 
-Mouse::~Mouse()
+Mouse::~Mouse() = default;
+
+bool Mouse::available() const
 {
-    delete m_inputDummydevice;
+    return m_backend->available();
 }
 
 bool Mouse::leftHanded() const
 {
-    return m_inputDummydevice->isLeftHanded();
+    return m_backend->booleanProperty(QStringLiteral("leftHanded"));
 }
 
 void Mouse::setLeftHanded(bool enabled)
 {
-    m_inputDummydevice->setLeftHanded(enabled);
-    m_inputDummydevice->applyConfig();
+    if (leftHanded() == enabled)
+        return;
+    m_backend->setBooleanProperty(QStringLiteral("leftHanded"), enabled);
+    emit leftHandedChanged();
 }
 
 bool Mouse::acceleration() const
 {
-    return m_inputDummydevice->pointerAccelerationProfileFlat();
+    return m_backend->booleanProperty(QStringLiteral("pointerAccelerationProfileFlat"));
 }
 
 void Mouse::setAcceleration(bool enabled)
 {
-    m_inputDummydevice->setPointerAccelerationProfileFlat(enabled);
-    m_inputDummydevice->applyConfig();
+    if (acceleration() == enabled)
+        return;
+    m_backend->setBooleanProperty(QStringLiteral("pointerAccelerationProfileFlat"), enabled);
+    m_backend->setBooleanProperty(QStringLiteral("pointerAccelerationProfileAdaptive"), !enabled);
+    emit accelerationChanged();
 }
 
 bool Mouse::naturalScroll() const
 {
-    return m_inputDummydevice->isNaturalScroll();
+    return m_backend->booleanProperty(QStringLiteral("naturalScroll"));
 }
 
 void Mouse::setNaturalScroll(bool enabled)
 {
-    m_inputDummydevice->setNaturalScroll(enabled);
-    m_inputDummydevice->applyConfig();
+    if (naturalScroll() == enabled)
+        return;
+    m_backend->setBooleanProperty(QStringLiteral("naturalScroll"), enabled);
+    emit naturalScrollChanged();
 }
 
 qreal Mouse::pointerAcceleration() const
 {
-    return m_inputDummydevice->pointerAcceleration();
+    return m_backend->realProperty(QStringLiteral("pointerAcceleration"));
 }
 
 void Mouse::setPointerAcceleration(qreal value)
 {
-    m_inputDummydevice->setPointerAcceleration(value);
-    m_inputDummydevice->applyConfig();
+    value = qBound<qreal>(-1.0, value, 1.0);
+    if (qFuzzyCompare(1.0 + pointerAcceleration(), 1.0 + value))
+        return;
+    m_backend->setRealProperty(QStringLiteral("pointerAcceleration"), value);
+    emit pointerAccelerationChanged();
 }

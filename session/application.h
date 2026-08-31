@@ -33,9 +33,6 @@ class Application : public QApplication
 public:
     explicit Application(int &argc, char **argv);
 
-    bool wayland() const;
-    bool startWindowManager() const;
-
 public slots:
     void logout() {
         m_processManager->logout();
@@ -70,8 +67,6 @@ private:
     void initEnvironments();
     void initLanguage();
     void initScreenScaleFactors();
-    void initXResource();
-    void initKWinConfig();
     bool syncDBusEnvironment();
     void importSystemdEnvrionment();
     void createConfigDirectory();
@@ -83,8 +78,6 @@ private:
     NetworkProxyManager *m_networkProxyManager;
     Power m_power;
 
-    bool m_wayland;
-    bool m_startWindowManager;
 };
 
 #endif // APPLICATION_H

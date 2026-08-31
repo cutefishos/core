@@ -20,14 +20,13 @@
 #ifndef PROCESSMANAGER_H
 #define PROCESSMANAGER_H
 
-#include <QAbstractNativeEventFilter>
 #include <QObject>
 #include <QProcess>
 #include <QEventLoop>
 #include <QMap>
 
 class Application;
-class ProcessManager : public QObject, public QAbstractNativeEventFilter
+class ProcessManager : public QObject
 {
     Q_OBJECT
 
@@ -38,12 +37,9 @@ public:
     void start();
     void logout();
 
-    void startWindowManager();
     void startDesktopProcess();
     void startDaemonProcess();
     void loadAutoStartProcess();
-
-    bool nativeEventFilter(const QByteArray & eventType, void * message, qintptr * result) override;
 
 private:
     void stopProcesses(QMap<QString, QProcess *> &processes);
@@ -53,8 +49,6 @@ private:
     QMap<QString, QProcess *> m_systemProcess;
     QMap<QString, QProcess *> m_autoStartProcess;
 
-    bool m_wmStarted;
-    QEventLoop *m_waitLoop;
 };
 
 #endif // PROCESSMANAGER_H

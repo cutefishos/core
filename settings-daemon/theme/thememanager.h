@@ -86,8 +86,8 @@ public:
 
     void updateGtk2Config();
     void updateGtk3Config();
-    void applyXResources();
-    void applyCursor();
+    void applyFontSettings();
+    void applyCursorSettings();
 
     QString iconTheme() const;
     void setIconTheme(const QString &iconTheme);

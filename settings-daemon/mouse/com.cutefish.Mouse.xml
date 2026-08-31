@@ -1,6 +1,9 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
   <interface name="com.cutefish.Mouse">
+    <property name="available" type="b" access="read"/>
+    <signal name="availableChanged"></signal>
+
     <method name="setLeftHanded"><arg name="value" type="b" direction="in"/></method>
     <property name="leftHanded" type="b" access="read"/>
     <signal name="leftHandedChanged"></signal>
@@ -12,5 +15,9 @@
     <method name="setNaturalScroll"><arg name="value" type="b" direction="in"/></method>
     <property name="naturalScroll" type="b" access="read"/>
     <signal name="naturalScrollChanged"></signal>
+
+    <method name="setAcceleration"><arg name="value" type="b" direction="in"/></method>
+    <property name="acceleration" type="b" access="read"/>
+    <signal name="accelerationChanged"></signal>
   </interface>
 </node>

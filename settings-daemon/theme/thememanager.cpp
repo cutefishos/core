@@ -78,8 +78,8 @@ ThemeManager::ThemeManager(QObject *parent)
     m_cursorSize = m_settings->value("CursorSize", 24).toInt();
     m_iconTheme = m_settings->value("IconTheme", "Crule").toString();
 
-    // Start the DE and need to update the settings again.
-    updateGtk3Config();
+    // Synchronize toolkit and compositor cursor settings at session startup.
+    applyCursorSettings();
 
     // Init fonts.
     if (!m_settings->contains(s_systemFixedFontName)) {
@@ -186,8 +186,7 @@ void ThemeManager::setCursorTheme(const QString &theme)
     if (m_cursorTheme != theme) {
         m_cursorTheme = theme;
         m_settings->setValue("CursorTheme", m_cursorTheme);
-        applyXResources();
-        applyCursor();
+        applyCursorSettings();
         emit cursorThemeChanged();
     }
 }
@@ -202,8 +201,7 @@ void ThemeManager::setCursorSize(int size)
     if (m_cursorSize != size) {
         m_cursorSize = size;
         m_settings->setValue("CursorSize", m_cursorSize);
-        applyXResources();
-        applyCursor();
+        applyCursorSettings();
         emit cursorSizeChanged();
     }
 }
@@ -258,17 +256,16 @@ qreal ThemeManager::devicePixelRatio()
 
 void ThemeManager::setDevicePixelRatio(qreal ratio)
 {
-    int fontDpi = qRound(ratio * 96.0);
+    ratio = qBound<qreal>(1.0, ratio, 4.0);
     m_settings->setValue(s_devicePixelRatio, ratio);
-    m_settings->setValue("forceFontDPI", fontDpi);
     m_settings->sync();
-    applyXResources();
+    updateGtk3Config();
+    applyCursorSettings();
 
-    // SDDM
     QProcess p;
     p.setProgram("pkexec");
     p.setArguments(QStringList() << "cutefish-sddm-helper"
-                                 << "--dpi" << QString::number(fontDpi));
+                                 << "--scale" << QString::number(ratio));
     p.start();
     p.waitForFinished(-1);
 
@@ -344,6 +341,8 @@ void ThemeManager::updateGtk3Config()
     settings.setValue("gtk-application-prefer-dark-theme", isDarkMode());
     // icon theme
     settings.setValue("gtk-icon-theme-name", m_iconTheme);
+    settings.setValue("gtk-cursor-theme-name", m_cursorTheme);
+    settings.setValue("gtk-cursor-theme-size", qRound(m_cursorSize * devicePixelRatio()));
     // other
     settings.setValue("gtk-enable-animations", true);
     // theme
@@ -351,48 +350,40 @@ void ThemeManager::updateGtk3Config()
     settings.sync();
 }
 
-void ThemeManager::applyXResources()
+void ThemeManager::applyFontSettings()
+{
+    m_settings->sync();
+    updateFontConfig();
+    updateGtk3Config();
+}
+
+void ThemeManager::applyCursorSettings()
 {
     m_settings->sync();
 
-    qreal scaleFactor = this->devicePixelRatio();
-    int fontDpi = 96 * scaleFactor;
+    QSettings inputSettings(QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation)
+                                + QStringLiteral("/kcminputrc"),
+                            QSettings::IniFormat);
+    inputSettings.beginGroup(QStringLiteral("Mouse"));
+    inputSettings.setValue(QStringLiteral("cursorTheme"), cursorTheme());
+    inputSettings.setValue(QStringLiteral("cursorSize"),
+                           qRound(cursorSize() * devicePixelRatio()));
+    inputSettings.endGroup();
+    inputSettings.sync();
 
-    int xftAntialias = m_settings->value("XftAntialias", 1).toBool();
-    QString xftHintStyle = m_settings->value("XftHintStyle", "hintfull").toString();
-
-    const QString datas = QString("Xft.dpi: %1\n"
-                                  "Xcursor.theme: %2\n"
-                                  "Xcursor.size: %3\n"
-                                  "Xft.antialias: %4\n"
-                                  "Xft.hintstyle: %5")
-                          .arg(fontDpi)
-                          .arg(m_cursorTheme)
-                          .arg(m_cursorSize * scaleFactor)
-                          .arg(xftAntialias)
-                          .arg(xftHintStyle);
-
-    QProcess p;
-    p.start(QStringLiteral("xrdb"), {QStringLiteral("-quiet"), QStringLiteral("-merge"), QStringLiteral("-nocpp")});
-    p.setProcessChannelMode(QProcess::ForwardedChannels);
-    p.write(datas.toLatin1());
-    p.closeWriteChannel();
-    p.waitForFinished(-1);
-}
-
-void ThemeManager::applyCursor()
-{
-    QProcess p;
-    p.start("cupdatecursor", QStringList() << cursorTheme() << QString::number(cursorSize() * devicePixelRatio()));
-    p.waitForFinished(-1);
+    updateGtk3Config();
 
     QDBusMessage message = QDBusMessage::createSignal("/KGlobalSettings",
                                                       "org.kde.KGlobalSettings",
                                                       "notifyChange");
-    // ChangeCursor
     message << 5;
     message << 0;
     QDBusConnection::sessionBus().send(message);
+
+    QDBusInterface kwin(QStringLiteral("org.kde.KWin"), QStringLiteral("/KWin"),
+                        QStringLiteral("org.kde.KWin"), QDBusConnection::sessionBus());
+    if (kwin.isValid())
+        kwin.asyncCall(QStringLiteral("reconfigure"));
 }
 
 void ThemeManager::updateFontConfig()
@@ -412,8 +403,8 @@ void ThemeManager::updateFontConfig()
     const QString familyFallback = familyFont;
 
     QSettings settings(QSettings::UserScope, "cutefishos", "theme");
-    bool hinting = settings.value("XftAntialias", 1).toBool();
-    QString hintStyle = settings.value("XftHintStyle", "hintslight").toString();
+    bool hinting = settings.value("FontAntialias", true).toBool();
+    QString hintStyle = settings.value("FontHintStyle", "hintslight").toString();
 
     QString content = QString("<?xml version=\"1.0\"?>"
                         "<!DOCTYPE fontconfig SYSTEM \"fonts.dtd\">"

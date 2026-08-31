@@ -20,8 +20,6 @@ set(SRCS main.cpp
 qt6_add_dbus_adaptor(DBUS_SOURCES com.cutefish.Notification.xml application.h Application)
 set_source_files_properties(${DBUS_SOURCES} PROPERTIES SKIP_AUTOGEN ON)
 
-find_package(KF6WindowSystem)
-
 add_executable(cutefish-notificationd ${SRCS} ${DBUS_SOURCES})
 
 target_link_libraries(cutefish-notificationd
@@ -29,7 +27,6 @@ target_link_libraries(cutefish-notificationd
     Qt6::DBus
     Qt6::Quick
     Qt6::Widgets
-    KF6::WindowSystem
 )
 
 install(TARGETS cutefish-notificationd

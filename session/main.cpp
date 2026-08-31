@@ -22,7 +22,6 @@
 
 int main(int argc, char *argv[])
 {
-    // putenv((char *)"SESSION_MANAGER=");
 
     QQuickWindow::setDefaultAlphaBuffer(true);
 

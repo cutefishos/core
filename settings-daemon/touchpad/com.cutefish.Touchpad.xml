@@ -7,6 +7,12 @@
     <property name="naturalScroll" type="b" access="read"/>
     <property name="pointerAcceleration" type="d" access="read"/>
 
+    <signal name="availableChanged"/>
+    <signal name="enabledChanged"/>
+    <signal name="tapToClickChanged"/>
+    <signal name="naturalScrollChanged"/>
+    <signal name="pointerAccelerationChanged"/>
+
     <method name="setEnabled">
       <arg name="enabled" type="b" direction="in"/>
     </method>

@@ -30,27 +30,17 @@
 #include <QTimer>
 #include <QThread>
 #include <QDir>
-#include <QtGui/qguiapplication_platform.h>
-
 #include <QDBusInterface>
 #include <QDBusPendingCall>
-
-#include <KWindowSystem>
-#include <netwm.h>
 
 ProcessManager::ProcessManager(Application *app, QObject *parent)
     : QObject(parent)
     , m_app(app)
-    , m_wmStarted(false)
-    , m_waitLoop(nullptr)
 {
-    qApp->installNativeEventFilter(this);
 }
 
 ProcessManager::~ProcessManager()
 {
-    qApp->removeNativeEventFilter(this);
-
     QMapIterator<QString, QProcess *> i(m_systemProcess);
     while (i.hasNext()) {
         i.next();
@@ -62,29 +52,13 @@ ProcessManager::~ProcessManager()
 
 void ProcessManager::start()
 {
-    if (m_app->startWindowManager())
-        startWindowManager();
-
     // The settings daemon owns the Cutefish settings D-Bus service and
-    // starts the desktop components after that service is ready. This is
-    // required for both X11 and Wayland sessions.
+    // starts the desktop components after that service is ready.
     startDaemonProcess();
 }
 
 void ProcessManager::logout()
 {
-    if (!m_app->wayland()) {
-        QDBusInterface kwinIface("org.kde.KWin",
-                                 "/Session",
-                                 "org.kde.KWin.Session",
-                                 QDBusConnection::sessionBus());
-
-        if (kwinIface.isValid()) {
-            kwinIface.call("aboutToSaveSession", "cutefish");
-            kwinIface.call("setState", uint(1)); // Quitting
-        }
-    }
-
     // Close what we started ourselves, the window manager last since
     // everything else is drawn on top of it.
     stopProcesses(m_autoStartProcess);
@@ -110,28 +84,6 @@ void ProcessManager::stopProcesses(QMap<QString, QProcess *> &processes)
 
         if (!p->waitForFinished(2000))
             p->kill();
-    }
-}
-
-void ProcessManager::startWindowManager()
-{
-    if (m_app->wayland()) {
-        qInfo() << "Using the existing Wayland compositor.";
-        return;
-    }
-
-    QProcess *wmProcess = new QProcess;
-    m_systemProcess.insert("kwin", wmProcess);
-
-    wmProcess->start("kwin_x11", QStringList());
-
-    if (!m_app->wayland()) {
-        QEventLoop waitLoop;
-        m_waitLoop = &waitLoop;
-        // add a timeout to avoid infinite blocking if a WM fail to execute.
-        QTimer::singleShot(30 * 1000, &waitLoop, SLOT(quit()));
-        waitLoop.exec();
-        m_waitLoop = nullptr;
     }
 }
 
@@ -165,11 +117,9 @@ void ProcessManager::startDesktopProcess()
         process->setProcessChannelMode(QProcess::ForwardedChannels);
         process->setProgram(pair.first);
         process->setArguments(pair.second);
-        if (m_app->wayland()) {
-            QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
-            environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
-            process->setProcessEnvironment(environment);
-        }
+        QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
+        environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
+        process->setProcessEnvironment(environment);
         process->start();
         process->waitForStarted();
 
@@ -195,12 +145,6 @@ void ProcessManager::startDaemonProcess()
     // This daemon registers com.cutefish.Settings and triggers startup of
     // the desktop components once the service is available.
     list << qMakePair(QString("cutefish-settings-daemon"), QStringList());
-
-    if (!m_app->wayland()) {
-        list << qMakePair(QString("cutefish-xembedsniproxy"), QStringList());
-        list << qMakePair(QString("cutefish-gmenuproxy"), QStringList());
-        list << qMakePair(QString("chotkeys"), QStringList());
-    }
 
     for (QPair<QString, QStringList> pair : list) {
         QProcess *process = new QProcess;
@@ -242,19 +186,7 @@ void ProcessManager::loadAutoStartProcess()
 
             const QString execValue = desktop.value("Exec").toString();
 
-            // 避免冲突
-            if (execValue.contains("gmenudbusmenuproxy"))
-                continue;
-
-            // These helpers are X11-only and are deliberately replaced by
-            // Wayland integration or omitted from the Wayland session. Do
-            // not let a legacy autostart entry bring them back after
-            // startDaemonProcess() skipped them.
-            if (m_app->wayland()
-                    && (execValue.contains("cutefish-settings-daemon")
-                        || execValue.contains("cutefish-xembedsniproxy")
-                        || execValue.contains("cutefish-gmenuproxy")
-                        || execValue.contains("chotkeys")))
+            if (execValue.contains("cutefish-settings-daemon"))
                 continue;
 
             if (!execValue.isEmpty()) {
@@ -266,11 +198,9 @@ void ProcessManager::loadAutoStartProcess()
     for (const QString &exec : execList) {
         QProcess *process = new QProcess;
         process->setProgram(exec);
-        if (m_app->wayland()) {
-            QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
-            environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
-            process->setProcessEnvironment(environment);
-        }
+        QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
+        environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
+        process->setProcessEnvironment(environment);
         process->start();
         process->waitForStarted();
 
@@ -280,28 +210,4 @@ void ProcessManager::loadAutoStartProcess()
             process->deleteLater();
         }
     }
-}
-
-bool ProcessManager::nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result)
-{
-    if (!KWindowSystem::isPlatformX11())
-        return false;
-
-    if (eventType != "xcb_generic_event_t") // We only want to handle XCB events
-        return false;
-
-    // ref: lxqt session
-    if (!m_wmStarted && m_waitLoop) {
-        // all window managers must set their name according to the spec
-        if (!QString::fromUtf8(NETRootInfo(qGuiApp->nativeInterface<QNativeInterface::QX11Application>()->connection(), NET::SupportingWMCheck).wmName()).isEmpty()) {
-            qDebug() << "Window manager started";
-            m_wmStarted = true;
-            if (m_waitLoop && m_waitLoop->isRunning())
-                m_waitLoop->exit();
-
-            qApp->removeNativeEventFilter(this);
-        }
-    }
-
-    return false;
 }

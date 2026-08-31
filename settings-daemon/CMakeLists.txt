@@ -1,14 +1,6 @@
 project(cutefish-settings-daemon)
 set(TARGET cutefish-settings-daemon)
 
-find_package(X11 REQUIRED)
-find_package(X11_XCB REQUIRED)
-find_package(XCB REQUIRED COMPONENTS XCB RECORD)
-
-pkg_check_modules(XORGLIBINPUT xorg-libinput IMPORTED_TARGET)
-pkg_check_modules(XORGSERVER xorg-server IMPORTED_TARGET)
-pkg_check_modules(SYNAPTICS xorg-synaptics IMPORTED_TARGET GLOBAL)
-
 file (GLOB_RECURSE SRCS
   "*.cpp"
   "*.h"
@@ -27,8 +19,6 @@ file (GLOB_RECURSE SRCS
   "mouse/*.cpp"
   "touchpad/*.h"
   "touchpad/*.cpp"
-  "touchpad/x11/*.h"
-  "touchpad/x11/*.cpp"
 )
 
 set(SOURCES ${SRCS})
@@ -66,15 +56,6 @@ target_link_libraries(${TARGET}
         Qt6::Widgets
         Qt6::DBus
         Qt6::Xml
-        ${X11_LIBRARIES}
-        X11::X11
-        X11::Xi
-        X11::XCB
-        XCB::XCB
-        XCB::RECORD
-        PkgConfig::XORGLIBINPUT
-        PkgConfig::XORGSERVER
-        PkgConfig::SYNAPTICS
 )
 
 file(GLOB TS_FILES translations/*.ts)
