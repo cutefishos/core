@@ -66,7 +66,6 @@ target_link_libraries(${TARGET}
         Qt6::Widgets
         Qt6::DBus
         Qt6::Xml
-        KF6::Screen
         KF6::IdleTime
         Plasma::KWaylandClient
 )

@@ -112,12 +112,7 @@ signals:
     void iconThemeChanged();
     void systemFontPointSizeChanged();
     void systemFontChanged();
-    void displayConfigurationReady();
-
 private:
-    void initializeDisplayConfiguration();
-    bool applyScaleToDisplays(qreal scale);
-
     QSettings *m_settings;
 
     bool m_isDarkMode;

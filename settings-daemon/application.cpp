@@ -70,8 +70,7 @@ Application::Application(int &argc, char **argv)
         }
     }
 
-    connect(m_themeManager, &ThemeManager::displayConfigurationReady,
-            this, &Application::invokeDesktopProcess);
+    QTimer::singleShot(10, this, &Application::invokeDesktopProcess);
 }
 
 void Application::invokeDesktopProcess()
