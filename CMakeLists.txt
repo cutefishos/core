@@ -28,7 +28,6 @@ add_subdirectory(settings-daemon)
 add_subdirectory(shutdown-ui)
 add_subdirectory(powerman)
 add_subdirectory(cpufreq)
-add_subdirectory(notificationd)
 add_subdirectory(sddm-helper)
 add_subdirectory(clipboard)
 

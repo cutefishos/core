@@ -94,8 +94,7 @@ void ProcessManager::startDesktopProcess()
 
     QList<QPair<QString, QStringList>> list;
     // Desktop components
-    list << qMakePair(QString("cutefish-notificationd"), QStringList());
-    // The status bar, dock, launcher and desktop are one process now.
+    // The status bar, dock, launcher, desktop and notifications are one process now.
     list << qMakePair(QString("cutefish-shell"), QStringList());
     list << qMakePair(QString("cutefish-powerman"), QStringList());
     list << qMakePair(QString("cutefish-clipboard"), QStringList());
