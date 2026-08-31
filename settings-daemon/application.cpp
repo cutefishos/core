@@ -64,7 +64,8 @@ Application::Application(int &argc, char **argv)
         }
     }
 
-    QTimer::singleShot(10, this, &Application::invokeDesktopProcess);
+    connect(m_themeManager, &ThemeManager::displayConfigurationReady,
+            this, &Application::invokeDesktopProcess);
 }
 
 void Application::invokeDesktopProcess()

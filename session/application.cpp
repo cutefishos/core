@@ -236,6 +236,17 @@ void Application::initScreenScaleFactors()
     QSettings settings(QSettings::UserScope, "cutefishos", "theme");
     qreal scaleFactor = settings.value("PixelRatio", 1.0).toReal();
 
+    const bool waylandSession = qEnvironmentVariable("XDG_SESSION_TYPE") == QStringLiteral("wayland")
+        || !qEnvironmentVariableIsEmpty("WAYLAND_DISPLAY");
+    if (waylandSession) {
+        // KWin owns the per-output Wayland scale. A global Qt or GTK scale
+        // factor would override the scale restored by settings-daemon.
+        qunsetenv("QT_SCREEN_SCALE_FACTORS");
+        qunsetenv("GDK_SCALE");
+        qunsetenv("GDK_DPI_SCALE");
+        return;
+    }
+
     qputenv("QT_SCREEN_SCALE_FACTORS", QByteArray::number(scaleFactor));
 
     // for Gtk

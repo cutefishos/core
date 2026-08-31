@@ -13,6 +13,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake;${CMAKE_CURRENT
 
 set(QT Core Gui Widgets Quick QuickControls2 DBus Xml LinguistTools)
 find_package(Qt6 REQUIRED ${QT})
+find_package(KF6Screen REQUIRED)
 # find_package(FishUI REQUIRED)
 find_package(PkgConfig REQUIRED)
 

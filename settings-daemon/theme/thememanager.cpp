@@ -20,6 +20,12 @@
 #include "thememanager.h"
 #include "themeadaptor.h"
 
+#include <KScreen/Config>
+#include <KScreen/GetConfigOperation>
+#include <KScreen/Mode>
+#include <KScreen/Output>
+#include <KScreen/SetConfigOperation>
+
 #include <QDomDocument>
 #include <QTextStream>
 #include <QDBusInterface>
@@ -27,11 +33,143 @@
 #include <QFile>
 #include <QDebug>
 #include <QFontDatabase>
+#include <QGuiApplication>
+#include <QTimer>
+
+#include <limits>
+
+#include <QtMath>
 
 static const QByteArray s_systemFontName = QByteArrayLiteral("Font");
 static const QByteArray s_systemFixedFontName = QByteArrayLiteral("FixedFont");
 static const QByteArray s_systemPointFontSize = QByteArrayLiteral("FontSize");
 static const QByteArray s_devicePixelRatio = QByteArrayLiteral("PixelRatio");
+
+static bool isWaylandSession()
+{
+    return QGuiApplication::platformName().contains(QStringLiteral("wayland"), Qt::CaseInsensitive)
+        || qEnvironmentVariable("XDG_SESSION_TYPE") == QStringLiteral("wayland")
+        || !qEnvironmentVariableIsEmpty("WAYLAND_DISPLAY");
+}
+
+static QString displayOutputKey(const KScreen::OutputPtr &output)
+{
+    if (!output) {
+        return QString();
+    }
+
+    QString key = output->hashMd5();
+    if (key.isEmpty()) {
+        key = output->name();
+    }
+    if (key.isEmpty()) {
+        key = QString::number(output->id());
+    }
+    return key.replace(QLatin1Char('/'), QLatin1Char('_'));
+}
+
+static bool hasStoredDisplayConfiguration()
+{
+    QSettings settings(QSettings::UserScope, QStringLiteral("cutefishos"), QStringLiteral("display"));
+    settings.beginGroup(QStringLiteral("Outputs"));
+    const bool hasConfiguration = !settings.childGroups().isEmpty();
+    settings.endGroup();
+    return hasConfiguration;
+}
+
+static void saveDisplayConfiguration(const KScreen::ConfigPtr &config)
+{
+    if (!config) {
+        return;
+    }
+
+    QSettings settings(QSettings::UserScope, QStringLiteral("cutefishos"), QStringLiteral("display"));
+    settings.setValue(QStringLiteral("Version"), 1);
+    settings.beginGroup(QStringLiteral("Outputs"));
+
+    const KScreen::OutputList outputs = config->outputs();
+    for (auto it = outputs.cbegin(); it != outputs.cend(); ++it) {
+        const KScreen::OutputPtr output = it.value();
+        if (!output || !output->isConnected()) {
+            continue;
+        }
+
+        settings.beginGroup(displayOutputKey(output));
+        settings.setValue(QStringLiteral("Name"), output->name());
+        settings.setValue(QStringLiteral("Enabled"), output->isEnabled());
+        settings.setValue(QStringLiteral("Primary"), output->isPrimary());
+        settings.setValue(QStringLiteral("PositionX"), output->pos().x());
+        settings.setValue(QStringLiteral("PositionY"), output->pos().y());
+        settings.setValue(QStringLiteral("Scale"), output->scale());
+        settings.setValue(QStringLiteral("Rotation"), static_cast<int>(output->rotation()));
+
+        if (const KScreen::ModePtr mode = output->currentMode()) {
+            settings.setValue(QStringLiteral("ModeId"), mode->id());
+            settings.setValue(QStringLiteral("ModeWidth"), mode->size().width());
+            settings.setValue(QStringLiteral("ModeHeight"), mode->size().height());
+            settings.setValue(QStringLiteral("ModeRefreshRate"), mode->refreshRate());
+        }
+        settings.endGroup();
+    }
+
+    settings.endGroup();
+    settings.sync();
+
+    KScreen::OutputPtr primary = config->primaryOutput();
+    if (!primary) {
+        for (const KScreen::OutputPtr &output : config->connectedOutputs()) {
+            if (output && output->isEnabled()) {
+                primary = output;
+                break;
+            }
+        }
+    }
+    if (primary) {
+        QSettings themeSettings(QSettings::UserScope,
+                                QStringLiteral("cutefishos"),
+                                QStringLiteral("theme"));
+        themeSettings.setValue(s_devicePixelRatio, primary->scale());
+        themeSettings.sync();
+    }
+}
+
+static KScreen::ModePtr storedMode(const KScreen::OutputPtr &output, QSettings &settings)
+{
+    if (!output) {
+        return {};
+    }
+
+    const QString modeId = settings.value(QStringLiteral("ModeId")).toString();
+    if (!modeId.isEmpty()) {
+        if (const KScreen::ModePtr mode = output->mode(modeId)) {
+            return mode;
+        }
+    }
+
+    const QSize storedSize(settings.value(QStringLiteral("ModeWidth"), 0).toInt(),
+                           settings.value(QStringLiteral("ModeHeight"), 0).toInt());
+    const float storedRefreshRate = settings.value(QStringLiteral("ModeRefreshRate"), 0).toFloat();
+    if (!storedSize.isValid()) {
+        return {};
+    }
+
+    KScreen::ModePtr closestMode;
+    float closestDifference = std::numeric_limits<float>::max();
+    const KScreen::ModeList modes = output->modes();
+    for (auto it = modes.cbegin(); it != modes.cend(); ++it) {
+        const KScreen::ModePtr mode = it.value();
+        if (!mode || mode->size() != storedSize) {
+            continue;
+        }
+
+        const float difference = qAbs(mode->refreshRate() - storedRefreshRate);
+        if (!closestMode || difference < closestDifference) {
+            closestMode = mode;
+            closestDifference = difference;
+        }
+    }
+    return closestMode;
+}
 
 static QString gtkRc2Path()
 {
@@ -53,6 +191,10 @@ ThemeManager::ThemeManager(QObject *parent)
     : QObject(parent)
     , m_settings(new QSettings(QStringLiteral("cutefishos"), QStringLiteral("theme")))
 {
+    if (isWaylandSession() && qEnvironmentVariableIsEmpty("KSCREEN_BACKEND")) {
+        qputenv("KSCREEN_BACKEND", QByteArrayLiteral("kwayland"));
+    }
+
     if (!QFile::exists(m_settings->fileName())) {
         QFile file(m_settings->fileName());
         if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -110,6 +252,10 @@ ThemeManager::ThemeManager(QObject *parent)
 
     // 登陆后更新 fontconfig
     updateFontConfig();
+
+    // KWin does not provide the persistence layer for the Cutefish desktop.
+    // Restore our display snapshot after the daemon enters its event loop.
+    QTimer::singleShot(0, this, &ThemeManager::initializeDisplayConfiguration);
 }
 
 bool ThemeManager::isDarkMode()
@@ -254,11 +400,175 @@ qreal ThemeManager::devicePixelRatio()
     return m_settings->value(s_devicePixelRatio, 1.0).toReal();
 }
 
+void ThemeManager::initializeDisplayConfiguration()
+{
+    if (!isWaylandSession()) {
+        emit displayConfigurationReady();
+        return;
+    }
+
+    KScreen::GetConfigOperation operation(KScreen::ConfigOperation::NoOptions, this);
+    if (!operation.exec() || operation.hasError() || !operation.config()) {
+        qWarning() << "Unable to read the display configuration during startup:"
+                   << operation.errorString();
+        emit displayConfigurationReady();
+        return;
+    }
+
+    const KScreen::ConfigPtr config = operation.config();
+    const bool hasStoredConfiguration = hasStoredDisplayConfiguration();
+    const qreal legacyScale = devicePixelRatio();
+    QSettings settings(QSettings::UserScope, QStringLiteral("cutefishos"), QStringLiteral("display"));
+    settings.beginGroup(QStringLiteral("Outputs"));
+    const QStringList storedOutputs = settings.childGroups();
+
+    bool changed = false;
+    KScreen::OutputPtr storedPrimary;
+    const KScreen::OutputList outputs = config->outputs();
+    for (auto it = outputs.cbegin(); it != outputs.cend(); ++it) {
+        const KScreen::OutputPtr output = it.value();
+        if (!output || !output->isConnected()) {
+            continue;
+        }
+
+        const QString key = displayOutputKey(output);
+        if (!hasStoredConfiguration) {
+            if (!qFuzzyCompare(output->scale(), legacyScale)) {
+                output->setScale(legacyScale);
+                changed = true;
+            }
+            continue;
+        }
+        if (!storedOutputs.contains(key)) {
+            continue;
+        }
+
+        settings.beginGroup(key);
+        if (settings.contains(QStringLiteral("Enabled"))) {
+            const bool enabled = settings.value(QStringLiteral("Enabled")).toBool();
+            if (output->isEnabled() != enabled) {
+                output->setEnabled(enabled);
+                changed = true;
+            }
+        }
+
+        if (settings.contains(QStringLiteral("PositionX"))
+            && settings.contains(QStringLiteral("PositionY"))) {
+            const QPoint position(settings.value(QStringLiteral("PositionX")).toInt(),
+                                  settings.value(QStringLiteral("PositionY")).toInt());
+            if (output->pos() != position) {
+                output->setPos(position);
+                changed = true;
+            }
+        }
+
+        if (settings.contains(QStringLiteral("Scale"))) {
+            const qreal scale = settings.value(QStringLiteral("Scale")).toReal();
+            if (scale > 0 && !qFuzzyCompare(output->scale(), scale)) {
+                output->setScale(scale);
+                changed = true;
+            }
+        }
+
+        if (settings.contains(QStringLiteral("Rotation"))) {
+            const auto rotation = static_cast<KScreen::Output::Rotation>(
+                settings.value(QStringLiteral("Rotation")).toInt());
+            if (output->rotation() != rotation) {
+                output->setRotation(rotation);
+                changed = true;
+            }
+        }
+
+        if (const KScreen::ModePtr mode = storedMode(output, settings)) {
+            if (output->currentModeId() != mode->id()) {
+                output->setCurrentModeId(mode->id());
+                changed = true;
+            }
+        }
+
+        if (settings.value(QStringLiteral("Primary"), false).toBool()) {
+            storedPrimary = output;
+        }
+        settings.endGroup();
+    }
+    settings.endGroup();
+
+    if (storedPrimary && !storedPrimary->isPrimary()) {
+        config->setPrimaryOutput(storedPrimary);
+        changed = true;
+    }
+
+    if (changed) {
+        if (!KScreen::Config::canBeApplied(config,
+                                           KScreen::Config::ValidityFlag::RequireAtLeastOneEnabledScreen)) {
+            qWarning() << "The stored display configuration is not valid";
+            emit displayConfigurationReady();
+            return;
+        }
+
+        KScreen::SetConfigOperation setOperation(config, this);
+        if (!setOperation.exec() || setOperation.hasError()) {
+            qWarning() << "Unable to restore the stored display configuration through KWin Wayland:"
+                       << setOperation.errorString();
+            emit displayConfigurationReady();
+            return;
+        }
+    }
+
+    // Capture the current state on first startup and keep the legacy theme
+    // scale synchronized for GTK, cursor settings, and already-running tools.
+    saveDisplayConfiguration(config);
+    m_settings->sync();
+    updateGtk3Config();
+    applyCursorSettings();
+    emit displayConfigurationReady();
+}
+
+bool ThemeManager::applyScaleToDisplays(qreal scale)
+{
+    if (!isWaylandSession()) {
+        return false;
+    }
+
+    KScreen::GetConfigOperation operation(KScreen::ConfigOperation::NoOptions, this);
+    if (!operation.exec() || operation.hasError() || !operation.config()) {
+        qWarning() << "Unable to read the display configuration for scaling:"
+                   << operation.errorString();
+        return false;
+    }
+
+    const KScreen::ConfigPtr config = operation.config();
+    bool changed = false;
+    for (const KScreen::OutputPtr &output : config->connectedOutputs()) {
+        if (output && !qFuzzyCompare(output->scale(), scale)) {
+            output->setScale(scale);
+            changed = true;
+        }
+    }
+
+    // Persist before applying so a compositor restart cannot lose the user's
+    // requested scale even if the live KWin operation fails.
+    saveDisplayConfiguration(config);
+    if (!changed) {
+        return true;
+    }
+
+    KScreen::SetConfigOperation setOperation(config, this);
+    if (!setOperation.exec() || setOperation.hasError()) {
+        qWarning() << "Unable to apply the display scale through KWin Wayland:"
+                   << setOperation.errorString();
+        return false;
+    }
+    return true;
+}
+
 void ThemeManager::setDevicePixelRatio(qreal ratio)
 {
     ratio = qBound<qreal>(1.0, ratio, 4.0);
     m_settings->setValue(s_devicePixelRatio, ratio);
     m_settings->sync();
+
+    applyScaleToDisplays(ratio);
     updateGtk3Config();
     applyCursorSettings();
 
