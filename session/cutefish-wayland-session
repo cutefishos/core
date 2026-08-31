@@ -14,4 +14,8 @@ export XDG_CURRENT_DESKTOP=Cutefish
 export XDG_SESSION_DESKTOP=Cutefish
 export DESKTOP_SESSION=Cutefish
 
-exec /usr/bin/kwin_wayland --exit-with-session /usr/bin/cutefish-kwin-wayland-session "$@"
+# Keep Xwayland available for legacy X11 session agents such as
+# spice-vdagent. The agent uses X11 selections and cannot connect to the
+# native Wayland display directly; KWin bridges the Xwayland clipboard into
+# the Wayland session.
+exec /usr/bin/kwin_wayland --xwayland --exit-with-session /usr/bin/cutefish-kwin-wayland-session "$@"
