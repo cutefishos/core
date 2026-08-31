@@ -28,6 +28,7 @@ class ThemeManager : public QObject
     Q_OBJECT
     Q_PROPERTY(bool isDarkMode READ isDarkMode WRITE setDarkMode NOTIFY darkModeChanged)
     Q_PROPERTY(bool darkModeDimsWallpaer READ darkModeDimsWallpaer WRITE setDarkModeDimsWallpaer NOTIFY darkModeDimsWallpaerChanged)
+    Q_PROPERTY(bool blurEnabled READ blurEnabled WRITE setBlurEnabled NOTIFY blurEnabledChanged)
     Q_PROPERTY(bool backgroundVisible READ backgroundVisible WRITE setBackgroundVisible NOTIFY backgroundVisibleChanged)
     Q_PROPERTY(QString systemFont READ systemFont WRITE setSystemFont NOTIFY systemFontChanged)
     Q_PROPERTY(QString systemFixedFont READ systemFixedFont WRITE setSystemFixedFont)
@@ -51,6 +52,9 @@ public:
 
     bool darkModeDimsWallpaer() const;
     void setDarkModeDimsWallpaer(bool value);
+
+    bool blurEnabled() const;
+    void setBlurEnabled(bool value);
 
     QString systemFont();
     bool backgroundVisible() const;
@@ -98,6 +102,7 @@ signals:
     void darkModeChanged(bool darkMode);
     void wallpaperChanged(QString path);
     void darkModeDimsWallpaerChanged();
+    void blurEnabledChanged();
     void accentColorChanged(int accentColor);
     void backgroundVisibleChanged();
     void backgroundTypeChanged();
@@ -117,6 +122,7 @@ private:
 
     bool m_isDarkMode;
     bool m_darkModeDimsWallpaer;
+    bool m_blurEnabled;
     QString m_wallpaperPath;
     bool m_backgroundVisible;
     int m_backgroundType;
