@@ -19,10 +19,11 @@
  ***************************************************************************/
 
 #include "dimdisplayaction.h"
+#include "screenlocker_interface.h"
+
 #include <QSettings>
 #include <QTimer>
 #include <QDBusPendingCall>
-#include <QProcess>
 #include <QDebug>
 
 DimDisplayAction::DimDisplayAction(QObject *parent)
@@ -73,7 +74,11 @@ void DimDisplayAction::onIdleTimeout(int msec)
         }
 
         if (m_lock) {
-            QProcess::startDetached("cutefish-screenlocker", QStringList());
+            OrgFreedesktopScreenSaverInterface screenSaver(
+                QStringLiteral("org.freedesktop.ScreenSaver"),
+                QStringLiteral("/ScreenSaver"),
+                QDBusConnection::sessionBus());
+            screenSaver.Lock();
         }
 
     } else if (sec == (m_dimOnIdleTime * 3 / 4)) {
