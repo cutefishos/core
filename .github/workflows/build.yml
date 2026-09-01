@@ -11,14 +11,31 @@ jobs:
     name: Debian
     runs-on: ubuntu-latest
     container: docker.io/library/debian:sid
+
     steps:
-    - name: Checkout Source
-      uses: actions/checkout@v3
-    - name: Update repository
-      run: apt-get update -y
-    - name: Install the basic dev packages
-      run: apt-get install -y equivs curl git devscripts lintian build-essential automake autotools-dev cmake g++
-    - name: Install build dependencies
-      run: mk-build-deps -i -t "apt-get --yes" -r
-    - name: Build Package
-      run: dpkg-buildpackage -b -uc -us -j$(nproc)
+      - name: Install basic tools
+        run: |
+          apt-get update
+          apt-get install -y git ca-certificates
+
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: |
+          apt-get install -y \
+            equivs \
+            curl \
+            devscripts \
+            lintian \
+            build-essential \
+            automake \
+            autotools-dev \
+            cmake \
+            g++
+
+      - name: Install build dependencies
+        run: mk-build-deps -i -t "apt-get --yes" -r
+
+      - name: Build package
+        run: dpkg-buildpackage -b -uc -us -j$(nproc)

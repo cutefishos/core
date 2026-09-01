@@ -18,15 +18,10 @@
  */
 
 #include "application.h"
-#include <QQuickWindow>
 
 int main(int argc, char *argv[])
 {
-
-    QQuickWindow::setDefaultAlphaBuffer(true);
-
     Application a(argc, argv);
-    a.setQuitOnLastWindowClosed(false);
 
     return a.exec();
 }

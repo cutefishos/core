@@ -21,9 +21,6 @@ set_source_files_properties(${DBUS_SOURCES} PROPERTIES SKIP_AUTOGEN ON)
 add_executable(${TARGET} ${SOURCES} ${DBUS_SOURCES})
 target_link_libraries(${TARGET}
         Qt6::Core
-        Qt6::Gui
-        Qt6::Widgets
-        Qt6::Quick
         Qt6::DBus
 )
 

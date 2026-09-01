@@ -20,13 +20,13 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include <QApplication>
+#include <QCoreApplication>
 
 #include "processmanager.h"
 #include "networkproxymanager.h"
 #include "powermanager/power.h"
 
-class Application : public QApplication
+class Application : public QCoreApplication
 {
     Q_OBJECT
 
