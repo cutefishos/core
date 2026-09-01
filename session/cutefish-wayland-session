@@ -18,4 +18,4 @@ export DESKTOP_SESSION=Cutefish
 # spice-vdagent. The agent uses X11 selections and cannot connect to the
 # native Wayland display directly; KWin bridges the Xwayland clipboard into
 # the Wayland session.
-exec /usr/bin/kwin_wayland --xwayland --exit-with-session /usr/bin/cutefish-kwin-wayland-session "$@"
+exec /usr/bin/kwin_wayland_wrapper --xwayland --exit-with-session /usr/bin/cutefish-kwin-wayland-session "$@"

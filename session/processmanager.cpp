@@ -30,8 +30,11 @@
 #include <QTimer>
 #include <QThread>
 #include <QDir>
+#include <QDBusConnectionInterface>
 #include <QDBusInterface>
 #include <QDBusPendingCall>
+#include <QDBusReply>
+#include <QDBusServiceWatcher>
 
 ProcessManager::ProcessManager(Application *app, QObject *parent)
     : QObject(parent)
@@ -52,6 +55,37 @@ ProcessManager::~ProcessManager()
 
 void ProcessManager::start()
 {
+    if (m_kwinReady)
+        return;
+
+    const QString serviceName = QStringLiteral("org.kde.KWinWrapper");
+    m_kwinWatcher = new QDBusServiceWatcher(serviceName,
+                                             QDBusConnection::sessionBus(),
+                                             QDBusServiceWatcher::WatchForRegistration,
+                                             this);
+    connect(m_kwinWatcher, &QDBusServiceWatcher::serviceRegistered,
+            this, [this](const QString &) {
+        startAfterKWinReady();
+    });
+
+    if (QDBusConnectionInterface *interface = QDBusConnection::sessionBus().interface()) {
+        const QDBusReply<bool> reply = interface->isServiceRegistered(serviceName);
+        if (reply.isValid() && reply.value())
+            startAfterKWinReady();
+    }
+}
+
+void ProcessManager::startAfterKWinReady()
+{
+    if (m_kwinReady)
+        return;
+
+    m_kwinReady = true;
+    if (m_kwinWatcher) {
+        m_kwinWatcher->deleteLater();
+        m_kwinWatcher = nullptr;
+    }
+
     // The settings daemon owns the Cutefish settings D-Bus service and
     // starts the desktop components after that service is ready.
     startDaemonProcess();
@@ -89,6 +123,16 @@ void ProcessManager::stopProcesses(QMap<QString, QProcess *> &processes)
 
 void ProcessManager::startDesktopProcess()
 {
+    if (!m_kwinReady) {
+        qWarning() << "Ignoring desktop startup before KWin is ready";
+        return;
+    }
+
+    if (m_desktopStarted)
+        return;
+
+    m_desktopStarted = true;
+
     // When the cutefish-settings-daemon theme module is loaded, start the desktop.
     // In the way, there will be no problem that desktop and launcher can't get wallpaper.
 

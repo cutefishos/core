@@ -26,6 +26,7 @@
 #include <QMap>
 
 class Application;
+class QDBusServiceWatcher;
 class ProcessManager : public QObject
 {
     Q_OBJECT
@@ -42,10 +43,14 @@ public:
     void loadAutoStartProcess();
 
 private:
+    void startAfterKWinReady();
     void stopProcesses(QMap<QString, QProcess *> &processes);
 
 private:
     Application *m_app;
+    QDBusServiceWatcher *m_kwinWatcher = nullptr;
+    bool m_kwinReady = false;
+    bool m_desktopStarted = false;
     QMap<QString, QProcess *> m_systemProcess;
     QMap<QString, QProcess *> m_autoStartProcess;
 
