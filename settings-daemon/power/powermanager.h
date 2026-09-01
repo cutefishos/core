@@ -1,7 +1,6 @@
 #ifndef CUTEFISH_SETTINGS_POWERMANAGER_H
 #define CUTEFISH_SETTINGS_POWERMANAGER_H
 
-#include <QDBusInterface>
 #include <QObject>
 #include <QSettings>
 
@@ -19,11 +18,10 @@ public slots:
     void setBatteryScreenOff(int timeout);
     void setACScreenOff(int timeout);
     void setDimDisplayTimeout(int timeout);
-    void setSleepWhenClosedScreen(bool enabled);
-    void setLockWhenClosedScreen(bool enabled);
 
 private slots:
     void onBatteryChanged();
+    void onLidClosedChanged();
 
 private:
     void loadSettings();
@@ -36,8 +34,6 @@ private:
 
     int m_batteryScreenOff = 300;
     int m_acScreenOff = 1200;
-    bool m_sleepWhenClosedScreen = false;
-    bool m_lockWhenClosedScreen = true;
     bool m_onBattery = false;
 };
 

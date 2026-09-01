@@ -28,18 +28,6 @@ int readTimeout(QSettings &settings, const QString &key, const QString &legacyKe
     return fallback;
 }
 
-bool readBool(QSettings &settings, const QString &key, const QString &legacyKey, bool fallback)
-{
-    settings.beginGroup(QLatin1String(s_powerGroup));
-    const bool hasValue = settings.contains(key);
-    const bool value = hasValue ? settings.value(key).toBool() : fallback;
-    settings.endGroup();
-
-    if (hasValue)
-        return value;
-
-    return settings.value(legacyKey, fallback).toBool();
-}
 }
 
 PowerManager::PowerManager(UPowerManager *upowerManager, QObject *parent)
@@ -55,9 +43,16 @@ PowerManager::PowerManager(UPowerManager *upowerManager, QObject *parent)
     if (m_upowerManager) {
         connect(m_upowerManager, &UPowerManager::onBatteryChanged,
                 this, &PowerManager::onBatteryChanged);
+        connect(m_upowerManager, &UPowerManager::lidClosedChanged,
+                this, &PowerManager::onLidClosedChanged);
+
+        m_dimDisplayAction->setLidPresent(m_upowerManager->lidIsPresent());
     }
 
     applyPolicy();
+
+    if (m_upowerManager && m_upowerManager->lidIsClosed())
+        m_dimDisplayAction->handleLidClosed();
 }
 
 void PowerManager::loadSettings()
@@ -66,19 +61,13 @@ void PowerManager::loadSettings()
                                      QStringLiteral("CloseScreenTimeout"), 300);
     m_acScreenOff = readTimeout(m_settings, QStringLiteral("ACScreenOff"),
                                 QStringLiteral("CloseScreenTimeout"), 1200);
-    m_sleepWhenClosedScreen = readBool(m_settings, QStringLiteral("SleepWhenClosedScreen"),
-                                       QStringLiteral("SleepWhenClosedScreen"), false);
-    m_lockWhenClosedScreen = readBool(m_settings, QStringLiteral("LockWhenClosedScreen"),
-                                      QStringLiteral("LockWhenClosedScreen"), true);
 }
 
 void PowerManager::applyPolicy()
 {
     const int timeout = m_onBattery ? m_batteryScreenOff : m_acScreenOff;
 
-    m_dimDisplayAction->setTimeout(timeout);
-    m_dimDisplayAction->setSleep(m_sleepWhenClosedScreen);
-    m_dimDisplayAction->setLock(m_lockWhenClosedScreen);
+    m_dimDisplayAction->setPolicy(timeout, m_onBattery ? 300 : 900);
 }
 
 void PowerManager::writePowerSetting(const QString &key, const QVariant &value)
@@ -109,22 +98,19 @@ void PowerManager::setDimDisplayTimeout(int timeout)
     setACScreenOff(timeout);
 }
 
-void PowerManager::setSleepWhenClosedScreen(bool enabled)
-{
-    m_sleepWhenClosedScreen = enabled;
-    writePowerSetting(QStringLiteral("SleepWhenClosedScreen"), enabled);
-    applyPolicy();
-}
-
-void PowerManager::setLockWhenClosedScreen(bool enabled)
-{
-    m_lockWhenClosedScreen = enabled;
-    writePowerSetting(QStringLiteral("LockWhenClosedScreen"), enabled);
-    applyPolicy();
-}
-
 void PowerManager::onBatteryChanged()
 {
     m_onBattery = m_upowerManager && m_upowerManager->onBattery();
     applyPolicy();
+}
+
+void PowerManager::onLidClosedChanged()
+{
+    if (!m_upowerManager)
+        return;
+
+    if (m_upowerManager->lidIsClosed())
+        m_dimDisplayAction->handleLidClosed();
+    else
+        m_dimDisplayAction->handleLidOpened();
 }

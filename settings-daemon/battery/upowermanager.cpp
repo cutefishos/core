@@ -23,6 +23,8 @@ UPowerManager::UPowerManager(QObject *parent)
                   UP_DBUS_INTERFACE,
                   QDBusConnection::systemBus())
     , m_onBattery(false)
+    , m_lidIsPresent(false)
+    , m_lidIsClosed(false)
 {
     qDBusRegisterMetaType<QList<QDBusObjectPath>>();
     qDBusRegisterMetaType<QVariantMap>();
@@ -62,6 +64,8 @@ UPowerManager::UPowerManager(QObject *parent)
                                              "PropertiesChanged", this,
                                              SLOT(onPropertiesChanged(QString, QVariantMap, QStringList)));
         m_onBattery = m_interface.property("OnBattery").toBool();
+        m_lidIsPresent = m_interface.property("LidIsPresent").toBool();
+        m_lidIsClosed = m_interface.property("LidIsClosed").toBool();
 
         // All devices
         QDBusReply<QList<QDBusObjectPath>> reply = m_interface.call("EnumerateDevices");
@@ -93,15 +97,37 @@ bool UPowerManager::onBattery() const
     return m_onBattery;
 }
 
+bool UPowerManager::lidIsPresent() const
+{
+    return m_lidIsPresent;
+}
+
+bool UPowerManager::lidIsClosed() const
+{
+    return m_lidIsClosed;
+}
+
 void UPowerManager::onPropertiesChanged(const QString &ifaceName, const QVariantMap &changedProps, const QStringList &invalidatedProps)
 {
     Q_UNUSED(ifaceName);
-    Q_UNUSED(changedProps);
-    Q_UNUSED(invalidatedProps);
 
-    const bool onBattery = m_interface.property("OnBattery").toBool();
-    m_onBattery = onBattery;
-    emit onBatteryChanged();
+    if (changedProps.contains(QStringLiteral("OnBattery"))
+        || invalidatedProps.contains(QStringLiteral("OnBattery"))) {
+        const bool onBattery = m_interface.property("OnBattery").toBool();
+        if (m_onBattery != onBattery) {
+            m_onBattery = onBattery;
+            emit onBatteryChanged();
+        }
+    }
+
+    if (changedProps.contains(QStringLiteral("LidIsClosed"))
+        || invalidatedProps.contains(QStringLiteral("LidIsClosed"))) {
+        const bool lidIsClosed = m_interface.property("LidIsClosed").toBool();
+        if (m_lidIsClosed != lidIsClosed) {
+            m_lidIsClosed = lidIsClosed;
+            emit lidClosedChanged();
+        }
+    }
 }
 
 void UPowerManager::onDeviceAdded(const QDBusObjectPath &path)

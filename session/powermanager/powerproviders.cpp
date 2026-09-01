@@ -87,6 +87,8 @@ static bool dbusCall(const QString &service,
             //                         msg.errorName() + QStringLiteral("\n\n") + msg.errorMessage(),
             //                         QStringLiteral("logo.png"));
         }
+
+        return false;
     }
 
     // If the method no returns value, we believe that it was successful.
@@ -134,6 +136,8 @@ static bool dbusCallSystemd(const QString &service,
             //                         msg.errorName() + QStringLiteral("\n\n") + msg.errorMessage(),
             //                         QStringLiteral("logo.png"));
         }
+
+        return false;
     }
 
     // If the method no returns value, we believe that it was successful.

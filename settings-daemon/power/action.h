@@ -18,8 +18,8 @@
  ***************************************************************************/
 
 
-#ifndef POWERDEVIL_POWERDEVILACTION_H
-#define POWERDEVIL_POWERDEVILACTION_H
+#ifndef CUTEFISH_SETTINGS_DAEMON_ACTION_H
+#define CUTEFISH_SETTINGS_DAEMON_ACTION_H
 
 #include <QObject>
 #include <QVariantMap>
@@ -88,4 +88,4 @@ private:
     friend class IDleManager;
 };
 
-#endif // POWERDEVIL_POWERDEVILACTION_H
+#endif // CUTEFISH_SETTINGS_DAEMON_ACTION_H

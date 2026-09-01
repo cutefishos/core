@@ -48,8 +48,8 @@ public slots:
         QCoreApplication::exit(0);
     }
 
-    void suspend() {
-        m_power.suspend();
+    bool suspend() {
+        return m_power.suspend();
     }
 
     void startDesktopProcess() {

@@ -11,7 +11,7 @@
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
     <method name="suspend">
-      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+      <arg name="result" type="b" direction="out"/>
     </method>
     <method name="startDesktopProcess">
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>

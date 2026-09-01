@@ -24,9 +24,12 @@ public:
     QString udiPrefix() const;
 
     bool onBattery() const;
+    bool lidIsPresent() const;
+    bool lidIsClosed() const;
 
 signals:
     void onBatteryChanged();
+    void lidClosedChanged();
 
 private slots:
     void onPropertiesChanged(const QString &ifaceName, const QVariantMap &changedProps, const QStringList &invalidatedProps);
@@ -36,6 +39,8 @@ private slots:
 private:
     QDBusInterface m_interface;
     bool m_onBattery;
+    bool m_lidIsPresent;
+    bool m_lidIsClosed;
 };
 
 #endif // UPOWERMANAGER_H

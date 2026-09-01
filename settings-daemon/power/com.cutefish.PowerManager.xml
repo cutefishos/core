@@ -11,11 +11,5 @@
     <method name="setDimDisplayTimeout">
       <arg name="value" type="i" direction="in"/>
     </method>
-    <method name="setSleepWhenClosedScreen">
-      <arg name="value" type="b" direction="in"/>
-    </method>
-    <method name="setLockWhenClosedScreen">
-      <arg name="value" type="b" direction="in"/>
-    </method>
   </interface>
 </node>
