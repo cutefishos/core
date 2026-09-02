@@ -167,6 +167,15 @@ void Application::initEnvironments()
     qputenv("XDG_CURRENT_DESKTOP", "Cutefish");
     qputenv("XDG_SESSION_DESKTOP", "Cutefish");
 
+    const QString gsettings = QStandardPaths::findExecutable(QStringLiteral("gsettings"));
+    if (!gsettings.isEmpty()) {
+        runSync(gsettings,
+                { QStringLiteral("set"),
+                  QStringLiteral("org.gnome.desktop.wm.preferences"),
+                  QStringLiteral("button-layout"),
+                  QStringLiteral("menu:minimize,maximize,close") });
+    }
+
     // Qt
     qputenv("QT_QPA_PLATFORM", "wayland");
     qputenv("QT_QPA_PLATFORMTHEME", "cutefish");
