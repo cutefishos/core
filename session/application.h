@@ -39,13 +39,13 @@ public slots:
     }
 
     void reboot() {
-        m_power.reboot();
-        QCoreApplication::exit(0);
+        if (m_power.reboot())
+            QCoreApplication::exit(0);
     }
 
     void powerOff() {
-        m_power.shutdown();
-        QCoreApplication::exit(0);
+        if (m_power.shutdown())
+            QCoreApplication::exit(0);
     }
 
     bool suspend() {
