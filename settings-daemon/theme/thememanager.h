@@ -33,7 +33,6 @@ class ThemeManager : public QObject
     Q_PROPERTY(QString systemFont READ systemFont WRITE setSystemFont NOTIFY systemFontChanged)
     Q_PROPERTY(QString systemFixedFont READ systemFixedFont WRITE setSystemFixedFont)
     Q_PROPERTY(qreal systemFontPointSize READ systemFontPointSize WRITE setSystemFontPointSize NOTIFY systemFontPointSizeChanged)
-    Q_PROPERTY(qreal devicePixelRatio READ devicePixelRatio WRITE setDevicePixelRatio)
     Q_PROPERTY(QString wallpaper READ wallpaper WRITE setWallpaper NOTIFY wallpaperChanged)
     Q_PROPERTY(int accentColor READ accentColor WRITE setAccentColor NOTIFY accentColorChanged)
     Q_PROPERTY(int backgroundType READ backgroundType WRITE setBackgroundType NOTIFY backgroundTypeChanged)
@@ -66,9 +65,6 @@ public:
 
     qreal systemFontPointSize();
     void setSystemFontPointSize(qreal fontSize);
-
-    qreal devicePixelRatio();
-    void setDevicePixelRatio(qreal ratio);
 
     QString wallpaper();
     void setWallpaper(const QString &path);

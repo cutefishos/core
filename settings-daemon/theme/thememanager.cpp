@@ -30,7 +30,6 @@
 static const QByteArray s_systemFontName = QByteArrayLiteral("Font");
 static const QByteArray s_systemFixedFontName = QByteArrayLiteral("FixedFont");
 static const QByteArray s_systemPointFontSize = QByteArrayLiteral("FontSize");
-static const QByteArray s_devicePixelRatio = QByteArrayLiteral("PixelRatio");
 
 static QString gtkRc2Path()
 {
@@ -266,45 +265,6 @@ void ThemeManager::setSystemFontPointSize(qreal fontSize)
     emit systemFontPointSizeChanged();
 }
 
-qreal ThemeManager::devicePixelRatio()
-{
-    return m_settings->value(s_devicePixelRatio, 1.0).toReal();
-}
-
-void ThemeManager::setDevicePixelRatio(qreal ratio)
-{
-    ratio = qBound<qreal>(1.0, ratio, 4.0);
-    m_settings->setValue(s_devicePixelRatio, ratio);
-    m_settings->sync();
-
-    updateGtk3Config();
-    applyCursorSettings();
-
-    QProcess p;
-    p.setProgram("pkexec");
-    p.setArguments(QStringList() << "cutefish-sddm-helper"
-                                 << "--scale" << QString::number(ratio));
-    p.start();
-    p.waitForFinished(-1);
-
-    QDBusInterface iface("org.freedesktop.Notifications",
-                         "/org/freedesktop/Notifications",
-                         "org.freedesktop.Notifications",
-                         QDBusConnection::sessionBus());
-    if (iface.isValid()) {
-        QList<QVariant> args;
-        args << "cutefish-settings";
-        args << ((unsigned int) 0);
-        args << "preferences-system";
-        args << "";
-        args << tr("Screen scaling needs to be re-login to take effect");
-        args << QStringList();
-        args << QVariantMap();
-        args << (int) 10;
-        iface.asyncCallWithArgumentList("Notify", args);
-    }
-}
-
 QString ThemeManager::wallpaper()
 {
     return m_wallpaperPath;
@@ -360,7 +320,7 @@ void ThemeManager::updateGtk3Config()
     // icon theme
     settings.setValue("gtk-icon-theme-name", m_iconTheme);
     settings.setValue("gtk-cursor-theme-name", m_cursorTheme);
-    settings.setValue("gtk-cursor-theme-size", qRound(m_cursorSize * devicePixelRatio()));
+    settings.setValue("gtk-cursor-theme-size", m_cursorSize);
     // other
     settings.setValue("gtk-enable-animations", true);
     // theme
@@ -384,8 +344,7 @@ void ThemeManager::applyCursorSettings()
                             QSettings::IniFormat);
     inputSettings.beginGroup(QStringLiteral("Mouse"));
     inputSettings.setValue(QStringLiteral("cursorTheme"), cursorTheme());
-    inputSettings.setValue(QStringLiteral("cursorSize"),
-                           qRound(cursorSize() * devicePixelRatio()));
+    inputSettings.setValue(QStringLiteral("cursorSize"), cursorSize());
     inputSettings.endGroup();
     inputSettings.sync();
 
