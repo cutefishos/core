@@ -99,7 +99,6 @@ Application::Application(int &argc, char **argv)
 
     createConfigDirectory();
     initLanguage();
-    initScreenScaleFactors();
 
     initEnvironments();
 
@@ -177,14 +176,13 @@ void Application::initEnvironments()
     }
 
     // Qt
-    qputenv("QT_QPA_PLATFORM", "wayland");
+    // Fall back to xcb so Qt builds without the Wayland platform plugin
+    // still start under Xwayland instead of aborting.
+    qputenv("QT_QPA_PLATFORM", "wayland;xcb");
     qputenv("QT_QPA_PLATFORMTHEME", "cutefish");
-    qputenv("QT_PLATFORM_PLUGIN", "cutefish");
     
     // ref: https://stackoverflow.com/questions/34399993/qml-performance-issue-when-updating-an-item-in-presence-of-many-non-overlapping
     qputenv("QT_QPA_UPDATE_IDLE_TIME", "10");
-
-    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "0");
 
     // IM Config
     // qputenv("GTK_IM_MODULE", "fcitx5");
@@ -237,34 +235,6 @@ void Application::initLanguage()
 
     if (!value.isEmpty()) {
         qputenv("LANGUAGE", value.toUtf8());
-    }
-}
-
-void Application::initScreenScaleFactors()
-{
-    QSettings settings(QSettings::UserScope, "cutefishos", "theme");
-    qreal scaleFactor = settings.value("PixelRatio", 1.0).toReal();
-
-    const bool waylandSession = qEnvironmentVariable("XDG_SESSION_TYPE") == QStringLiteral("wayland")
-        || !qEnvironmentVariableIsEmpty("WAYLAND_DISPLAY");
-    if (waylandSession) {
-        // KWin owns the per-output Wayland scale. A global Qt or GTK scale
-        // factor would override the scale restored by settings-daemon.
-        qunsetenv("QT_SCREEN_SCALE_FACTORS");
-        qunsetenv("GDK_SCALE");
-        qunsetenv("GDK_DPI_SCALE");
-        return;
-    }
-
-    qputenv("QT_SCREEN_SCALE_FACTORS", QByteArray::number(scaleFactor));
-
-    // for Gtk
-    if (qFloor(scaleFactor) > 1) {
-        qputenv("GDK_SCALE", QByteArray::number(scaleFactor, 'g', 0));
-        qputenv("GDK_DPI_SCALE", QByteArray::number(1.0 / scaleFactor, 'g', 3));
-    } else {
-        qputenv("GDK_SCALE", QByteArray::number(qFloor(scaleFactor), 'g', 0));
-        qputenv("GDK_DPI_SCALE", QByteArray::number(qFloor(scaleFactor), 'g', 0));
     }
 }
 

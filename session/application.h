@@ -66,7 +66,6 @@ public slots:
 private:
     void initEnvironments();
     void initLanguage();
-    void initScreenScaleFactors();
     bool syncDBusEnvironment();
     void importSystemdEnvrionment();
     void createConfigDirectory();
