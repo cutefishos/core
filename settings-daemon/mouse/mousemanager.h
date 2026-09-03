@@ -21,6 +21,7 @@
 #define MOUSE_H
 
 #include <QObject>
+#include <QSettings>
 
 class KWinInputBackend;
 
@@ -58,7 +59,10 @@ signals:
     void pointerAccelerationChanged();
 
 private:
+    void restoreSettings();
+
     KWinInputBackend *m_backend;
+    QSettings m_settings;
 };
 
 #endif // MOUSE_H
