@@ -16,8 +16,6 @@ file (GLOB_RECURSE SRCS
   "battery/*.h"
   "language/*.cpp"
   "language/*.h"
-  "dock/*.cpp"
-  "dock/*.h"
   "mouse/*.h"
   "mouse/*.cpp"
   "touchpad/*.h"
