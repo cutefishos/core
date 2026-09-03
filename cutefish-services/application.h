@@ -21,13 +21,12 @@
 #define APPLICATION_H
 
 #include <QApplication>
-#include "theme/thememanager.h"
+#include "appearance/thememanager.h"
 #include "brightness/brightnessmanager.h"
 #include "battery/upowermanager.h"
-#include "language/language.h"
-#include "mouse/mousemanager.h"
-#include "touchpad/touchpadmanager.h"
-#include "defaultapplications.h"
+#include "locale/language.h"
+#include "input/mouse/mousemanager.h"
+#include "input/touchpad/touchpadmanager.h"
 #include "power/powermanager.h"
 #include "power/cpumanagement.h"
 
@@ -50,7 +49,6 @@ private:
     Language *m_language;
     Mouse *m_mouse;
     TouchpadManager *m_touchpad;
-    DefaultApplications *m_defaultApps;
     CPUManagement *m_cpuManagement;
     PowerManager *m_powerManager;
 };

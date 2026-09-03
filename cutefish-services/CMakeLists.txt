@@ -4,25 +4,11 @@ set(TARGET cutefish-services)
 find_package(KF6IdleTime REQUIRED)
 find_package(KWayland REQUIRED)
 
-file (GLOB_RECURSE SRCS
+file(GLOB_RECURSE SOURCES
   "*.cpp"
   "*.h"
-  "theme/*.h"
-  "theme/*.cpp"
-  "brightness/*.h"
-  "brightness/*.cpp"
-  "brightness/*.c"
-  "battery/*.cpp"
-  "battery/*.h"
-  "language/*.cpp"
-  "language/*.h"
-  "mouse/*.h"
-  "mouse/*.cpp"
-  "touchpad/*.h"
-  "touchpad/*.cpp"
 )
 
-set(SOURCES ${SRCS})
 set(HEADERS "")
 set(FORMS "")
 set(RESOURCES "")
@@ -31,20 +17,20 @@ qt6_add_dbus_adaptor(DBUS_SOURCES
                      brightness/com.cutefish.Services.Brightness.xml
                      brightness/brightnessmanager.h BrightnessManager)
 qt6_add_dbus_adaptor(DBUS_SOURCES
-                     theme/com.cutefish.Appearance.xml
-                     theme/thememanager.h ThemeManager)
+                     appearance/com.cutefish.Appearance.xml
+                     appearance/thememanager.h ThemeManager)
 qt6_add_dbus_adaptor(DBUS_SOURCES
                      battery/com.cutefish.Battery.xml
                      battery/battery.h Battery)
 qt6_add_dbus_adaptor(DBUS_SOURCES
-                     language/com.cutefish.Services.Language.xml
-                     language/language.h Language)
+                     locale/com.cutefish.Services.Language.xml
+                     locale/language.h Language)
 qt6_add_dbus_adaptor(DBUS_SOURCES
-                     mouse/com.cutefish.Services.Input.Mouse.xml
-                     mouse/mousemanager.h Mouse)
+                     input/mouse/com.cutefish.Services.Input.Mouse.xml
+                     input/mouse/mousemanager.h Mouse)
 qt6_add_dbus_adaptor(DBUS_SOURCES
-                     touchpad/com.cutefish.Services.Input.Touchpad.xml
-                     touchpad/touchpadmanager.h TouchpadManager)
+                     input/touchpad/com.cutefish.Services.Input.Touchpad.xml
+                     input/touchpad/touchpadmanager.h TouchpadManager)
 qt6_add_dbus_adaptor(DBUS_SOURCES
                      power/com.cutefish.Power.xml
                      power/powermanager.h PowerManager)

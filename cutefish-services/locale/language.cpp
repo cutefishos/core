@@ -19,7 +19,7 @@
 
 #include "language.h"
 #include "languageadaptor.h"
-#include "theme/thememanager.h"
+#include "appearance/thememanager.h"
 
 #include <QDBusInterface>
 #include <QSettings>

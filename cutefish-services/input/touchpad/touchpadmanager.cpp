@@ -1,7 +1,7 @@
 #include "touchpadmanager.h"
 #include "touchpadadaptor.h"
 
-#include "input/kwininputbackend.h"
+#include "input/backend/kwininputbackend.h"
 
 #include <QDBusConnection>
 

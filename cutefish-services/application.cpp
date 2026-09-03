@@ -18,7 +18,6 @@
  */
 
 #include "application.h"
-#include "dbusadaptor.h"
 #include "poweradaptor.h"
 #include <QStandardPaths>
 #include <QProcess>
@@ -45,13 +44,11 @@ Application::Application(int &argc, char **argv)
     , m_language(Language::self())
     , m_mouse(new Mouse(this))
     , m_touchpad(new TouchpadManager(this))
-    , m_defaultApps(new DefaultApplications)
     , m_cpuManagement(new CPUManagement(this))
     , m_powerManager(new PowerManager(m_upowerManager, m_cpuManagement, this))
 {
     initTrash();
 
-    new DBusAdaptor(this);
     // connect to D-Bus and register as an object:
     QDBusConnection::sessionBus().registerService(QStringLiteral("com.cutefish.Services"));
     new PowerAdaptor(m_powerManager);
