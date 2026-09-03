@@ -14,8 +14,8 @@ declared in `cutefish-services/CMakeLists.txt`.
 For the Wayland session, install KWin Wayland and select `Cutefish (KWin
 Wayland)` from the display manager. The session entry launches KWin with
 Wayland enabled and starts `cutefish-session` inside the
-compositor. The session starts the retained services daemon, which in turn
-starts the desktop components after its D-Bus service is ready.
+compositor. The session starts the retained services daemon, waits for its
+D-Bus service to register, and then starts the desktop components.
 
 ## Build
 

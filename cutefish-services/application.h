@@ -30,8 +30,6 @@
 #include "power/powermanager.h"
 #include "power/cpumanagement.h"
 
-#include <QTimer>
-
 class Application : public QApplication
 {
     Q_OBJECT
@@ -39,7 +37,6 @@ class Application : public QApplication
 public:
     explicit Application(int &argc, char **argv);
 
-    void invokeDesktopProcess();
     void initTrash();
 
 private:

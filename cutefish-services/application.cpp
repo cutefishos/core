@@ -19,15 +19,10 @@
 
 #include "application.h"
 #include "poweradaptor.h"
-#include <QStandardPaths>
-#include <QProcess>
-#include <QTimer>
 #include <QFile>
-#include <QDebug>
 #include <QDir>
 #include <QTranslator>
 #include <QLocale>
-#include <QTimer>
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -49,8 +44,7 @@ Application::Application(int &argc, char **argv)
 {
     initTrash();
 
-    // connect to D-Bus and register as an object:
-    QDBusConnection::sessionBus().registerService(QStringLiteral("com.cutefish.Services"));
+    // Register all service objects before publishing the well-known name.
     new PowerAdaptor(m_powerManager);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/com/cutefish/Services/Power"), m_powerManager);
 
@@ -66,18 +60,7 @@ Application::Application(int &argc, char **argv)
         }
     }
 
-    QTimer::singleShot(10, this, &Application::invokeDesktopProcess);
-}
-
-void Application::invokeDesktopProcess()
-{
-    // Start desktop UI component.
-    QDBusInterface sessionInterface("com.cutefish.Session", "/Session", "com.cutefish.Session",
-                                    QDBusConnection::sessionBus());
-
-    if (sessionInterface.isValid()) {
-        sessionInterface.call("startDesktopProcess");
-    }
+    QDBusConnection::sessionBus().registerService(QStringLiteral("com.cutefish.Services"));
 }
 
 void Application::initTrash()

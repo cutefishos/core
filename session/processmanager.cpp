@@ -22,17 +22,12 @@
 
 #include <QCoreApplication>
 #include <QStandardPaths>
-#include <QFileInfoList>
-#include <QFileInfo>
 #include <QSettings>
 #include <QDebug>
 #include <QProcessEnvironment>
 #include <QTimer>
-#include <QThread>
 #include <QDir>
 #include <QDBusConnectionInterface>
-#include <QDBusInterface>
-#include <QDBusPendingCall>
 #include <QDBusReply>
 #include <QDBusServiceWatcher>
 
@@ -86,9 +81,33 @@ void ProcessManager::startAfterKWinReady()
         m_kwinWatcher = nullptr;
     }
 
-    // The services daemon owns the Cutefish settings D-Bus service and
-    // starts the desktop components after that service is ready.
+    // Start the desktop after the services daemon has registered its D-Bus
+    // service so its theme and input backends are available to the shell.
+    const QString serviceName = QStringLiteral("com.cutefish.Services");
+    const auto servicesReady = [this]() {
+        if (m_servicesWatcher) {
+            m_servicesWatcher->deleteLater();
+            m_servicesWatcher = nullptr;
+        }
+        startDesktopProcess();
+    };
+
+    m_servicesWatcher = new QDBusServiceWatcher(serviceName,
+                                                QDBusConnection::sessionBus(),
+                                                QDBusServiceWatcher::WatchForRegistration,
+                                                this);
+    connect(m_servicesWatcher, &QDBusServiceWatcher::serviceRegistered,
+            this, [servicesReady](const QString &) {
+        servicesReady();
+    });
+
     startDaemonProcess();
+
+    if (QDBusConnectionInterface *interface = QDBusConnection::sessionBus().interface()) {
+        const QDBusReply<bool> reply = interface->isServiceRegistered(serviceName);
+        if (reply.isValid() && reply.value())
+            servicesReady();
+    }
 }
 
 void ProcessManager::logout()
@@ -132,9 +151,6 @@ void ProcessManager::startDesktopProcess()
         return;
 
     m_desktopStarted = true;
-
-    // Start the desktop after the services daemon has initialized its theme module.
-    // In the way, there will be no problem that desktop and launcher can't get wallpaper.
 
     QList<QPair<QString, QStringList>> list;
     // Desktop components
@@ -184,8 +200,7 @@ void ProcessManager::startDesktopProcess()
 void ProcessManager::startDaemonProcess()
 {
     QList<QPair<QString, QStringList>> list;
-    // This daemon registers com.cutefish.Services and triggers startup of
-    // the desktop components once the service is available.
+    // This daemon provides the services used by the desktop components.
     list << qMakePair(QString("cutefish-services"), QStringList());
 
     for (QPair<QString, QStringList> pair : list) {

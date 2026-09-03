@@ -49,6 +49,7 @@ private:
 private:
     Application *m_app;
     QDBusServiceWatcher *m_kwinWatcher = nullptr;
+    QDBusServiceWatcher *m_servicesWatcher = nullptr;
     bool m_kwinReady = false;
     bool m_desktopStarted = false;
     QMap<QString, QProcess *> m_systemProcess;
