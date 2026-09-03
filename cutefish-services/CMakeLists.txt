@@ -1,5 +1,5 @@
-project(cutefish-settings-daemon)
-set(TARGET cutefish-settings-daemon)
+project(cutefish-services)
+set(TARGET cutefish-services)
 
 find_package(KF6IdleTime REQUIRED)
 find_package(KWayland REQUIRED)
@@ -30,32 +30,29 @@ set(FORMS "")
 set(RESOURCES "")
 
 qt6_add_dbus_adaptor(DBUS_SOURCES
-                     brightness/com.cutefish.Brightness.xml
+                     brightness/com.cutefish.Services.Brightness.xml
                      brightness/brightnessmanager.h BrightnessManager)
 qt6_add_dbus_adaptor(DBUS_SOURCES
-                     theme/com.cutefish.Theme.xml
+                     theme/com.cutefish.Appearance.xml
                      theme/thememanager.h ThemeManager)
 qt6_add_dbus_adaptor(DBUS_SOURCES
-                     battery/com.cutefish.PrimaryBattery.xml
+                     battery/com.cutefish.Battery.xml
                      battery/battery.h Battery)
 qt6_add_dbus_adaptor(DBUS_SOURCES
-                     language/com.cutefish.Language.xml
+                     language/com.cutefish.Services.Language.xml
                      language/language.h Language)
 qt6_add_dbus_adaptor(DBUS_SOURCES
-                     dock/com.cutefish.Dock.xml
+                     dock/com.cutefish.Services.Dock.xml
                      dock/dock.h Dock)
 qt6_add_dbus_adaptor(DBUS_SOURCES
-                     mouse/com.cutefish.Mouse.xml
+                     mouse/com.cutefish.Services.Input.Mouse.xml
                      mouse/mousemanager.h Mouse)
 qt6_add_dbus_adaptor(DBUS_SOURCES
-                     touchpad/com.cutefish.Touchpad.xml
+                     touchpad/com.cutefish.Services.Input.Touchpad.xml
                      touchpad/touchpadmanager.h TouchpadManager)
 qt6_add_dbus_adaptor(DBUS_SOURCES
-                     power/com.cutefish.PowerManager.xml
+                     power/com.cutefish.Power.xml
                      power/powermanager.h PowerManager)
-qt6_add_dbus_adaptor(DBUS_SOURCES
-                     power/com.cutefish.CPUManagement.xml
-                     power/cpumanagement.h CPUManagement)
 set_source_files_properties(${DBUS_SOURCES} PROPERTIES SKIP_AUTOGEN ON)
 
 add_executable(${TARGET} ${SOURCES} ${DBUS_SOURCES} ${HEADERS} ${FORMS} ${RESOURCES})

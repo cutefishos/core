@@ -37,7 +37,7 @@ Dock::Dock(QObject *parent)
     , m_settings(new QSettings(QSettings::UserScope, "cutefishos", "dock"))
 {
     new DockAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Dock"), this);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/com/cutefish/Services/Dock"), this);
 
     if (!m_settings->contains("IconSize"))
         m_settings->setValue("IconSize", 64);

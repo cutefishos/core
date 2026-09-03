@@ -86,7 +86,7 @@ void ProcessManager::startAfterKWinReady()
         m_kwinWatcher = nullptr;
     }
 
-    // The settings daemon owns the Cutefish settings D-Bus service and
+    // The services daemon owns the Cutefish settings D-Bus service and
     // starts the desktop components after that service is ready.
     startDaemonProcess();
 }
@@ -133,7 +133,7 @@ void ProcessManager::startDesktopProcess()
 
     m_desktopStarted = true;
 
-    // When the cutefish-settings-daemon theme module is loaded, start the desktop.
+    // Start the desktop after the services daemon has initialized its theme module.
     // In the way, there will be no problem that desktop and launcher can't get wallpaper.
 
     QList<QPair<QString, QStringList>> list;
@@ -184,9 +184,9 @@ void ProcessManager::startDesktopProcess()
 void ProcessManager::startDaemonProcess()
 {
     QList<QPair<QString, QStringList>> list;
-    // This daemon registers com.cutefish.Settings and triggers startup of
+    // This daemon registers com.cutefish.Services and triggers startup of
     // the desktop components once the service is available.
-    list << qMakePair(QString("cutefish-settings-daemon"), QStringList());
+    list << qMakePair(QString("cutefish-services"), QStringList());
 
     for (QPair<QString, QStringList> pair : list) {
         QProcess *process = new QProcess;
@@ -228,7 +228,7 @@ void ProcessManager::loadAutoStartProcess()
 
             const QString execValue = desktop.value("Exec").toString();
 
-            if (execValue.contains("cutefish-settings-daemon"))
+            if (execValue.contains("cutefish-services"))
                 continue;
 
             if (!execValue.isEmpty()) {

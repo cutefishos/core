@@ -18,7 +18,7 @@
  */
 
 #include "thememanager.h"
-#include "themeadaptor.h"
+#include "appearanceadaptor.h"
 
 #include <QDomDocument>
 #include <QTextStream>
@@ -61,8 +61,8 @@ ThemeManager::ThemeManager(QObject *parent)
     }
 
     // init dbus
-    new ThemeAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Theme"), this);
+    new AppearanceAdaptor(this);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/com/cutefish/Services/Appearance"), this);
 
     // init value
     m_isDarkMode = m_settings->value("DarkMode", false).toBool();

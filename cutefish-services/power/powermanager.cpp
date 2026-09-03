@@ -1,6 +1,7 @@
 #include "powermanager.h"
 
 #include "../battery/upowermanager.h"
+#include "cpumanagement.h"
 #include "dimdisplayaction.h"
 
 namespace
@@ -30,12 +31,20 @@ int readTimeout(QSettings &settings, const QString &key, const QString &legacyKe
 
 }
 
-PowerManager::PowerManager(UPowerManager *upowerManager, QObject *parent)
+PowerManager::PowerManager(UPowerManager *upowerManager,
+                           CPUManagement *cpuManagement,
+                           QObject *parent)
     : QObject(parent)
     , m_settings(QStringLiteral("cutefishos"), QStringLiteral("power"))
     , m_upowerManager(upowerManager)
+    , m_cpuManagement(cpuManagement)
     , m_dimDisplayAction(new DimDisplayAction(this))
 {
+    if (m_cpuManagement) {
+        connect(m_cpuManagement, &CPUManagement::modeChanged,
+                this, &PowerManager::modeChanged);
+    }
+
     loadSettings();
 
     m_onBattery = m_upowerManager && m_upowerManager->onBattery();
@@ -53,6 +62,17 @@ PowerManager::PowerManager(UPowerManager *upowerManager, QObject *parent)
 
     if (m_upowerManager && m_upowerManager->lidIsClosed())
         m_dimDisplayAction->handleLidClosed();
+}
+
+int PowerManager::mode() const
+{
+    return m_cpuManagement ? m_cpuManagement->mode() : -1;
+}
+
+void PowerManager::setMode(int mode)
+{
+    if (m_cpuManagement)
+        m_cpuManagement->setMode(mode);
 }
 
 void PowerManager::loadSettings()

@@ -35,7 +35,7 @@ Language::Language(QObject *parent)
     , m_settings(new QSettings(QStringLiteral("cutefishos"), QStringLiteral("language")))
 {
     new LanguageAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Language"), this);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/com/cutefish/Services/Language"), this);
 
     if (!m_settings->contains("language"))
         m_settings->setValue("language", "en_US");

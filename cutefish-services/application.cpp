@@ -19,7 +19,7 @@
 
 #include "application.h"
 #include "dbusadaptor.h"
-#include "powermanageradaptor.h"
+#include "poweradaptor.h"
 #include <QStandardPaths>
 #include <QProcess>
 #include <QTimer>
@@ -47,20 +47,19 @@ Application::Application(int &argc, char **argv)
     , m_touchpad(new TouchpadManager(this))
     , m_defaultApps(new DefaultApplications)
     , m_cpuManagement(new CPUManagement(this))
-    , m_powerManager(new PowerManager(m_upowerManager, this))
+    , m_powerManager(new PowerManager(m_upowerManager, m_cpuManagement, this))
 {
     initTrash();
 
     new DBusAdaptor(this);
     // connect to D-Bus and register as an object:
-    QDBusConnection::sessionBus().registerService(QStringLiteral("com.cutefish.Settings"));
-    QDBusConnection::sessionBus().registerService(QStringLiteral("com.cutefish.PowerManager"));
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/PowerManager"), m_powerManager);
-    new PowerManagerAdaptor(m_powerManager);
+    QDBusConnection::sessionBus().registerService(QStringLiteral("com.cutefish.Services"));
+    new PowerAdaptor(m_powerManager);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/com/cutefish/Services/Power"), m_powerManager);
 
     // Translations
     QLocale locale;
-    QString qmFilePath = QString("%1/%2.qm").arg("/usr/share/cutefish-settings-daemon/translations/").arg(locale.name());
+    QString qmFilePath = QString("%1/%2.qm").arg("/usr/share/cutefish-services/translations/").arg(locale.name());
     if (QFile::exists(qmFilePath)) {
         QTranslator *translator = new QTranslator(QApplication::instance());
         if (translator->load(qmFilePath)) {

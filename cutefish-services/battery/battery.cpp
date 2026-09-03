@@ -1,6 +1,6 @@
 #include "battery.h"
 #include "power.h"
-#include "primarybatteryadaptor.h"
+#include "batteryadaptor.h"
 
 #include <QDateTime>
 #include <QDebug>
@@ -47,8 +47,8 @@ void Battery::updateCache()
 void Battery::init()
 {
     if (type() == Battery::PrimaryBattery) {
-        new PrimaryBatteryAdaptor(this);
-        QDBusConnection::sessionBus().registerObject(QStringLiteral("/PrimaryBattery"), this);
+        new BatteryAdaptor(this);
+        QDBusConnection::sessionBus().registerObject(QStringLiteral("/com/cutefish/Services/Battery"), this);
 
         m_settings = new QSettings(QStringLiteral("cutefishos"), QStringLiteral("PrimaryBattery"));
         m_lastChargedPercent = m_settings->value("LastChargedPercent", 0).toInt();

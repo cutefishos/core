@@ -19,7 +19,7 @@ Mouse::Mouse(QObject *parent)
     , m_settings(QSettings::UserScope, QStringLiteral("cutefishos"), QStringLiteral("mouse"))
 {
     new MouseAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Mouse"), this);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/com/cutefish/Services/Input/Mouse"), this);
 
     connect(m_backend, &KWinInputBackend::devicesChanged, this, [this] {
         restoreSettings();

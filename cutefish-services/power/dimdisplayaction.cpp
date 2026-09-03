@@ -54,9 +54,9 @@ constexpr int s_brightnessDimTimeoutFinalDenominator = 4;
 
 DimDisplayAction::DimDisplayAction(QObject *parent)
     : Action(parent)
-    , m_iface("com.cutefish.Settings",
-              "/Brightness",
-              "com.cutefish.Brightness", QDBusConnection::sessionBus())
+    , m_iface("com.cutefish.Services",
+              "/com/cutefish/Services/Brightness",
+              "com.cutefish.Services.Brightness", QDBusConnection::sessionBus())
 {
     QDBusConnection::sessionBus().connect(QString::fromLatin1(s_screenSaverService),
                                           QString::fromLatin1(s_screenSaverPath),

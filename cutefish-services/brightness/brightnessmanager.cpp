@@ -34,7 +34,7 @@ BrightnessManager::BrightnessManager(QObject *parent)
 {
     // init dbus
     new BrightnessAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Brightness"), this);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/com/cutefish/Services/Brightness"), this);
 
     init();
 }

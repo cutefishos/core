@@ -18,7 +18,6 @@
  */
 
 #include "cpumanagement.h"
-#include "cpumanagementadaptor.h"
 
 #include <QProcess>
 #include <QDebug>
@@ -29,9 +28,6 @@ CPUManagement::CPUManagement(QObject *parent)
     : QObject(parent)
     , m_currentMode(PowerSave)
 {
-    new CPUManagementAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/CPUManagement"), this);
-
     // Init cpu items.
     QDir dir("/sys/devices/system/cpu");
     QStringList dirList = dir.entryList(QDir::Dirs | QDir::NoDot | QDir::NoDotAndDotDot);

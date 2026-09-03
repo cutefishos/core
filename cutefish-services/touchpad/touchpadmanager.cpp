@@ -10,7 +10,7 @@ TouchpadManager::TouchpadManager(QObject *parent)
     , m_backend(new KWinInputBackend(KWinInputBackend::DeviceType::Touchpad, this))
 {
     new TouchpadAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Touchpad"), this);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/com/cutefish/Services/Input/Touchpad"), this);
 
     connect(m_backend, &KWinInputBackend::devicesChanged, this, [this] {
         emit availableChanged();
