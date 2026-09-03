@@ -18,14 +18,6 @@
  */
 
 #include "dock.h"
-#include "dockadaptor.h"
-
-#include <QDBusConnection>
-#include <QDBusServiceWatcher>
-#include <QDBusInterface>
-
-#include <QFile>
-#include <QDebug>
 
 Dock::Dock(QObject *parent)
     : QObject(parent)
@@ -36,9 +28,6 @@ Dock::Dock(QObject *parent)
     , m_visibility(AlwaysVisible)
     , m_settings(new QSettings(QSettings::UserScope, "cutefishos", "dock"))
 {
-    new DockAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/com/cutefish/Services/Dock"), this);
-
     if (!m_settings->contains("IconSize"))
         m_settings->setValue("IconSize", 64);
     if (!m_settings->contains("Direction"))

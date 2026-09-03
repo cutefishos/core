@@ -42,9 +42,6 @@ qt6_add_dbus_adaptor(DBUS_SOURCES
                      language/com.cutefish.Services.Language.xml
                      language/language.h Language)
 qt6_add_dbus_adaptor(DBUS_SOURCES
-                     dock/com.cutefish.Services.Dock.xml
-                     dock/dock.h Dock)
-qt6_add_dbus_adaptor(DBUS_SOURCES
                      mouse/com.cutefish.Services.Input.Mouse.xml
                      mouse/mousemanager.h Mouse)
 qt6_add_dbus_adaptor(DBUS_SOURCES
