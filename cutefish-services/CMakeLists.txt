@@ -3,6 +3,8 @@ set(TARGET cutefish-services)
 
 find_package(KF6IdleTime REQUIRED)
 find_package(KWayland REQUIRED)
+find_package(Qt6 REQUIRED COMPONENTS WaylandClient)
+find_package(WaylandScanner REQUIRED)
 
 file(GLOB_RECURSE SOURCES
   "*.cpp"
@@ -37,6 +39,11 @@ qt6_add_dbus_adaptor(DBUS_SOURCES
 set_source_files_properties(${DBUS_SOURCES} PROPERTIES SKIP_AUTOGEN ON)
 
 add_executable(${TARGET} ${SOURCES} ${DBUS_SOURCES} ${HEADERS} ${FORMS} ${RESOURCES})
+qt6_generate_wayland_protocol_client_sources(
+        ${TARGET}
+        PRIVATE_CODE
+        FILES ${CMAKE_CURRENT_SOURCE_DIR}/clipboard/wlr-data-control-unstable-v1.xml
+)
 target_link_libraries(${TARGET}
         Qt6::Core
         Qt6::Gui
@@ -44,6 +51,7 @@ target_link_libraries(${TARGET}
         Qt6::DBus
         Qt6::Xml
         KF6::IdleTime
+        Qt6::WaylandClient
         Plasma::KWaylandClient
 )
 

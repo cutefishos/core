@@ -22,6 +22,7 @@
 
 #include <QApplication>
 #include "appearance/thememanager.h"
+#include "clipboard/clipboard.h"
 #include "brightness/brightnessmanager.h"
 #include "battery/upowermanager.h"
 #include "locale/language.h"
@@ -46,6 +47,7 @@ private:
     Language *m_language;
     Mouse *m_mouse;
     TouchpadManager *m_touchpad;
+    Clipboard *m_clipboard;
     CPUManagement *m_cpuManagement;
     PowerManager *m_powerManager;
 };

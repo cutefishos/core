@@ -158,7 +158,6 @@ void ProcessManager::startDesktopProcess()
     // Desktop components
     // The status bar, dock, launcher, desktop and notifications are one process now.
     list << qMakePair(QString("cutefish-shell"), QStringList());
-    list << qMakePair(QString("cutefish-clipboard"), QStringList());
 
     // For CutefishOS.
     if (QFile("/usr/bin/cutefish-welcome").exists() &&

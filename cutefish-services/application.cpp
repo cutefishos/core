@@ -39,6 +39,7 @@ Application::Application(int &argc, char **argv)
     , m_language(Language::self())
     , m_mouse(new Mouse(this))
     , m_touchpad(new TouchpadManager(this))
+    , m_clipboard(new Clipboard(this))
     , m_cpuManagement(new CPUManagement(this))
     , m_powerManager(new PowerManager(m_upowerManager, m_cpuManagement, this))
 {

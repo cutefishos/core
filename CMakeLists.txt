@@ -27,6 +27,5 @@ add_subdirectory(session)
 add_subdirectory(cutefish-services)
 add_subdirectory(cpufreq)
 add_subdirectory(sddm-helper)
-add_subdirectory(clipboard)
 
 install(FILES cutefish DESTINATION /etc/ COMPONENT Runtime)
