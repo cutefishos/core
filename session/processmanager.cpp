@@ -39,12 +39,14 @@ ProcessManager::ProcessManager(Application *app, QObject *parent)
 
 ProcessManager::~ProcessManager()
 {
-    QMapIterator<QString, QProcess *> i(m_systemProcess);
-    while (i.hasNext()) {
-        i.next();
-        QProcess *p = i.value();
-        delete p;
-        m_systemProcess[i.key()] = nullptr;
+    for (QMap<QString, QProcess *> *processes : {&m_coreProcesses, &m_autostartProcesses}) {
+        QMapIterator<QString, QProcess *> i(*processes);
+        while (i.hasNext()) {
+            i.next();
+            QProcess *p = i.value();
+            delete p;
+            (*processes)[i.key()] = nullptr;
+        }
     }
 }
 
@@ -114,8 +116,8 @@ void ProcessManager::logout()
 {
     // Close what we started ourselves, the window manager last since
     // everything else is drawn on top of it.
-    stopProcesses(m_autoStartProcess);
-    stopProcesses(m_systemProcess);
+    stopProcesses(m_autostartProcesses);
+    stopProcesses(m_coreProcesses);
 
     // KWin is started with --exit-with-session, so returning from this
     // process also ends the compositor session and returns to the greeter.
@@ -185,7 +187,7 @@ void ProcessManager::startDesktopProcess()
 
         // Add to map
         if (process->state() != QProcess::NotRunning) {
-            m_autoStartProcess.insert(pair.first, process);
+            m_coreProcesses.insert(pair.first, process);
         } else {
             qWarning() << "Failed to start desktop process:" << pair.first
                        << process->errorString();
@@ -216,7 +218,7 @@ void ProcessManager::startDaemonProcess()
         // running. The old check discarded long-lived daemons immediately
         // after starting them.
         if (process->state() != QProcess::NotRunning) {
-            m_autoStartProcess.insert(pair.first, process);
+            m_coreProcesses.insert(pair.first, process);
         } else {
             qWarning() << "Failed to start daemon:" << pair.first
                        << process->errorString();
@@ -262,7 +264,7 @@ void ProcessManager::loadAutoStartProcess()
         process->waitForStarted();
 
         if (process->exitCode() == 0) {
-            m_autoStartProcess.insert(exec, process);
+            m_autostartProcesses.insert(exec, process);
         } else {
             process->deleteLater();
         }

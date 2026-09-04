@@ -52,8 +52,8 @@ private:
     QDBusServiceWatcher *m_servicesWatcher = nullptr;
     bool m_kwinReady = false;
     bool m_desktopStarted = false;
-    QMap<QString, QProcess *> m_systemProcess;
-    QMap<QString, QProcess *> m_autoStartProcess;
+    QMap<QString, QProcess *> m_coreProcesses;
+    QMap<QString, QProcess *> m_autostartProcesses;
 
 };
 
