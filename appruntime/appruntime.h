@@ -39,6 +39,12 @@ signals:
     void applicationQuit(const QString &appId, uint pid);
 
 private:
+    struct Instance {
+        QString appId;
+        // Kernel start time of the process; a recycled pid has a different one.
+        qulonglong startTime = 0;
+    };
+
     uint startProcess(const QString &appId, const QStringList &command,
                       const QString &workingDirectory);
     bool terminate(uint pid);
@@ -47,10 +53,11 @@ private:
     static bool isAlive(uint pid);
     static bool isSafeTarget(uint pid);
     static bool isOwnedByUser(uint pid);
+    static qulonglong startTime(uint pid);
 
     ApplicationRegistry *m_registry;
-    // pid -> application id
-    QHash<uint, QString> m_instances;
+    // pid -> instance
+    QHash<uint, Instance> m_instances;
     QTimer m_reaper;
 };
 

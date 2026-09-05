@@ -4,6 +4,7 @@
 #include "desktopentry.h"
 
 #include <QDebug>
+#include <QFile>
 #include <QFileInfo>
 #include <QProcess>
 #include <QStandardPaths>
@@ -91,7 +92,8 @@ uint AppRuntime::startProcess(const QString &appId, const QStringList &command,
         return 0;
     }
 
-    m_instances.insert(static_cast<uint>(pid), appId);
+    m_instances.insert(static_cast<uint>(pid),
+                       Instance{appId, startTime(static_cast<uint>(pid))});
 
     if (!m_reaper.isActive())
         m_reaper.start();
@@ -138,8 +140,11 @@ bool AppRuntime::terminate(uint pid)
     // one takes down the whole login session.
     ::kill(static_cast<pid_t>(pid), SIGTERM);
 
-    QTimer::singleShot(kTerminateTimeout, this, [pid] {
-        if (isAlive(pid) && isOwnedByUser(pid))
+    // The pid may be recycled before the timeout fires, so the kill is bound
+    // to this exact process rather than to the number.
+    const qulonglong started = startTime(pid);
+    QTimer::singleShot(kTerminateTimeout, this, [pid, started] {
+        if (isAlive(pid) && isOwnedByUser(pid) && (started == 0 || startTime(pid) == started))
             ::kill(static_cast<pid_t>(pid), SIGKILL);
     });
 
@@ -158,8 +163,8 @@ QStringList AppRuntime::runningApplications() const
 {
     QStringList result;
     for (auto it = m_instances.constBegin(); it != m_instances.constEnd(); ++it) {
-        if (!result.contains(it.value()))
-            result.append(it.value());
+        if (!result.contains(it.value().appId))
+            result.append(it.value().appId);
     }
     return result;
 }
@@ -168,7 +173,7 @@ QList<uint> AppRuntime::pidsForApplication(const QString &appId) const
 {
     QList<uint> result;
     for (auto it = m_instances.constBegin(); it != m_instances.constEnd(); ++it) {
-        if (it.value() == appId)
+        if (it.value().appId == appId)
             result.append(it.key());
     }
     return result;
@@ -178,11 +183,16 @@ void AppRuntime::reap()
 {
     const QList<uint> pids = m_instances.keys();
     for (const uint pid : pids) {
-        if (isAlive(pid))
+        const Instance instance = m_instances.value(pid);
+
+        // A live pid that no longer belongs to the process we started has
+        // been recycled: the instance is gone all the same. An unknown start
+        // time only leaves liveness to go by.
+        if (isAlive(pid) && (instance.startTime == 0 || startTime(pid) == instance.startTime))
             continue;
 
-        const QString appId = m_instances.take(pid);
-        emit applicationQuit(appId, pid);
+        m_instances.remove(pid);
+        emit applicationQuit(instance.appId, pid);
     }
 
     if (m_instances.isEmpty())
@@ -208,6 +218,27 @@ bool AppRuntime::isSafeTarget(uint pid)
     return pid != static_cast<uint>(::getpid())
         && pid != static_cast<uint>(::getpgrp())
         && pid != static_cast<uint>(::getsid(0));
+}
+
+// Field 22 of /proc/pid/stat, in clock ticks since boot.
+qulonglong AppRuntime::startTime(uint pid)
+{
+    QFile stat(QStringLiteral("/proc/%1/stat").arg(pid));
+    if (!stat.open(QIODevice::ReadOnly))
+        return 0;
+
+    const QByteArray line = stat.readLine();
+    // The comm field is parenthesised and may itself contain spaces.
+    const int commEnd = line.lastIndexOf(')');
+    if (commEnd < 0)
+        return 0;
+
+    const QList<QByteArray> fields = line.mid(commEnd + 2).simplified().split(' ');
+    // stat field 22 is the 20th one after comm.
+    if (fields.size() < 20)
+        return 0;
+
+    return fields.at(19).toULongLong();
 }
 
 bool AppRuntime::isOwnedByUser(uint pid)
