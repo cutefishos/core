@@ -1,0 +1,51 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="com.cutefish.AppRuntime">
+    <!-- Launch the application with this desktop entry id. Returns 0 when the
+         entry is unknown or could not be started. -->
+    <method name="launchApplication">
+      <arg name="appId" type="s" direction="in"/>
+      <arg name="arguments" type="as" direction="in"/>
+      <arg name="pid" type="u" direction="out"/>
+    </method>
+    <!-- Launch a command that has no desktop entry. appId may be empty, it is
+         only the key the runtime tracks the instance under. -->
+    <method name="launchCommand">
+      <arg name="appId" type="s" direction="in"/>
+      <arg name="command" type="as" direction="in"/>
+      <arg name="workingDirectory" type="s" direction="in"/>
+      <arg name="pid" type="u" direction="out"/>
+    </method>
+    <method name="quitApplication">
+      <arg name="appId" type="s" direction="in"/>
+      <arg name="result" type="b" direction="out"/>
+    </method>
+    <method name="quitAll">
+      <arg name="result" type="b" direction="out"/>
+    </method>
+    <method name="quitByPid">
+      <arg name="pid" type="u" direction="in"/>
+      <arg name="result" type="b" direction="out"/>
+    </method>
+    <method name="isRunning">
+      <arg name="appId" type="s" direction="in"/>
+      <arg name="result" type="b" direction="out"/>
+    </method>
+    <method name="runningApplications">
+      <arg name="appIds" type="as" direction="out"/>
+    </method>
+    <method name="pidsForApplication">
+      <arg name="appId" type="s" direction="in"/>
+      <arg name="pids" type="au" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QList&lt;uint&gt;"/>
+    </method>
+    <signal name="applicationLaunched">
+      <arg name="appId" type="s"/>
+      <arg name="pid" type="u"/>
+    </signal>
+    <signal name="applicationQuit">
+      <arg name="appId" type="s"/>
+      <arg name="pid" type="u"/>
+    </signal>
+  </interface>
+</node>

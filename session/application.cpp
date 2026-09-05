@@ -120,25 +120,6 @@ Application::Application(int &argc, char **argv)
     QTimer::singleShot(100, m_processManager, &ProcessManager::start);
 }
 
-void Application::launch(const QString &exec, const QStringList &args)
-{
-    QProcess process;
-    process.setProgram(exec);
-    process.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
-    process.setArguments(args);
-    process.startDetached();
-}
-
-void Application::launch(const QString &exec, const QString &workingDir, const QStringList &args)
-{
-    QProcess process;
-    process.setProgram(exec);
-    process.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
-    process.setWorkingDirectory(workingDir);
-    process.setArguments(args);
-    process.startDetached();
-}
-
 void Application::initEnvironments()
 {
     // Set defaults

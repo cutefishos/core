@@ -19,6 +19,8 @@
 
 #include "processmanager.h"
 #include "application.h"
+#include "applicationlauncher.h"
+#include "applicationruntime.h"
 
 #include <QCoreApplication>
 #include <QStandardPaths>
@@ -39,14 +41,11 @@ ProcessManager::ProcessManager(Application *app, QObject *parent)
 
 ProcessManager::~ProcessManager()
 {
-    for (QMap<QString, QProcess *> *processes : {&m_coreProcesses, &m_autostartProcesses}) {
-        QMapIterator<QString, QProcess *> i(*processes);
-        while (i.hasNext()) {
-            i.next();
-            QProcess *p = i.value();
-            delete p;
-            (*processes)[i.key()] = nullptr;
-        }
+    QMapIterator<QString, QProcess *> i(m_coreProcesses);
+    while (i.hasNext()) {
+        i.next();
+        delete i.value();
+        m_coreProcesses[i.key()] = nullptr;
     }
 }
 
@@ -114,9 +113,14 @@ void ProcessManager::startAfterKWinReady()
 
 void ProcessManager::logout()
 {
-    // Close what we started ourselves, the window manager last since
-    // everything else is drawn on top of it.
-    stopProcesses(m_autostartProcesses);
+    // Applications belong to the runtime, so ask it to quit them, then close
+    // what we started ourselves.
+    ApplicationRuntime *runtime = ApplicationRuntime::instance();
+    if (!runtime->quitAll()) {
+        for (const QString &appId : runtime->runningApplications())
+            runtime->quitApplication(appId);
+    }
+
     stopProcesses(m_coreProcesses);
 
     // KWin is started with --exit-with-session, so returning from this
@@ -159,18 +163,6 @@ void ProcessManager::startDesktopProcess()
     // The status bar, dock, launcher, desktop and notifications are one process now.
     list << qMakePair(QString("cutefish-shell"), QStringList());
 
-    // For CutefishOS.
-    if (QFile("/usr/bin/cutefish-welcome").exists() &&
-            !QFile("/run/live/medium/live/filesystem.squashfs").exists()) {
-        QSettings settings("cutefishos", "login");
-
-        if (!settings.value("Finished", false).toBool()) {
-            list << qMakePair(QString("/usr/bin/cutefish-welcome"), QStringList());
-        } else {
-            list << qMakePair(QString("/usr/bin/cutefish-welcome"), QStringList() << "-d");
-        }
-    }
-
     for (QPair<QString, QStringList> pair : list) {
         QProcess *process = new QProcess;
         process->setProcessChannelMode(QProcess::ForwardedChannels);
@@ -194,6 +186,19 @@ void ProcessManager::startDesktopProcess()
         }
     }
 
+    // For CutefishOS. An ordinary application, so the runtime starts it.
+    if (QFile("/usr/bin/cutefish-welcome").exists() &&
+            !QFile("/run/live/medium/live/filesystem.squashfs").exists()) {
+        QSettings settings("cutefishos", "login");
+        QStringList command{QStringLiteral("/usr/bin/cutefish-welcome")};
+
+        if (settings.value("Finished", false).toBool())
+            command << QStringLiteral("-d");
+
+        ApplicationLauncher::startDetached(command, QString(),
+                                           QStringLiteral("cutefish-welcome"));
+    }
+
     // Auto start
     QTimer::singleShot(100, this, &ProcessManager::loadAutoStartProcess);
 }
@@ -201,6 +206,9 @@ void ProcessManager::startDesktopProcess()
 void ProcessManager::startDaemonProcess()
 {
     QList<QPair<QString, QStringList>> list;
+    // The application runtime owns every application start, so it has to be up
+    // before anything that may want to launch one.
+    list << qMakePair(QString("cutefish-appruntime"), QStringList());
     // This daemon provides the services used by the desktop components.
     list << qMakePair(QString("cutefish-services"), QStringList());
 
@@ -244,7 +252,8 @@ void ProcessManager::loadAutoStartProcess()
 
             const QString execValue = desktop.value("Exec").toString();
 
-            if (execValue.contains("cutefish-services"))
+            if (execValue.contains("cutefish-services") ||
+                    execValue.contains("cutefish-appruntime"))
                 continue;
 
             if (!execValue.isEmpty()) {
@@ -253,19 +262,20 @@ void ProcessManager::loadAutoStartProcess()
         }
     }
 
+    // Autostart entries are applications: the runtime starts them, and keeps
+    // them quittable like any other application.
     for (const QString &exec : execList) {
-        QProcess *process = new QProcess;
-        process->setProgram(exec);
-        QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
-        environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
-        process->setProcessEnvironment(environment);
-        process->start();
-        process->waitForStarted();
+        QStringList command = QProcess::splitCommand(exec);
 
-        if (process->exitCode() == 0) {
-            m_autostartProcesses.insert(exec, process);
-        } else {
-            process->deleteLater();
-        }
+        // Autostart entries take no files, so their field codes expand to
+        // nothing rather than to a literal "%U" argument.
+        command.removeIf([](const QString &argument) {
+            return argument.size() == 2 && argument.startsWith(QLatin1Char('%'));
+        });
+
+        if (command.isEmpty())
+            continue;
+
+        ApplicationLauncher::startDetached(command);
     }
 }

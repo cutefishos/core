@@ -53,7 +53,6 @@ private:
     bool m_kwinReady = false;
     bool m_desktopStarted = false;
     QMap<QString, QProcess *> m_coreProcesses;
-    QMap<QString, QProcess *> m_autostartProcesses;
 
 };
 
